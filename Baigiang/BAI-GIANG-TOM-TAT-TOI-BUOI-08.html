@@ -252,7 +252,6 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     <p class="demo-say">Địa chỉ chỉ ngăn nào. Nội dung là số trong ngăn.</p>
   </div>
   <table>
-    <thead><tr><th>Chức năng</th>  <table>
     <thead><tr><th>Chức năng</th><th>Việc cụ thể</th><th>Thành phần đảm nhận</th></tr></thead>
     <tbody>
       <tr><td>Lưu trữ</td><td>Giữ lệnh và dữ liệu để dùng lại</td><td>Hệ thống nhớ: RAM, ROM, thanh ghi</td></tr>
@@ -445,6 +444,11 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say">Hợp ngữ viết lệnh bằng chữ. Assembler đổi chữ đó thành bit. IAS viết một địa chỉ, nguồn còn lại ở AC.</p>
   </div>
+  <p>Một lệnh có hai phần: opcode nói làm phép gì, toán hạng nói làm trên số nào. Chữ <code>MOV</code>, <code>ADD</code>, <code>CMP</code> là mnemonic. Assembler đổi các chữ ấy thành byte mã máy. CPU giải mã byte, không đọc chữ trong tệp nguồn.</p>
+  <p>Trong C, một phép gán có thể thành hai lệnh máy. <code>x = y + 3</code> với <code>x</code> ở AX và <code>y</code> ở BX viết thành:</p>
+  <pre><code>MOV AX, BX    ; đưa y vào chỗ sẽ giữ kết quả
+ADD AX, 3     ; cộng hằng 3, kết quả đè lên AX</code></pre>
+  <p>Số 3 nằm ngay trong lệnh, gọi là toán hạng tức thì. BX là toán hạng thanh ghi. Nếu số nằm trong RAM thì lệnh phải chỉ ra ô nhớ, và cách chỉ ô nhớ là chế độ địa chỉ.</p>
   <h3>8086 chỉ vào một ô nhớ bằng bốn cách</h3>
   <table>
     <thead><tr><th>Chế độ</th><th>Địa chỉ hiệu dụng</th><th>Dòng phân biệt</th></tr></thead>
@@ -467,6 +471,25 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say" id="mov-say">Ngoặc vuông là vào bộ nhớ.</p>
   </div>
+  <p>Lấy đúng số của ô minh họa: BX = 2000h, từ nhớ tại 2000h là 0034h, DI = 0020h. Số 10 trong <code>[BX+10]</code> là mười thập phân, tức 0Ah, không phải 10h.</p>
+  <table>
+    <thead><tr><th>Lệnh</th><th>Địa chỉ hiệu dụng</th><th>Kết quả</th><th>Cùng ý trong C</th></tr></thead>
+    <tbody>
+      <tr><td><code>MOV AX, BX</code></td><td>không vào RAM</td><td>AX = 2000h</td><td><code>x = y;</code> khi cả hai là biến trong thanh ghi</td></tr>
+      <tr><td><code>MOV AX, [BX]</code></td><td>2000h</td><td>AX = 0034h</td><td><code>x = *p;</code> với <code>p == 0x2000</code></td></tr>
+      <tr><td><code>MOV CX, [BX+10]</code></td><td>2000h + 0Ah = 200Ah</td><td>CX = nội dung ô 200Ah</td><td><code>x = *(p + 10);</code> chỉ khi mỗi phần tử dài 1 byte</td></tr>
+      <tr><td><code>MOV BX, [BX+DI+10]</code></td><td>2000h + 0020h + 0Ah = 202Ah</td><td>BX = nội dung ô 202Ah</td><td><code>x = *(base + index + 10);</code> cộng theo byte</td></tr>
+    </tbody>
+  </table>
+  <p>Con trỏ <code>int *</code> trong C cộng thêm <code>10 * sizeof(int)</code>. Độ dời của 8086 cộng theo byte. Mảng từ 16 bit nên phần tử <code>a[i]</code> nằm tại <code>đầu mảng + 2*i</code>.</p>
+  <pre><code>/* C: mỗi phần tử 16 bit trong bài này */
+int a[4] = {0x11, 0x22, 0x33, 0x44};
+int x = a[2];          /* x = 0x33 */</code></pre>
+  <pre><code>; a[0] ở 2000h, a[1] ở 2002h, a[2] ở 2004h
+MOV BX, 2000h
+MOV SI, 4              ; 2 * 2 byte
+MOV AX, [BX+SI]        ; AX = 0033h</code></pre>
+  <p>Viết <code>MOV SI, 2</code> rồi <code>MOV AX, [BX+SI]</code> sẽ đọc <code>a[1]</code>, vì 2 byte mới là một phần tử. Đây là chỗ lệch giữa chỉ số trong C và độ dời trên 8086.</p>
   <figure class="anh">
     <img src="hinh/hinh-06.jpg" alt="Định dạng lệnh gồm opcode và toán hạng, bảy nhóm lệnh, và lệnh ba địa chỉ, hai địa chỉ, một địa chỉ, không địa chỉ">
     <figcaption>Hình 06. Opcode và toán hạng. IAS là lệnh một địa chỉ; 8086 thường là lệnh hai địa chỉ.</figcaption>
@@ -484,6 +507,16 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say">Opcode nói làm phép gì. Toán hạng nói làm trên số nào. 8086 chủ yếu là lệnh hai địa chỉ.</p>
   </div>
+  <p>Cùng phép <code>a = b + c</code> với b = 10, c = 7, a nhận 17. Số địa chỉ ghi trong lệnh quyết định lệnh phải nhắc tên những ô nào.</p>
+  <table>
+    <thead><tr><th>Dạng</th><th>Đoạn minh họa</th><th>Chỗ giữ kết quả</th></tr></thead>
+    <tbody>
+      <tr><td>Ba địa chỉ</td><td><code>ADD A, B, C</code></td><td>A còn nguyên B và C. 8086 không có lệnh này.</td></tr>
+      <tr><td>Hai địa chỉ, đúng 8086</td><td><code>MOV AX, B</code> rồi <code>ADD AX, C</code> rồi <code>MOV A, AX</code></td><td>Kết quả đè lên AX. Sau <code>ADD</code>, AX = 17.</td></tr>
+      <tr><td>Một địa chỉ, kiểu IAS</td><td>nạp B vào AC, cộng ô C, cất AC vào A</td><td>Một nguồn luôn là AC.</td></tr>
+    </tbody>
+  </table>
+  <p><code>CMP AX, BX</code> vẫn là lệnh hai địa chỉ, nhưng hiệu bị bỏ. Hai thanh ghi còn nguyên, chỉ cờ đổi. <code>INC AX</code> của 8086 tăng AX và không sửa CF, khác với <code>ADD AX, 1</code> vì <code>ADD</code> có thể bật CF.</p>
   <figure class="anh">
     <img src="hinh/hinh-07.jpg" alt="Bảng chín chế độ địa chỉ: tức thì, trực tiếp, thanh ghi, gián tiếp thanh ghi, chỉ số, cơ sở, tương đối PC, tự tăng và tự giảm">
     <figcaption>Hình 07. Chín cách tìm toán hạng. Bốn cách 8086 hay gặp nằm ở bảng phía trên.</figcaption>
@@ -504,6 +537,16 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say">EA là offset của toán hạng. Ba cách 8086 đứng riêng: cơ sở, chỉ số, cơ sở–chỉ số. (R1)+ không phải cú pháp 8086.</p>
   </div>
+  <p>Bốn lệnh sau cùng một ý với bốn cách viết trong C. Hằng 25 thập phân là 0019h.</p>
+  <pre><code>x = 25;     /* tức thì */
+x = a;      /* a có địa chỉ cố định 2000h */
+x = y;      /* y đang ở BX */
+x = *p;     /* p đang ở BX */</code></pre>
+  <pre><code>MOV AX, 25         ; AX = 0019h, RAM không được đọc
+MOV AX, [2000h]    ; EA = 2000h, AX = nội dung ô ấy
+MOV AX, BX         ; AX nhận đúng số trong BX
+MOV AX, [BX]       ; EA = BX</code></pre>
+  <p>Nhảy ngắn dùng IP đã tăng qua khỏi lệnh nhảy, rồi cộng độ dời có dấu. Lệnh chuỗi <code>MOVSB</code> tự cộng hoặc trừ SI và DI một byte; <code>MOVSW</code> cộng hoặc trừ hai byte. Chiều do DF: DF = 0 thì địa chỉ tăng.</p>
   <h3>Vài lệnh hay gặp</h3>
     <div class="demo" id="demo-lenh">
     <p class="face">CMP không ghi</p>
@@ -520,9 +563,9 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     <p class="demo-say">CMP sửa cờ và giữ nguyên hai toán hạng. INC của 8086 không sửa CF.</p>
   </div>
   <h3>Pipeline</h3>
-    <p>Nhiều lệnh đứng ở các đoạn khác nhau trong cùng một nhịp. Thông lượng tăng. Một lệnh đơn vẫn đi đủ các đoạn.</p>
+  <p>Năm giai đoạn F, D, E, M, W làm việc cùng một nhịp trên năm lệnh khác nhau. Lệnh vào sau không chờ lệnh trước đi hết năm giai đoạn. Một lệnh đơn vẫn phải qua đủ năm giai đoạn, nên thời gian của riêng lệnh đó không bị chia cho năm.</p>
   <div class="formula">Tăng tốc = (n × k) / (n + k − 1)</div>
-  <p>Bảng sau vẽ k = 5 đoạn, đặt tên F, D, E, M, W, với n = 4 lệnh để nhìn thấy công thức trước khi thay số lớn. Hàng là lệnh, cột là nhịp.</p>
+  <p>Bảng dưới lấy k = 5 và n = 4. Không có nhịp chờ thì lệnh cuối xong ở nhịp n + k − 1 = 8. Chạy tuần tự bốn lệnh hết 4 × 5 = 20 nhịp. Tăng tốc bằng 20 / 8 = 2,5. Với n = 20, số nhịp pipeline là 24, tăng tốc 100 / 24 ≈ 4,17. Trần của công thức là k = 5, và chỉ đạt khi n rất lớn và không có stall.</p>
   <div class="demo">
     <p class="demo-note">Bốn lệnh, năm giai đoạn. Ô đậm là giai đoạn đang chạy trong nhịp đó.</p>
     <div class="demo-bar">
@@ -541,6 +584,7 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
       <tr><td>I4</td><td></td><td></td><td></td><td>F</td><td>D</td><td>E</td><td>M</td><td>W</td></tr>
     </tbody>
   </table>
+  <p>Đọc một cột là đọc một nhịp. Nhịp 4 có I1 ở M, I2 ở E, I3 ở D và I4 ở F. Nhịp 5 là nhịp đầu tiên có một lệnh hoàn thành: I1 viết kết quả ở W. Từ nhịp 5 đến nhịp 8, mỗi nhịp xong thêm một lệnh. Năm đoạn 40, 50, 30, 45 và 35 ns cộng thời gian chốt 5 ns cho nhịp đồng hồ 55 ns, vì mọi đoạn phải chờ đoạn chậm nhất. Mười lệnh pipeline hết (10 + 5 − 1) × 55 = 770 ns. Cùng mười lệnh chạy tuần tự hết 10 × (40 + 50 + 30 + 45 + 35) = 2000 ns. Tăng tốc 2000 / 770 ≈ 2,60.</p>
     <div class="demo" id="demo-pipe-so">
     <p class="face">8 nhịp</p>
     <div class="board">
@@ -589,6 +633,22 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say">A = B + C×D. Thứ tự đúng là lấy C, nhân D, cộng B, cất A. Dãy CISC in trên hình đang tính B×C+D. 8086 là CISC.</p>
   </div>
+  <p>Lấy số nhỏ để đối chiếu thứ tự nhân. B = 4, C = 3, D = 5. Biểu thức đúng là A = 4 + 3×5 = 19. Dãy in sai thứ tự trên hình ra B×C+D = 17.</p>
+  <pre><code>/* C */
+A = B + C * D;</code></pre>
+  <pre><code>; máy RISC, chỉ LOAD/STORE đụng bộ nhớ
+LOAD R1, B
+LOAD R2, C
+LOAD R3, D
+MUL  R2, R2, R3    ; R2 = 15
+ADD  R1, R1, R2    ; R1 = 19
+STORE A, R1</code></pre>
+  <pre><code>; 8086, các biến là word không dấu, tích nằm gọn trong AX
+MOV AX, C          ; AX = 3
+MUL D              ; DX:AX = 15, DX = 0
+ADD AX, B          ; AX = 19
+MOV A, AX</code></pre>
+  <p><code>MUL</code> của 8086 nhân không dấu và ghi tích 32 bit vào DX:AX. Với 3×5 thì DX = 0, cộng B vào riêng AX là đủ. Nếu tích vượt 16 bit, phải cộng cả DX. <code>ADD AX, [BX]</code> vừa đọc bộ nhớ vừa cộng, nên ở mức tập lệnh của môn này 8086 thuộc CISC. Chip x86 đời sau cắt lệnh thành vi lệnh rồi xếp pipeline; tên tập lệnh mà sinh viên viết vẫn là tập lệnh CISC.</p>
   <h3>Xử lý song song và phân loại Flynn</h3>
   <figure class="anh">
     <img src="hinh/hinh-15.jpg" alt="Xử lý song song: SISD, SIMD, MISD, MIMD và các mức song song bit, lệnh, dữ liệu, tác vụ">
@@ -608,6 +668,7 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say">Pipeline là mức lệnh trong một CPU. Cùng một lệnh trên nhiều dữ liệu là SIMD. Nhiều bộ xử lý, mỗi bộ một chương trình, là MIMD.</p>
   </div>
+  <p>Ba cách cộng dãy cho thấy ba mức khác nhau. Vòng <code>for</code> cộng từng cặp <code>a[i] + b[i]</code> trên một ALU là SISD. Một lệnh cộng bốn cặp trong bốn làn là SIMD. Pipeline vẫn một ALU, nhưng lệnh sau đã vào F trong khi lệnh trước còn ở E: đó là song song mức lệnh, không phải MIMD. MIMD là hai nhân, mỗi nhân chạy một vòng lặp của riêng nó.</p>
 </section>
 
 <section class="sec" id="c4">
@@ -622,7 +683,11 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     <p class="demo-say">ALU xử lý 16 bit một lần. 20 bit địa chỉ chọn 1.048.576 byte, tức 1 MiB.</p>
   </div>
   <div class="formula">Địa chỉ vật lý 20 bit = (giá trị segment dịch trái 4 bit) + offset 16 bit</div>
-    <p>Nhân segment với 16, rồi cộng offset.</p>
+  <p>Dịch trái bốn bit là nhân với 16, tức thêm một chữ số hex 0 bên phải. Với CS = 1A2Bh và IP = 0100h:</p>
+  <pre><code>1A2Bh  dịch trái 4 bit  =  1A2B0h
+1A2B0h + 0100h          =  1A3B0h</code></pre>
+  <p>1A3B0h là địa chỉ vật lý của lệnh sắp lấy. Offset 16 bit đi được 65.536 byte, nên một đoạn dài tối đa 64 KiB. Chân đoạn luôn là bội của 16, nên đoạn sau có thể bắt đầu chỉ cách đoạn trước 16 byte và hai đoạn chồng lên nhau.</p>
+  <p>Một địa chỉ vật lý viết được bằng nhiều cặp. 12345h bằng 1234h:0005h vì 12340h + 0005h = 12345h, và cũng bằng 1233h:0015h vì 12330h + 0015h = 12345h. Khi làm bài phải ghi đủ segment và offset, không chỉ ghi năm chữ số hex rồi dừng.</p>
   <div class="demo" id="demo-seg">
     <p class="demo-note">CS = 1A2Bh, IP = 0100h. Dịch trái bốn bit rồi cộng offset.</p>
     <div class="demo-bar">
@@ -666,6 +731,30 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say">AX = 1234h thì AH = 12h và AL = 34h. Tích 32 bit nằm ở DX:AX.</p>
   </div>
+  <p>AX = 1234h thì byte cao AH = 12h và byte thấp AL = 34h. Ghi AL làm đổi AX, còn AH giữ nguyên. Trong C, cùng một vùng 16 bit tách được như sau:</p>
+  <pre><code>unsigned short ax = 0x1234;
+unsigned char ah = ax >> 8;       /* 0x12 */
+unsigned char al = ax &amp; 0xFF;      /* 0x34 */
+ax = (ax &amp; 0xFF00) | 0x56;         /* AL = 0x56, AX = 0x1256 */</code></pre>
+  <pre><code>MOV AX, 1234h    ; AH = 12h, AL = 34h
+MOV AL, 56h      ; AX = 1256h, AH vẫn 12h
+MOV AH, 0        ; AX = 0056h</code></pre>
+  <p>Hàm DOS chọn việc bằng AH, còn ký tự đọc về nằm ở AL. Vì vậy <code>MOV AH, 01h</code> rồi <code>INT 21h</code> không được xen một lệnh nào ghi AX ở giữa.</p>
+  <p>Thanh ghi trong đoạn cộng dồn dưới đây đứng đúng vai trò biến của C. CX là biến đếm, AX là biến tổng và cũng là giá trị trả về.</p>
+  <pre><code>int tong(int n) {
+    int s = 0;
+    for (int i = n; i &gt; 0; i--)
+        s = s + i;
+    return s;
+}</code></pre>
+  <pre><code>; n đưa vào CX, kết quả nằm ở AX
+; n = 5 thì AX = 15
+MOV CX, 5
+MOV AX, 0
+LAP:
+    ADD AX, CX
+    LOOP LAP       ; CX giảm 1, nhảy nếu CX khác 0</code></pre>
+  <p>BX được dùng trong địa chỉ nhớ, như con trỏ. DX giữ nửa cao khi nhân hai số 16 bit, và cũng giữ số hiệu cổng khi cổng lớn hơn 255. SI, DI là chỉ số nguồn và đích. SP trỏ đỉnh ngăn xếp; BP giữ khung để đọc tham số. CS:IP là lệnh sắp lấy, DS đi với dữ liệu, SS đi với SP và BP.</p>
 </section>
 
 <section class="sec" id="cuphap">
@@ -681,22 +770,33 @@ footer.note{font-size:calc(18px * var(--s));color:var(--text)}
     </div>
     <p class="demo-say">Một dòng có bốn vị trí: nhãn, lệnh, toán hạng, chú thích. DB không phải lệnh của CPU.</p>
   </div>
-  <pre><code>LAP:  ADD AX, CX    ; nhan, lenh, toan hang, chu thich
+  <p>Một dòng nguồn xếp bốn vị trí: nhãn, mnemonic, toán hạng, chú thích. Nhãn là tên để <code>JMP</code> hoặc <code>CALL</code> trỏ tới. Chữ sau dấu chấm phẩy assembler bỏ qua, CPU không thực hiện chú thích. <code>DB</code>, <code>DW</code> và <code>EQU</code> là chỉ thị cho assembler lúc dịch, không phải lệnh nằm trong EU.</p>
+  <pre><code>LAP:  ADD AX, CX    ; nhãn, lệnh, toán hạng, chú thích
 S     DB  "PTIT", 0Dh, 0Ah, "$"
 N     DW  100 DUP(?)
 K     EQU 2</code></pre>
-    <p>$ là byte 24h. Hàm 09h dừng trước byte này.</p>
+  <p>Dấu <code>$</code> là byte 24h. Hàm 09h in đến trước byte này và không in chính byte 24h. Trong C, xâu kết thúc bằng <code>'\0'</code>, mã 00h. Hai quy ước không đổi cho nhau: đưa xâu C cho hàm 09h thì DOS không dừng đúng chỗ, trừ khi byte 24h tình cờ nằm phía sau.</p>
   <table>
     <thead><tr><th>Offset</th><th>0100h</th><th>0101h</th><th>0102h</th><th>0103h</th><th>0104h</th><th>0105h</th><th>0106h</th></tr></thead>
     <tbody>
-      <tr><td>Nội dung</td><td>P</td><td>T</td><td>I</td><td>T</td><td>0Dh</td><td>0Ah</td><td>$</td></tr>
+      <tr><td>Nội dung</td><td>P = 50h</td><td>T = 54h</td><td>I = 49h</td><td>T = 54h</td><td>0Dh</td><td>0Ah</td><td>$ = 24h</td></tr>
     </tbody>
   </table>
-  
-  
-    <p>EXE gán DS qua AX.</p>
+  <p>0Dh đưa con trỏ về đầu dòng, 0Ah xuống dòng. Hai byte này không kết thúc xâu. Thiếu 24h thì hàm 09h in tiếp các byte phía sau cho đến khi gặp một byte 24h tình cờ.</p>
+  <p><code>DW 100 DUP(?)</code> dành 100 từ, tức 200 byte, và không ghi số ban đầu. <code>?</code> không phải giá trị 0. <code>EQU</code> không tạo ô nhớ: chỗ nào viết <code>K</code>, assembler thay bằng 2 lúc dịch. Muốn một byte trong RAM chứa 2 thì viết <code>K DB 2</code>.</p>
+  <pre><code>/* C */
+char s[] = "PTIT\r\n";   /* thêm '\0', không có '$' */
+unsigned short n[100];   /* 100 từ 16 bit, giá trị chưa gán */
+#define K 2              /* không chiếm RAM */</code></pre>
+  <p>Đọc cả từ tại S theo little endian được 5450h: byte thấp 50h là 'P', byte cao 54h là 'T'. <code>MOV AX, S</code> đưa 5450h vào AX. Hàm 09h không cần nội dung đó; nó cần địa chỉ. <code>LEA DX, S</code> và <code>MOV DX, OFFSET S</code> đều đưa offset của S vào DX.</p>
+  <pre><code>char *p = s;                        /* địa chỉ, tương ứng LEA */
+unsigned short w = *(unsigned short *)s;  /* 5450h: bộ nhớ vẫn là 'P' rồi 'T' */</code></pre>
+  <pre><code>LEA DX, S            ; DX = offset của S
+MOV AX, S            ; AX = 5450h, không phải địa chỉ</code></pre>
+  <p>Tệp COM nạp với CS, DS, ES và SS cùng trỏ một đoạn, nên không cần gán lại DS trước khi đọc S. Tệp EXE kiểu <code>.MODEL SMALL</code> để DS chưa trỏ đoạn dữ liệu. Hai lệnh sau phải đứng trước mọi lệnh đọc S, N hoặc chuỗi in:</p>
   <pre><code>MOV AX, @DATA
 MOV DS, AX</code></pre>
+  <p>Không có lệnh <code>MOV DS, hằng</code>. Hằng đoạn đi đường vòng qua AX. Quên hai lệnh này thì DX vẫn là offset đúng, nhưng DS sai đoạn, hàm 09h in nhầm vùng nhớ.</p>
     <div class="demo" id="demo-khai">
     <p class="face">5450h</p>
     <div class="board">
@@ -735,6 +835,20 @@ MOV DS, AX</code></pre>
       <tr><td>AND</td><td>0000 0100</td><td>04h</td></tr>
     </tbody>
   </table>
+  <p>Cùng các phép đó viết trong C, với <code>al</code> là một byte. Mặt nạ đứng ở cột nào thì bit cột ấy bị giữ, bị bật hoặc bị đảo.</p>
+  <pre><code>al = al &amp; 0x0F;          /* AND: B4h thành 04h, giữ nibble thấp */
+al = al | 0x01;          /* OR: bật bit 0 */
+al = al ^ 0x80;          /* XOR: đảo bit 7 */
+if ((al &amp; 0x01) == 0)    /* TEST AL, 01h rồi JZ: kiểm tra bit, không ghi AL */</code></pre>
+  <pre><code>AND AL, 0Fh
+OR  AL, 01h
+XOR AL, 80h
+TEST AL, 01h
+JZ  CHAN</code></pre>
+  <p><code>TEST</code> lập cờ theo kết quả AND rồi bỏ kết quả, nên AL còn nguyên và <code>JZ</code> phía sau vẫn dùng được ZF. <code>NOT AL</code> đảo mọi bit và không sửa cờ. Dịch trái một bit là nhân 2 nếu bit đẩy ra không làm mất dữ liệu; dịch phải số học giữ bit dấu.</p>
+  <pre><code>al = al &lt;&lt; 1;                 /* SHL, cùng mã với SAL trên 8086 */
+al = (unsigned char)al &gt;&gt; 1;  /* SHR, điền 0 vào bit trái */
+al = (signed char)al &gt;&gt; 1;    /* SAR, điền bit dấu vào bit trái */</code></pre>
   
   <div class="demo" id="demo-and">
     <p class="demo-note">AL = 1011 0100. Mặt nạ = 0000 1111. AND làm từng cột.</p>
@@ -787,11 +901,17 @@ BO:  LOOP LAP</code></pre>
     <p class="demo-say" id="jcc-say">JA nhìn số không dấu. JG nhìn số có dấu.</p>
   </div>
   <h3>Vết 1 — LOOP cộng dồn</h3>
-  
+  <p><code>LOOP</code> giảm CX trước, rồi nhảy nếu CX khác 0. Phép <code>ADD</code> nhìn thấy CX cũ. Với n = 5, các số được cộng là 5, 4, 3, 2, 1 và AX = 15. Đó là n(n+1)/2.</p>
+  <pre><code>int cx = 5, ax = 0;
+while (cx != 0) {
+    ax = ax + cx;
+    cx = cx - 1;
+}</code></pre>
   <pre><code>MOV CX, 5
 MOV AX, 0
 LAP: ADD AX, CX
      LOOP LAP</code></pre>
+  <p>Nếu CX đã bằng 0 ngay trước <code>LOOP</code>, lệnh này giảm CX thành FFFFh và vẫn nhảy. Vòng chạy 65.536 lần. Muốn bỏ qua thân khi số lần bằng 0 thì phải so CX trước khi vào <code>LAP</code>. <code>LOOP</code> không đọc cờ.</p>
   <div class="demo" id="demo-loop">
     <p class="face">n(n+1)/2</p>
     <div class="demo-bar">
@@ -814,6 +934,12 @@ LAP: ADD AX, CX
   </table>
   
   <h3>Vết 2 — CMP / JLE</h3>
+  <p>Thân cộng CX vào AX, rồi mới tăng CX và so với 6. Số 6 vẫn được cộng. Tổng 3 + 4 + 5 + 6 = 18. <code>JLE</code> là so sánh có dấu: nhảy khi CX ≤ 6.</p>
+  <pre><code>int ax = 0, cx = 3;
+do {
+    ax = ax + cx;
+    cx = cx + 1;
+} while (cx &lt;= 6);</code></pre>
   <pre><code>MOV AX, 0
 MOV CX, 3
 LAP: ADD AX, CX
@@ -835,9 +961,11 @@ LAP: ADD AX, CX
   </table>
   
   <h3>Vết 3 — XOR mặt nạ</h3>
+  <p>XOR từng nibble: 3 XOR 0 = 3, C XOR F = 3. Cả từ 3C3Ch XOR 0F0Fh thành 3333h. BX không đổi. Cùng phép trong C là <code>ax = ax ^ 0x0F0F</code>.</p>
   <pre><code>MOV AX, 3C3Ch
 MOV BX, 0F0Fh
-XOR AX, BX</code></pre>
+XOR AX, BX       ; AX = 3333h, BX = 0F0Fh</code></pre>
+  <p>XOR xóa CF và OF. Kết quả khác 0 nên ZF = 0. Byte 33h có bốn bit 1, chẵn, nên PF = 1. Một phép khác hay đứng cạnh vết này: <code>MUL BL</code> với AL = 200 = C8h và BL = 4 cho tích 800 = 0320h, ghi cả AX, AH = 03h và AL = 20h.</p>
     <div class="demo" id="demo-xor">
     <p class="face">3333h</p>
     <div class="board">
@@ -849,6 +977,15 @@ XOR AX, BX</code></pre>
     <p class="demo-say">XOR AX, BX ghi AX. MUL byte ghi tích 16 bit vào cả AX.</p>
   </div>
   <h3>Vết 4 — SUB, CMP, JG, NEG</h3>
+  <p>Nhánh dương cộng thêm 5 rồi nhảy tới <code>XONG</code>. Nhánh còn lại đổi dấu rồi cộng 30. Thiếu <code>JMP TIEP</code> thì sau <code>NEG</code> chương trình rơi xuống <code>DUONG</code> và cộng cả 5.</p>
+  <pre><code>int ax = 8, bx = 20;
+ax = ax - bx;
+if (ax &gt; 0)
+    ax = ax + 5;
+else {
+    ax = -ax;
+    ax = ax + 30;
+}</code></pre>
   <pre><code>MOV AX, 8
 MOV BX, 20
 SUB AX, BX
@@ -860,6 +997,15 @@ DUONG: ADD AX, 5
        JMP XONG
 TIEP:  ADD AX, 30
 XONG:</code></pre>
+  <p>Với AX = 8 và BX = 20: 0008h − 0014h = FFF4h, tức −12. ZF = 0, SF = 1, OF = 0, nên <code>JG</code> không nhảy. <code>NEG AX</code> đổi FFF4h thành 000Ch = 12. <code>ADD AX, 30</code> cho 002Ah = 42. Nếu ban đầu AX = 25 và BX = 20 thì hiệu bằng 5, <code>JG</code> vào <code>DUONG</code>, AX thành 10 và không đi qua lệnh cộng 30.</p>
+  <table>
+    <thead><tr><th>Đầu vào</th><th>Sau SUB</th><th>Nhánh</th><th>AX cuối</th></tr></thead>
+    <tbody>
+      <tr><td>AX = 8, BX = 20</td><td>FFF4h = −12</td><td>NEG rồi cộng 30</td><td>42 = 002Ah</td></tr>
+      <tr><td>AX = 25, BX = 20</td><td>0005h</td><td>cộng 5</td><td>10 = 000Ah</td></tr>
+      <tr><td>AX = 20, BX = 20</td><td>0000h, ZF = 1</td><td><code>JG</code> không nhảy vì bằng 0</td><td>30 = 001Eh</td></tr>
+    </tbody>
+  </table>
     <div class="demo" id="demo-t4">
     <p class="face" id="t4-face">AX = 8</p>
     <div class="demo-bar"><button class="btn" type="button" id="t4-next">Bước tiếp</button></div>
@@ -869,7 +1015,16 @@ XONG:</code></pre>
 
 <section class="sec" id="ngat">
   <h2><span class="num">07</span> Ngắt 21h</h2>
-    <p>INT 21h gọi DOS. Số trong AH chọn việc.</p>
+  <p><code>INT 21h</code> gọi DOS. Số đang nằm trong AH chọn việc, giống lời gọi hàm trong C nhưng tham số không đứng trong ngoặc: ký tự đặt ở AL hoặc DL, địa chỉ xâu đặt ở DX. Bốn hàm dùng trong buổi này đối chiếu như sau.</p>
+  <table>
+    <thead><tr><th>C</th><th>Trước INT 21h</th><th>Sau lời gọi</th></tr></thead>
+    <tbody>
+      <tr><td><code>c = getchar();</code> có hiện lại ký tự</td><td>AH = 01h</td><td>ký tự nằm ở AL</td></tr>
+      <tr><td><code>putchar(c);</code></td><td>AH = 02h, DL = mã ký tự</td><td>một ký tự ra màn hình</td></tr>
+      <tr><td><code>printf("%s", s);</code></td><td>AH = 09h, DX = offset của s, s kết thúc bằng <code>$</code></td><td>dấu <code>$</code> không hiện</td></tr>
+      <tr><td><code>return 0;</code></td><td>AX = 4C00h</td><td>chương trình kết thúc, AL là mã trả về</td></tr>
+    </tbody>
+  </table>
   <table>
     <thead><tr><th>AH</th><th>Việc</th><th>Thanh ghi đi kèm</th></tr></thead>
     <tbody>
@@ -889,6 +1044,20 @@ XONG:</code></pre>
     </div>
     <p class="demo-say" id="int-say">AH chọn hàm. AL, DL và DX là chỗ đặt ký tự hoặc địa chỉ xâu.</p>
   </div>
+  <pre><code>/* C */
+printf("PTIT\r\n");
+return 0;</code></pre>
+  <pre><code>.DATA
+S   DB "PTIT", 0Dh, 0Ah, "$"
+.CODE
+    MOV AX, @DATA
+    MOV DS, AX
+    LEA DX, S
+    MOV AH, 09h
+    INT 21h
+    MOV AX, 4C00h
+    INT 21h</code></pre>
+  <p>Thứ tự hai lệnh gán AH và DX đổi cho nhau vẫn đúng, miễn cả hai đứng trước <code>INT 21h</code>. <code>LEA DX, BUFFER</code> dưới đây là dạng ngắn của phần in xâu.</p>
   <pre><code>LEA DX, BUFFER
 MOV AH, 09h
 INT 21h</code></pre>
@@ -902,7 +1071,13 @@ INT 21h</code></pre>
     </tbody>
   </table>
   
-    <p>Enter, mã 0Dh, bị so trước khi tăng CX nên không được đếm.</p>
+  <p>Vòng dưới đếm ký tự gõ vào cho đến khi gặp Enter. Enter có mã 0Dh và bị so trước <code>INC</code>, nên nó không được tính vào CX. Gõ <code>AB</code> rồi Enter thì CX = 2.</p>
+  <pre><code>int cx = 0, al;
+for (;;) {
+    al = getchar();          /* hàm 01h, có hiện lại */
+    if (al == '\r') break;   /* 0Dh */
+    cx = cx + 1;
+}</code></pre>
   <pre><code>MOV CX, 0
 MOV AH, 01h
 DOC: INT 21h
@@ -911,6 +1086,24 @@ DOC: INT 21h
      INC CX
      JMP DOC
 XONG:</code></pre>
+  <p>Hàm 02h in đúng một mã đang nằm trong DL. DL = 45 thập phân là mã của dấu <code>-</code>, không phải hai chữ số của số 45. Chữ số 4 có mã 34h = 30h + 4. Muốn in số 45 thì tách thương và dư cho 10, mỗi chữ số cộng 30h, rồi gọi hàm 02h hai lần. <code>INT 21h</code> có thể ghi đè AH, nên chữ số chưa in phải cất ở thanh khác trước khi gọi.</p>
+  <pre><code>void in_hai_chu_so(unsigned char n) {   /* n = 45 */
+    putchar('0' + n / 10);              /* '4' */
+    putchar('0' + n % 10);              /* '5' */
+}</code></pre>
+  <pre><code>MOV AL, 45
+MOV AH, 0
+MOV BL, 10
+DIV BL             ; AL = 4, AH = 5
+ADD AL, 30h        ; AL = 34h, chữ '4'
+MOV DL, AL
+MOV BH, AH         ; cất chữ số hàng đơn vị, vì INT 21h dùng AH
+MOV AH, 02h
+INT 21h
+MOV DL, BH
+ADD DL, 30h        ; DL = 35h, chữ '5'
+MOV AH, 02h
+INT 21h</code></pre>
   
   <div class="demo" id="demo-ascii">
     <p class="demo-note">Mã 45 là một ký tự. Mã của chữ số 4 là 34h, tức 52.</p>
@@ -936,7 +1129,7 @@ XONG:</code></pre>
 
 <section class="sec" id="call">
   <h2><span class="num">08</span> Ngăn xếp, thủ tục và macro</h2>
-    <p>PUSH giảm SP đi 2. POP tăng SP lên 2. Từ đẩy sau được lấy trước.</p>
+  <p><code>PUSH</code> giảm SP đi 2 rồi ghi một từ tại SS:SP. <code>POP</code> đọc từ đó rồi tăng SP lên 2. Từ đẩy sau được lấy trước. Đẩy 1111h, rồi 2222h, rồi 3333h: lần <code>POP</code> đầu nhận 3333h, lần sau nhận 2222h, lần cuối nhận 1111h.</p>
   <div class="demo" id="demo-stack">
     <p class="demo-note">Đĩa đặt sau nằm trên. Lấy ra theo thứ tự ngược với lúc đẩy.</p>
     <div class="demo-bar">
@@ -973,11 +1166,40 @@ XONG:</code></pre>
     </div>
     <p class="demo-say">NEAR chỉ cất IP. FAR cất CS và IP. Macro chèn chữ lúc dịch, không có CALL.</p>
   </div>
+  <p>Hàm C có một bản mã. Lời gọi nhảy tới bản đó rồi quay về. Thủ tục <code>NEAR</code> làm cùng việc: <code>CALL</code> đẩy IP của lệnh kế, ghi IP mới, <code>RET</code> lấy IP đó ra. <code>JMP</code> đổi IP và không đẩy gì, nên không có đường quay về. Thủ tục <code>FAR</code> đẩy cả CS lẫn IP vì thủ tục có thể nằm ở đoạn khác.</p>
+  <pre><code>int gap_doi(int x) {
+    return x + x;
+}
+int main(void) {
+    int x = 7;
+    x = gap_doi(x);    /* x = 14 */
+    return 0;
+}</code></pre>
+  <pre><code>    MOV AX, 7
+    CALL GAPDOI        ; đẩy IP của lệnh kế, AX vẫn = 7
+    ; trở về đây, AX = 14
+    MOV AX, 4C00h
+    INT 21h
+
+GAPDOI PROC NEAR
+    ADD AX, AX         ; 7 + 7 = 14
+    RET                ; lấy IP đã đẩy
+GAPDOI ENDP</code></pre>
+  <p>Quy ước của bài: tham số vào bằng AX hoặc BX, kết quả trả ở AX, giống <code>return</code>. Thanh nào thủ tục dùng tạm thì <code>PUSH</code> lúc vào và <code>POP</code> trước <code>RET</code>, theo đúng thứ tự ngược. Một <code>PUSH</code> chưa có <code>POP</code> làm <code>RET</code> lấy chính số đó làm địa chỉ trở về.</p>
+  <p>Macro không phải hàm. Assembler chép thân macro vào từng chỗ gọi lúc dịch. Không có <code>CALL</code>, không có địa chỉ trở về, và gọi nhiều lần thì mã dài thêm từng đó lần. Thanh ghi mà macro dùng bị sửa ngay tại chỗ chèn.</p>
+  <pre><code>#define GAPDOI(v) ((v) + (v))
+x = GAPDOI(x);     /* trình biên dịch dán biểu thức, không gọi hàm */</code></pre>
+  <pre><code>GAPDOI MACRO
+    ADD AX, AX
+ENDM
+    MOV AX, 7
+    GAPDOI             ; thành một lệnh ADD AX, AX ngay tại đây
+    ; AX = 14, stack không đổi</code></pre>
 </section>
 
 <section class="sec" id="dk">
   <h2><span class="num">09</span> Sáu cấu trúc điều khiển</h2>
-    <p>8086 không có chữ if. Mỗi cấu trúc là CMP, một lệnh nhảy, và đôi khi một JMP để khỏi rơi sang nhánh bên.</p>
+  <p>8086 không có từ khóa <code>if</code>, <code>while</code> hay <code>for</code>. Mỗi cấu trúc của C được viết bằng <code>CMP</code>, một lệnh nhảy có điều kiện, và khi có hai nhánh thì thêm <code>JMP</code> để khỏi rơi từ nhánh này sang nhánh kia. Các mẫu dưới dùng nhảy có dấu <code>JLE</code> và <code>JG</code>. Cùng một mẫu bit, nhảy không dấu là <code>JBE</code> và <code>JA</code>.</p>
   <div class="demo" id="demo-dk">
     <p class="demo-note">Mỗi cấu trúc là một cách đặt CMP và lệnh nhảy.</p>
     <div class="demo-bar">
@@ -1000,14 +1222,28 @@ XONG:</code></pre>
     </div>
   </div>
   <h3>IF, không có nhánh else</h3>
-  <p>Chỉ cộng khi AX &gt; 0. So sánh có dấu.</p>
+  <p>Chỉ cộng khi AX &gt; 0. Điều kiện sai thì <code>JLE</code> nhảy qua lệnh cần bảo vệ. Không có nhánh else nên không cần <code>JMP</code>.</p>
+  <pre><code>if (ax &gt; 0)
+    bx = bx + ax;</code></pre>
   <pre><code>    CMP AX, 0
     JLE BOQUA
     ADD BX, AX
 BOQUA:</code></pre>
-  
+  <table>
+    <thead><tr><th>Trước</th><th>Đường đi</th><th>BX sau</th></tr></thead>
+    <tbody>
+      <tr><td>AX = 5, BX = 10</td><td>5 &gt; 0, không nhảy</td><td>15</td></tr>
+      <tr><td>AX = 0, BX = 10</td><td><code>JLE</code> nhảy, bằng 0 cũng bỏ qua</td><td>10</td></tr>
+      <tr><td>AX = FFFEh = −2, BX = 10</td><td>có dấu −2 ≤ 0, nhảy</td><td>10</td></tr>
+    </tbody>
+  </table>
+  <p>Nếu đề yêu cầu so không dấu, đổi <code>JLE</code> thành <code>JBE</code>. Khi đó AX = FFFEh được hiểu là 65534 và lệnh <code>ADD</code> vẫn chạy.</p>
   <h3>IF-ELSE</h3>
-  <p>CX = 1 khi AX &gt; BX, so sánh có dấu. Mỗi nhánh có một JMP ra ngoài.</p>
+  <p>CX = 1 khi AX &gt; BX, CX = 0 trong các trường hợp còn lại. Nhánh gán 1 phải có <code>JMP XONG</code>. Bỏ lệnh nhảy đó thì chương trình rơi xuống <code>MOV CX, 0</code> và CX thành 0 dù AX lớn hơn BX.</p>
+  <pre><code>if (ax &gt; bx)
+    cx = 1;
+else
+    cx = 0;</code></pre>
   <pre><code>    CMP AX, BX
     JLE NHO
     MOV CX, 1
@@ -1015,9 +1251,33 @@ BOQUA:</code></pre>
 NHO:
     MOV CX, 0
 XONG:</code></pre>
-  
+  <table>
+    <thead><tr><th>AX</th><th>BX</th><th>Nhánh</th><th>CX</th></tr></thead>
+    <tbody>
+      <tr><td>9</td><td>4</td><td>gán 1, nhảy ra</td><td>1</td></tr>
+      <tr><td>4</td><td>4</td><td><code>JLE</code> vì bằng nhau</td><td>0</td></tr>
+      <tr><td>2</td><td>7</td><td><code>JLE</code></td><td>0</td></tr>
+    </tbody>
+  </table>
+  <p>Cùng dạng if-else cho hàm lấy số lớn hơn. AX = 8, BX = 20 thì CX = 20. AX = 30, BX = 20 thì CX = 30. Hai số bằng nhau thì <code>JL</code> không nhảy, CX nhận AX.</p>
+  <pre><code>if (ax &gt;= bx)
+    cx = ax;
+else
+    cx = bx;</code></pre>
+  <pre><code>    CMP AX, BX
+    JL  LAYBX
+    MOV CX, AX
+    JMP HET
+LAYBX:
+    MOV CX, BX
+HET:</code></pre>
   <h3>SWITCH</h3>
-  <p>Ba nhánh theo ký tự trong AL. Mỗi nhánh JMP tới XONG.</p>
+  <p>Ba nhánh theo ký tự trong AL. Chữ <code>'1'</code> có mã 31h, chữ <code>'2'</code> có mã 32h. So với số 1 thì ZF không bật. Mỗi nhánh đã xử lý phải <code>JMP XONG</code>. Thiếu lệnh nhảy ở nhánh <code>MOT</code> thì BL vừa được gán 1 sẽ bị <code>MOV BL, 2</code> ghi đè.</p>
+  <pre><code>switch (al) {
+case '1': bl = 1; break;
+case '2': bl = 2; break;
+default:  bl = 0;
+}</code></pre>
   <pre><code>    CMP AL, '1'
     JE  MOT
     CMP AL, '2'
@@ -1032,17 +1292,46 @@ HAI:
 KHAC:
     MOV BL, 0
 XONG:</code></pre>
-  
+  <table>
+    <thead><tr><th>AL</th><th>Mã</th><th>BL</th></tr></thead>
+    <tbody>
+      <tr><td>chữ 1</td><td>31h</td><td>1</td></tr>
+      <tr><td>chữ 2</td><td>32h</td><td>2</td></tr>
+      <tr><td>chữ A</td><td>41h</td><td>0</td></tr>
+      <tr><td>số 1</td><td>01h</td><td>0, vì không trùng 31h</td></tr>
+    </tbody>
+  </table>
   <h3>FOR, lặp đủ một số lần đã biết</h3>
-  <p>CX đếm ngược. LOOP giảm CX rồi quay lại nếu CX khác 0.</p>
+  <p><code>LOOP</code> đếm ngược. CX = 4 thì các số được cộng là 4, 3, 2, 1 và AX = 10. Cờ không tham gia. Vòng <code>for</code> đếm tiến trong C ra cùng tổng, nhưng hợp ngữ phải tự tăng chỉ số rồi so sánh, vì <code>LOOP</code> không đếm tiến.</p>
+  <pre><code>int ax = 0, cx = 4;
+while (cx != 0) {
+    ax = ax + cx;
+    cx = cx - 1;
+}
+
+int s = 0;
+for (int i = 1; i &lt;= 4; i++)
+    s = s + i;          /* s = 10 */</code></pre>
   <pre><code>    MOV CX, 4
     MOV AX, 0
 LAP:
     ADD AX, CX
-    LOOP LAP</code></pre>
-  
+    LOOP LAP           ; AX = 10
+
+    MOV AX, 0
+    MOV SI, 1
+TANG:
+    ADD AX, SI
+    INC SI
+    CMP SI, 4
+    JLE TANG           ; cộng 1+2+3+4, AX = 10</code></pre>
+  <p>Ở vòng đếm tiến, khi SI = 4 thân vẫn chạy, SI thành 5, rồi <code>JLE</code> mới dừng. CX = 0 ngay trước <code>LOOP</code> không có nghĩa là chạy 0 lần: CX bị giảm thành FFFFh và vòng chạy 65.536 lần.</p>
   <h3>WHILE, kiểm tra trước khi vào thân</h3>
-  <p>BX = 0 thì thân không chạy.</p>
+  <p>Điều kiện đứng trước thân. BX ≤ 0 thì <code>JLE</code> nhảy ngay, <code>ADD</code> không chạy lần nào. <code>DEC</code> không sửa CF; vòng này không đọc CF.</p>
+  <pre><code>while (bx &gt; 0) {
+    ax = ax + 2;
+    bx = bx - 1;
+}</code></pre>
   <pre><code>LAP:
     CMP BX, 0
     JLE XONG
@@ -1050,14 +1339,25 @@ LAP:
     DEC BX
     JMP LAP
 XONG:</code></pre>
-  
+  <p>AX = 0 và BX = 3: ba lần cộng 2, AX = 6, BX = 0. AX = 0 và BX = 0: thân không chạy, AX vẫn 0. Không thay cả vòng bằng một lệnh <code>LOOP</code> khi số lần có thể bằng 0, vì <code>LOOP</code> với CX = 0 lại chạy rất nhiều lần.</p>
   <h3>DO-WHILE, thân chạy rồi mới xét</h3>
-  <p>Thân chạy một lần rồi mới CMP. BX = 0 vẫn bị cộng một lần.</p>
+  <p>Thân đứng trước <code>CMP</code>. BX = 0 vẫn bị cộng một lần, rồi BX thành FFFFh và <code>JG</code> dừng vì −1 không lớn hơn 0.</p>
+  <pre><code>do {
+    ax = ax + 2;
+    bx = bx - 1;
+} while (bx &gt; 0);</code></pre>
   <pre><code>LAP:
     ADD AX, 2
     DEC BX
     CMP BX, 0
     JG  LAP</code></pre>
+  <table>
+    <thead><tr><th>BX ban đầu</th><th>WHILE, AX bắt đầu từ 0</th><th>DO-WHILE, AX bắt đầu từ 0</th></tr></thead>
+    <tbody>
+      <tr><td>3</td><td>AX = 6, thân chạy 3 lần</td><td>AX = 6, thân chạy 3 lần</td></tr>
+      <tr><td>0</td><td>AX = 0, thân không chạy</td><td>AX = 2, thân chạy 1 lần, BX còn FFFFh</td></tr>
+    </tbody>
+  </table>
   
 </section>
 
