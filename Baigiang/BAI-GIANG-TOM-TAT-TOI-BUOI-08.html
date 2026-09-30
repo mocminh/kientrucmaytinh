@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INT13145 · Bài giảng tóm tắt đến buổi 8 · 30/09/2026</title>
+<script>
+(function () {
+  var z = 1.6;
+  try {
+    var s = localStorage.getItem("ktmt-b8-zoom");
+    if (s) z = Number(s);
+  } catch (e) {}
+  if (!(z >= 1 && z <= 2)) z = 1.6;
+  document.documentElement.style.setProperty("--s", String(z));
+})();
+</script>
+<style>
+:root{
+  --bg:#fff; --bg-subtle:#f8fafc; --border:#cbd5e1; --border-light:#e2e8f0;
+  --text:#1e293b; --ink:#0f172a; --muted:#475569;
+  --navy:#16305a; --navy-light:#eef3f9;
+  --copper:#9a3412; --copper-light:#fff7ed;
+  --green:#166534; --green-light:#f0fdf4;
+  --red:#991b1b; --red-light:#fef2f2;
+  --cyan:#0e7490; --cyan-light:#ecfeff;
+  --font:"Times New Roman", Times, serif;
+  --font-mono:Consolas, "Courier New", monospace;
+  --s:1.6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:calc(20px * var(--s));line-height:1.7}
+h1,h2,h3{font-family:var(--font);color:var(--ink);line-height:1.35;font-weight:700}
+a{color:var(--navy)}
+code,pre,.mono{font-family:var(--font-mono)}
+code{font-size:.92em;background:var(--navy-light);padding:.05em .35em;border-radius:4px}
+.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:2px solid var(--ink)}
+.top-inner{max-width:1280px;margin:0 auto;padding:calc(10px * var(--s)) 22px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-family:var(--font);font-size:calc(16px * var(--s));font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--navy)}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{font-family:var(--font);font-size:calc(18px * var(--s));font-weight:700;border:1.5px solid var(--navy);background:#fff;color:var(--navy);padding:calc(8px * var(--s)) calc(14px * var(--s));border-radius:6px;cursor:pointer}
+.btn:hover{background:var(--navy);color:#fff}
+.zoom-label{font-family:var(--font);font-size:calc(18px * var(--s));font-weight:700;color:var(--navy);min-width:4.6em;text-align:center}
+.hero{background:#fafcff;border-bottom:1px solid var(--border)}
+.hero-inner{max-width:1280px;margin:0 auto;padding:calc(22px * var(--s)) 22px calc(18px * var(--s))}
+.hero h1{margin:0}
+.eyebrow{font-family:var(--font);font-size:calc(15px * var(--s));font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--copper);margin:0 0 8px}
+h1{font-size:calc(34px * var(--s));margin:0 0 12px;color:var(--navy)}
+.lead{font-size:calc(20px * var(--s));color:var(--text);max-width:68rem;margin:0}
+.layout{max-width:1280px;margin:0 auto;padding:28px 22px 64px;display:grid;grid-template-columns:290px 1fr;gap:28px}
+.side{position:sticky;top:calc(78px * var(--s));align-self:start;max-height:calc(100vh - 86px * var(--s));overflow:auto}
+.side h2{font-family:var(--font);font-size:calc(15px * var(--s));letter-spacing:.06em;text-transform:uppercase;color:var(--copper);margin:0 0 10px}
+.side a{display:block;font-family:var(--font);font-size:calc(16px * var(--s));color:var(--muted);text-decoration:none;padding:calc(5px * var(--s)) 8px;border-left:2px solid transparent}
+.side a:hover,.side a.active{background:var(--navy-light);color:var(--navy);border-left-color:var(--navy)}
+body.chieu .side{display:none}
+body.chieu .layout{grid-template-columns:1fr;max-width:1100px}
+body.chieu .hero-inner,body.chieu .top-inner{max-width:1100px}
+.sec{margin:0 0 46px;scroll-margin-top:calc(96px * var(--s))}
+.sec h2{font-size:calc(28px * var(--s));color:var(--navy);border-bottom:2px solid var(--ink);padding-bottom:8px;display:flex;gap:10px;align-items:baseline}
+.num{font-family:var(--font);font-size:calc(15px * var(--s));color:#fff;background:var(--navy);border-radius:5px;padding:3px 8px;letter-spacing:.04em}
+h3{font-size:calc(23px * var(--s));margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px 1.2em}
+li{margin:0 0 8px}
+table{width:100%;border-collapse:collapse;font-family:var(--font);font-size:calc(18px * var(--s));margin:12px 0 18px;background:#fff}
+th,td{border:1px solid var(--border-light);padding:calc(8px * var(--s)) calc(10px * var(--s));text-align:left;vertical-align:top}
+th{background:var(--navy);color:#fff;font-weight:700}
+tr:nth-child(even) td{background:#fbfcfe}
+.box{border-left:5px solid var(--navy);background:var(--bg-subtle);padding:14px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+.box h3,.box .t{font-family:var(--font);font-size:calc(16px * var(--s));font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);margin:0 0 6px}
+.box.warn{border-left-color:var(--copper);background:var(--copper-light)}
+.box.warn .t{color:var(--copper)}
+.box.ok{border-left-color:var(--green);background:var(--green-light)}
+.box.ok .t{color:var(--green)}
+.formula{border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin:10px 0 14px;text-align:center;font-family:var(--font);color:var(--navy);font-size:calc(22px * var(--s))}
+pre{background:#f1f4f8;border-left:4px solid #2e5c8a;padding:calc(12px * var(--s)) calc(14px * var(--s));overflow:auto;font-size:calc(18px * var(--s));line-height:1.55;margin:10px 0 14px}
+.tag{font-family:var(--font);font-size:calc(14px * var(--s));font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+details.lg{margin:12px 0 18px;border:1px solid var(--border);border-radius:8px;background:#fff;padding:10px 14px}
+details.lg summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details.lg[open]{background:var(--navy-light);border-color:var(--navy)}
+p.files a{font-weight:700}
+figure.anh{margin:16px 0 12px;border:1px solid var(--border);border-radius:8px;background:#fff;overflow:hidden}
+figure.anh img{display:block;width:100%;height:auto}
+figure.anh{cursor:zoom-in}
+figure.anh figcaption{padding:8px 12px 12px;font-weight:700;color:var(--navy);font-size:calc(17px * var(--s))}
+main table tbody tr{cursor:pointer}
+main table tbody tr.hot td{background:#fff7ed;box-shadow:inset 4px 0 0 var(--copper)}
+.demo{border:1px solid var(--border);border-radius:8px;background:#fff;padding:14px 16px;margin:14px 0 18px}
+.demo-note{margin:0 0 10px;font-weight:700;color:var(--navy)}
+.demo-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.demo-say{margin:10px 0 0;min-height:1.6em;font-weight:700;color:var(--copper)}
+.bitrow{display:flex;flex-wrap:wrap;gap:8px}
+.bit{width:calc(46px * var(--s));height:calc(58px * var(--s));font-family:var(--font-mono);font-size:calc(26px * var(--s));font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;cursor:pointer}
+.bit.on{background:var(--navy);color:#fff}
+.cells{display:flex;flex-wrap:wrap;gap:12px}
+.cell{min-width:calc(140px * var(--s));border:2px solid var(--navy);border-radius:8px;padding:8px 12px;text-align:center;background:var(--navy-light)}
+.cell .addr{display:block;font-size:calc(16px * var(--s));color:var(--muted)}
+.cell b{display:block;font-family:var(--font-mono);font-size:calc(32px * var(--s));color:var(--navy)}
+.cell b.drop{animation:pop .45s ease}
+.pipe-now{background:var(--navy)!important;color:#fff!important;animation:pop .35s ease}
+.pipe-done{background:#dbe7f5!important}
+.pile{min-height:calc(150px * var(--s));width:calc(180px * var(--s));border:2px dashed var(--navy);border-radius:8px;display:flex;flex-direction:column-reverse;justify-content:flex-start;padding:8px;gap:6px;background:#f8fafc}
+.plate{background:var(--navy);color:#fff;text-align:center;border-radius:6px;padding:8px;font-family:var(--font-mono);font-size:calc(22px * var(--s));font-weight:700;animation:pop .4s ease}
+.stk-wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end}
+.regs{font-family:var(--font-mono);font-size:calc(22px * var(--s));font-weight:700;color:var(--navy);line-height:1.6}
+.flagbox{display:flex;flex-wrap:wrap;gap:10px}
+.flagbox span{border:2px solid var(--border);border-radius:8px;padding:8px 14px;font-weight:700;background:#fff}
+.flagbox span.on{border-color:var(--copper);background:var(--copper-light);color:var(--copper)}
+#lightbox{position:fixed;inset:0;z-index:40;background:rgba(15,23,42,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#lightbox[hidden]{display:none}
+#lightbox img{max-width:min(1100px,96vw);max-height:78vh;object-fit:contain;background:#fff;border-radius:8px}
+#lightbox p{color:#fff;font-weight:700;max-width:900px;text-align:center}
+@keyframes pop{0%{transform:scale(.72);opacity:.2}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.do-jump{animation:pop .45s ease;background:var(--green-light)}
+.do-stay{animation:shake .45s linear;background:var(--red-light)}
+.step{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.step span{border:2px solid var(--border);border-radius:8px;padding:8px 12px;font-weight:700;background:#fff}
+.step span.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.step span.done{background:#dbe7f5;border-color:var(--navy)}
+.btn.on{background:var(--navy);color:#fff}
+.screen{display:inline-block;min-width:calc(220px * var(--s));border:2px solid var(--navy);border-radius:8px;background:#0f172a;color:#e2e8f0;font-family:var(--font-mono);font-size:calc(28px * var(--s));font-weight:700;text-align:center;padding:10px 16px}
+.face{display:block;font-family:var(--font-mono);font-size:calc(34px * var(--s));font-weight:700;color:var(--navy);margin:0 0 8px;min-height:1.15em}
+.board{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+@media(prefers-reduced-motion:reduce){.cell b.drop,.pipe-now,.plate,.do-jump,.do-stay{animation:none}}
+.tag.n{background:var(--cyan-light);color:var(--cyan)}
+.tag.v{background:var(--green-light);color:var(--green)}
+.tag.p{background:var(--red-light);color:var(--red)}
+.q{border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:14px 0;background:#fff}
+.q p{margin-bottom:8px}
+.opts{list-style:none;margin:0;padding:0}
+.opts li{margin:0 0 6px}
+.opts label{display:block;padding:7px 10px;background:var(--bg-subtle);border-radius:5px;cursor:pointer}
+.opts label:hover{background:var(--navy-light)}
+.fb{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:calc(18px * var(--s))}
+.q.good{border-color:#86efac}
+.q.bad{border-color:#fdba74}
+.q.graded .fb{display:block}
+.score{font-family:var(--font);font-weight:700;color:var(--navy);min-height:1.4em}
+footer.note{font-size:calc(18px * var(--s));color:var(--text)}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .side{position:static;max-height:none}
+}
+@media print{
+  :root{--s:1 !important}
+  .top,.side,.btn,.no-print,.actions{display:none!important}
+  .layout{display:block;max-width:none;padding:0}
+  body{font-family:"Times New Roman",Times,serif;font-size:12.5pt!important;line-height:1.5!important}
+  h1{font-size:18pt!important}
+  .sec h2{font-size:14pt!important}
+  h3{font-size:13pt!important}
+  .lead,table,pre,.formula,.fb,footer.note,.box,.tag,.eyebrow{font-size:12pt!important}
+  pre{font-size:11pt!important}
+  .sec{break-inside:auto}
+  pre,table,.box,.q,figure.anh{break-inside:avoid}
+  figure.anh img{max-width:100%}
+  a{color:#000;text-decoration:none}
+  .fb{display:block}
+  .demo-bar,.bitrow,.step,.pile,.stk-wrap,.cells,.screen,.flagbox,.board,#lightbox{display:none!important}
+  .demo{border:none;padding:0;background:transparent}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">INT13145 · Nhóm 01 · PTIT · 30/09/2026</div>
+    <div class="actions">
+      <button class="btn" type="button" id="zoom-out">A−</button>
+      <span class="zoom-label" id="zoom-label">160%</span>
+      <button class="btn" type="button" id="zoom-in">A+</button>
+      <button class="btn" type="button" id="chieu">Chế độ chiếu</button>
+      <button class="btn" type="button" id="keys">Hiện lời giải</button>
+      <button class="btn" type="button" onclick="window.print()">In</button>
+    </div>
+  </div>
+</header>
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Từ chương trình lưu trữ đến một chương trình 8086</h1>
+  </div>
+</div>
+<div class="layout">
+<nav class="side" aria-label="Mục lục">
+  <h2>Mục lục</h2>
+  <a href="#khung">00 · Khung buổi 8</a>
+  <a href="#c1">01 · Máy tính và dữ liệu</a>
+  <a href="#c2">02 · CPU và hiệu năng</a>
+  <a href="#c3">03 · Tập lệnh và pipeline</a>
+  <a href="#c4">04 · Khối 8086 và thanh ghi</a>
+  <a href="#cuphap">05 · Dòng lệnh và khai báo</a>
+  <a href="#vet">06 · Logic, nhảy và vết lệnh</a>
+  <a href="#ngat">07 · Ngắt 21h</a>
+  <a href="#call">08 · Ngăn xếp, thủ tục, macro</a>
+  <a href="#dk">09 · Sáu cấu trúc điều khiển</a>
+  <a href="#nho">10 · Bộ nhớ và cache</a>
+  <a href="#iora">11 · Vào–ra</a>
+  <a href="#bus">12 · Bus hệ thống</a>
+  <a href="#congthuc">13 · Công thức trên hình tính</a>
+  <a href="#onhinh">14 · Tờ ôn mười lăm ô</a>
+  <a href="#trenlop">15 · Bài tập trên lớp</a>
+  <a href="#venha">16 · Bài tập về nhà</a>
+  <a href="#baitap">17 · Bài đã giao từ các buổi trước</a>
+  <a href="#quiz">18 · Mười hai câu tự kiểm</a>
+  <a href="#nguon">19 · Căn cứ</a>
+</nav>
+<main>
+<section class="sec" id="khung">
+  <h2><span class="num">00</span> Khung bốn tiết ngày 30/09</h2>
+  <p>Đã học 34/50 câu: dữ liệu 4, CPU 10, tập lệnh 10, hợp ngữ 10.</p>
+  <table>
+    <thead><tr><th>Phút</th><th>Việc trên lớp</th><th>Cụm cần chắc</th></tr></thead>
+    <tbody>
+      <tr><td>0–20</td><td>Ôn chỗ hay nhầm ở chương 1–3</td><td>Endian, IAS, CF với OF, pipeline và thông lượng</td></tr>
+      <tr><td>20–70</td><td>Logic, dịch, Jcc, LOOP</td><td>Mặt nạ bit, nhảy có dấu và không dấu, một vết LOOP</td></tr>
+      <tr><td>70–130</td><td>INT 21h và vết chương trình</td><td>Hàm 01h, 02h, 09h, 4Ch; đọc AX, BX, CX sau một đoạn</td></tr>
+      <tr><td>130–160</td><td>Sáu cấu trúc C, CALL, bài trên lớp</td><td>IF/ELSE, WHILE, PROC; phát phiếu về nhà và Thực hành 2</td></tr>
+    </tbody>
+  </table>
+  <p>Bốn tiết khoảng 180 phút.</p>
+</section>
+
+<section class="sec" id="c1">
+  <h2><span class="num">01</span> Máy tính và dữ liệu</h2>
+  <h3>Chữ và số dùng suốt buổi</h3>
+  <div class="demo" id="demo-bit">
+    <p class="demo-note">Một byte có tám bit. Bit trái cùng có trọng số 128.</p>
+    <div class="bitrow" id="bitrow"></div>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="bit-zero">Xóa về 0</button>
+      <button class="btn" type="button" id="bit-b4">Nạp B4h</button>
+      <button class="btn" type="button" id="bit-ee">Nạp 11101110</button>
+    </div>
+    <p class="demo-say" id="bit-say"></p>
+  </div>
+  <div class="demo" id="demo-hex">
+    <p class="demo-note">Một chữ số hex là đúng bốn bit. A là mười, F là mười lăm.</p>
+    <div class="demo-bar" id="hex-bar"></div>
+    <p class="regs" id="hex-bits">0000</p>
+    <p class="demo-say" id="hex-say">Chữ 0 là bốn bit 0000. Hai chữ hex ghép thành một byte.</p>
+  </div>
+  <div class="demo" id="demo-word">
+    <p class="face">2000h</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="2000h ≠ 34h" data-say="2000h là địa chỉ của ngăn. 34h là số đang nằm trong ngăn.">Địa chỉ</button>
+      <button class="btn" type="button" data-face="AX BX CX DX" data-say="Thanh ghi là ngăn nhỏ trong CPU. Lấy số ở đây nhanh hơn lấy từ bộ nhớ.">Thanh ghi</button>
+      <button class="btn" type="button" data-face="một lệnh, một bước" data-say="Một lệnh là một bước: chép, cộng hoặc nhảy. Chương trình là dãy lệnh đã nằm trong bộ nhớ.">Lệnh</button>
+      <button class="btn" type="button" data-face="10h = 16" data-say="Chữ h ở cuối báo số hex. 10h bằng 16.">Chữ h</button>
+    </div>
+    <p class="demo-say">Địa chỉ chỉ ngăn nào. Nội dung là số trong ngăn.</p>
+  </div>
+  <table>
+    <thead><tr><th>Chức năng</th>  <table>
+    <thead><tr><th>Chức năng</th><th>Việc cụ thể</th><th>Thành phần đảm nhận</th></tr></thead>
+    <tbody>
+      <tr><td>Lưu trữ</td><td>Giữ lệnh và dữ liệu để dùng lại</td><td>Hệ thống nhớ: RAM, ROM, thanh ghi</td></tr>
+      <tr><td>Xử lý</td><td>Tính toán và ra quyết định trên dữ liệu</td><td>Bộ xử lý, chủ yếu là ALU</td></tr>
+      <tr><td>Trao đổi</td><td>Đưa dữ liệu vào và đưa kết quả ra</td><td>Hệ thống vào–ra: bàn phím, màn hình, đĩa</td></tr>
+      <tr><td>Điều khiển</td><td>Quyết định bước nào chạy, tín hiệu nào bật</td><td>Khối điều khiển trong CPU</td></tr>
+    </tbody>
+  </table>
+  <div class="demo" id="demo-fn">
+    <p class="demo-note">Mỗi chức năng có một khối làm việc đó.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-fn="store">Lưu trữ</button>
+      <button class="btn" type="button" data-fn="proc">Xử lý</button>
+      <button class="btn" type="button" data-fn="io">Trao đổi</button>
+      <button class="btn" type="button" data-fn="ctrl">Điều khiển</button>
+    </div>
+    <p class="demo-say" id="fn-say">RAM giữ được số. ALU làm được phép tính. Bàn phím đưa số vào. Khối điều khiển chọn bước nào chạy.</p>
+  </div>
+  <figure class="anh">
+    <img src="hinh/hinh-01.jpg" alt="Poster mở đầu: CPU ở giữa, bộ nhớ và bus hệ thống, dòng năm bước từ đầu vào đến đầu ra">
+    <figcaption>Hình 01. Các khối của máy. Bốn chức năng lấy theo bảng phía trên.</figcaption>
+  </figure>
+  <figure class="anh">
+    <img src="hinh/hinh-02.jpg" alt="Sơ đồ chương giới thiệu: thiết bị vào, CPU gồm ALU, khối điều khiển và thanh ghi, thiết bị ra, bộ nhớ chính và bộ nhớ phụ">
+    <figcaption>Hình 02. Các khối của máy. ALU, khối điều khiển và thanh ghi nằm trong CPU.</figcaption>
+  </figure>
+  <figure class="anh">
+    <img src="hinh/hinh-03.jpg" alt="Sơ đồ tổ chức máy tính và ba bus: bus địa chỉ, bus dữ liệu, bus điều khiển">
+    <figcaption>Hình 03. Tổ chức máy và ba bus. Bus địa chỉ một chiều, bus dữ liệu và bus điều khiển hai chiều.</figcaption>
+  </figure>
+  <div class="demo" id="demo-khoi">
+    <p class="face">bốn khối</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="địa chỉ: 1 chiều" data-say="Bus địa chỉ đi từ CPU ra. Bus dữ liệu hai chiều. Bus điều khiển mang đọc, ghi, và trạng thái gửi ngược về.">Ba bus</button>
+      <button class="btn" type="button" data-face="một chức năng" data-say="Ô bộ nhớ và ô lưu trữ trên hình 01 là một chức năng. Bàn phím và màn hình thuộc trao đổi.">Hình 01</button>
+      <button class="btn" type="button" data-face="RAM mất điện" data-say="RAM đọc ghi, mất khi rút điện. ROM còn khi mất điện. Đĩa là bộ nhớ phụ, không nối thẳng vào ALU.">RAM / ROM</button>
+      <button class="btn" type="button" data-face="cache trên DRAM" data-say="Cache là bản sao nhỏ và nhanh giữa CPU và DRAM. Cùng nhóm nhớ với RAM. Theo tốc độ thì cache đứng trên DRAM.">Cache</button>
+      <button class="btn" type="button" data-face="DRAM làm tươi" data-say="DRAM phải làm tươi. SRAM không làm tươi. Cache thường là SRAM. RAM chính của máy đa dụng thường là DRAM.">DRAM</button>
+    </div>
+    <p class="demo-say">Bốn chức năng vẫn là lưu trữ, xử lý, trao đổi, điều khiển.</p>
+  </div>
+  <h3>Chương trình lưu trữ</h3>
+  <p>Chương trình là dãy bit nằm trong bộ nhớ, cạnh dữ liệu. PC giữ địa chỉ lệnh sắp lấy.</p>
+  <div class="demo" id="demo-arch">
+    <p class="demo-note">Lệnh và dữ liệu có thể đi chung một đường, hoặc đi hai đường.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-arch="vn">Một bộ nhớ, một bus</button>
+      <button class="btn" type="button" data-arch="hv">Hai bộ nhớ, hai bus</button>
+      <button class="btn" type="button" data-face="ENIAC" data-say="ENIAC là máy tính điện tử số đầu tiên trong môn này. Máy von Neumann được nhắc vì chương trình nằm trong bộ nhớ. Địa chỉ lệnh kế do PC giữ.">ENIAC và PC</button>
+    </div>
+    <p class="demo-say" id="arch-say">Một bus thì một nhịp chỉ chở được lệnh hoặc dữ liệu. Hai bus thì lấy lệnh và đọc dữ liệu cùng lúc.</p>
+  </div>
+  <h3>Máy IAS: 20 bit, 256 mã lệnh, 7 thanh ghi</h3>
+  <p>Từ IAS dài 40 bit, hai lệnh 20 bit: 8 bit mã, 12 bit địa chỉ. 256 mã, 4096 ô.</p>
+  <table>
+    <thead><tr><th colspan="2">Nửa trái, 20 bit, đưa vào IR</th><th colspan="2">Nửa phải, 20 bit, đưa vào IBR</th></tr></thead>
+    <tbody>
+      <tr><td>Mã lệnh, 8 bit</td><td>Địa chỉ, 12 bit</td><td>Mã lệnh, 8 bit</td><td>Địa chỉ, 12 bit</td></tr>
+    </tbody>
+  </table>
+  <div class="demo" id="demo-ias">
+    <p class="face">40 bit</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="MBR = cả từ" data-say="Vừa nạp, MBR giữ từ lệnh 40 bit, chưa phải kết quả tính.">MBR</button>
+      <button class="btn" type="button" data-face="IR = nửa trái" data-say="Nửa trái sang IR để giải mã ngay.">IR</button>
+      <button class="btn" type="button" data-face="IBR = nửa phải" data-say="Nửa phải vào IBR. Đi thẳng lần sau thì lấy từ IBR, không đọc nhớ thêm.">IBR</button>
+      <button class="btn" type="button" data-face="AC + [50CE]" data-say="Trực tiếp: 50CE là địa chỉ dữ liệu. Cộng đúng nội dung ô đó vào AC.">Trực tiếp</button>
+      <button class="btn" type="button" data-face="AC + [[50CE]]" data-say="Gián tiếp: ô 50CE chứa địa chỉ của ô khác. Lấy số ở ô được chỉ.">Gián tiếp</button>
+      <button class="btn" type="button" data-face="AC MQ MBR IBR" data-say="AC giữ kết quả số học. MQ đi với nhân và chia. MBR là cửa dữ liệu. IBR giữ lệnh chưa tới lượt.">Bốn thanh</button>
+      <button class="btn" type="button" data-face="MAR IR PC" data-say="MAR giữ địa chỉ ô sắp truy cập. IR giữ mã đang giải mã. PC giữ địa chỉ lệnh sẽ lấy lần sau.">MAR IR PC</button>
+    </div>
+    <p class="demo-say">Bảy thanh ghi IAS: AC, MQ, MBR, IBR, MAR, IR, PC.</p>
+  </div>
+  <h3>Thứ tự byte</h3>
+  <p>1234h có byte cao 12h và byte thấp 34h. 8086 để byte thấp ở địa chỉ nhỏ hơn.</p>
+  <div class="demo" id="demo-endian">
+    <p class="demo-note">Số 1234h gồm byte cao 12h và byte thấp 34h.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="end-le">Little endian, 8086</button>
+      <button class="btn" type="button" id="end-be">Big endian</button>
+      <button class="btn" type="button" data-face="34h rồi 12h" data-say="Đọc lại: byte ở địa chỉ nhỏ ghép vào bên phải. 34h và 12h thành 1234h.">Ghép lại</button>
+    </div>
+    <div class="cells">
+      <div class="cell"><span class="addr">2000h</span><b data-slot="0">34h</b></div>
+      <div class="cell"><span class="addr">2001h</span><b data-slot="1">12h</b></div>
+    </div>
+    <p class="demo-say" id="end-say">Đang là little endian: 34h ở địa chỉ thấp.</p>
+  </div>
+  <table>
+    <thead><tr><th>Địa chỉ</th><th>Little endian, như 8086</th><th>Big endian</th></tr></thead>
+    <tbody>
+      <tr><td>2000h</td><td>34h, byte thấp của 1234h</td><td>12h, byte cao</td></tr>
+      <tr><td>2001h</td><td>12h, byte cao</td><td>34h, byte thấp</td></tr>
+    </tbody>
+  </table>
+  <h3>Số âm viết bằng bit</h3>
+  <p>Bit trái là bit dấu. Số âm: đảo mọi bit, rồi cộng 1. Một byte có dấu chạy từ −128 đến 127.</p>
+  <div class="demo" id="demo-twos">
+    <p class="demo-note">Mẫu 11101110 có bit trái bằng 1. Đảo bit rồi cộng 1 ra 18, nên mẫu này là −18.</p>
+    <div class="bitrow" id="twos-row"></div>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="twos-flip">Đảo bit</button>
+      <button class="btn" type="button" id="twos-inc">Cộng 1</button>
+      <button class="btn" type="button" id="twos-reset">Mẫu gốc</button>
+      <button class="btn" type="button" data-face="10001111 = −113" data-say="Đảo được 01110000, cộng 1 ra 113. Cùng mẫu đọc không dấu là 143.">Mẫu −113</button>
+    </div>
+    <p class="demo-say" id="twos-say">Mẫu gốc 11101110. Bit trái bằng 1.</p>
+  </div>
+  <h3>Ngắt</h3>
+  <div class="demo" id="demo-ngat">
+    <p class="face">cất rồi mới nhảy</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="làm nốt lệnh" data-say="Thiết bị gọi giữa chừng. CPU làm nốt lệnh đang dở, cất địa chỉ lệnh kế, rồi vào chương trình phục vụ.">Ngắt</button>
+      <button class="btn" type="button" data-face="FLAGS, CS, IP" data-say="Lệnh INT đẩy ba thứ, theo thứ tự: cờ, CS, rồi IP.">INT</button>
+      <button class="btn" type="button" data-face="CS:IP" data-say="Tệp đã nằm trong RAM. Khi cho chạy, hệ điều hành ghi địa chỉ lệnh đầu vào CS:IP.">Bắt đầu chạy</button>
+    </div>
+    <p class="demo-say">Cất địa chỉ trở về trước khi nhảy.</p>
+  </div>
+</section>
+
+<section class="sec" id="c2">
+  <h2><span class="num">02</span> CPU và hiệu năng</h2>
+  <p>Một lệnh đi qua bốn bước. PC tăng ngay khi vừa nạp, để còn địa chỉ quay về nếu lệnh là lời gọi.</p>
+  <div class="demo" id="demo-fetch">
+    <p class="demo-note">PC đang giữ 0100h. Ô đó chứa lệnh ADD AX, BX.</p>
+    <div class="step" id="fetch-steps">
+      <span>Nạp</span><span>Giải mã</span><span>Thực hiện</span><span>Cất</span>
+    </div>
+    <div class="demo-bar"><button class="btn" type="button" id="fetch-next">Bước tiếp</button></div>
+    <p class="regs" id="fetch-show">PC = 0100h · IR = trống</p>
+    <p class="demo-say" id="fetch-say">PC giữ địa chỉ. IR giữ lệnh. Hai thanh này không đổi vai cho nhau.</p>
+  </div>
+  <figure class="anh">
+    <img src="hinh/hinh-04.jpg" alt="Ba khối trong CPU: ALU, khối điều khiển, thanh ghi, và bốn bước nạp, giải mã, thực hiện, lưu">
+    <figcaption>Hình 04. CPU = ALU + khối điều khiển + thanh ghi, rồi bốn bước của một lệnh.</figcaption>
+  </figure>
+  <div class="demo" id="demo-cpu">
+    <p class="face">PC giữ địa chỉ</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="PC = địa chỉ" data-say="PC giữ địa chỉ lệnh kế. IR giữ lệnh đang làm. Hai thanh không đổi vai.">PC và IR</button>
+      <button class="btn" type="button" data-face="MAR / MDR" data-say="MAR giữ địa chỉ ô sắp truy cập. MDR giữ dữ liệu vừa đọc hoặc sắp ghi. Trên IAS, MDR chính là MBR.">MAR, MDR</button>
+      <button class="btn" type="button" data-face="MOV không sửa cờ" data-say="Cờ lập ở bước thực hiện. MOV để nguyên cờ. INC và DEC của 8086 không sửa CF.">Cờ sau MOV</button>
+      <button class="btn" type="button" data-face="ALU + điều khiển + thanh ghi" data-say="Trong CPU có ALU, khối điều khiển, thanh ghi và đường nối nội bộ. Cache, đĩa, màn hình đứng ngoài.">Bốn phần</button>
+      <button class="btn" type="button" data-face="32 bit = ALU" data-say="Máy 32 bit nói độ rộng thanh ghi và đường dữ liệu, không nói dung lượng RAM.">Máy 32 bit</button>
+    </div>
+    <p class="demo-say">MDR trên hình làm việc của MBR. IBR chỉ IAS mới có.</p>
+  </div>
+  <figure class="anh">
+    <img src="hinh/hinh-05.jpg" alt="Chu trình lệnh bốn giai đoạn Fetch, Decode, Execute, Store và bảng vai trò PC, IR, CU, ALU, thanh ghi, bộ nhớ">
+    <figcaption>Hình 05. Chu trình lệnh. PC trỏ lệnh kế, IR giữ lệnh hiện tại.</figcaption>
+  </figure>
+  <h3>CF và OF</h3>
+  <p>CF là nhớ của số không dấu. OF là tràn của số có dấu.</p>
+  <div class="formula">11110000 + 00110000 = 1 00100000</div>
+  <div class="demo" id="demo-cf">
+    <p class="demo-note">11110000 + 00110000. Bit nhớ và tràn dấu là hai việc.</p>
+    <div class="demo-bar"><button class="btn" type="button" id="cf-go">Cộng</button>
+      <button class="btn" type="button" data-face="SF = bit trái" data-say="SF chép bit trái của kết quả. ZF = 1 khi mọi bit kết quả bằng 0.">SF, ZF</button>
+      <button class="btn" type="button" data-face="IF = công tắc" data-say="IF không sinh từ ALU. IF là công tắc cho phép nhận ngắt.">IF</button></div>
+    <div class="flagbox" id="cf-flags">
+      <span id="cf-bit">Bit nhớ: ?</span>
+      <span id="cf-cf">CF: ?</span>
+      <span id="cf-of">OF: ?</span>
+    </div>
+    <p class="demo-say" id="cf-say">240 + 48 vượt 255. −16 + 48 vẫn nằm trong −128 đến 127.</p>
+  </div>
+  <h3>Máy chạy hết bao lâu, và MIPS</h3>
+  <div class="formula">CPI = tổng (tỉ lệ của lớp lệnh × CPI của lớp đó)</div>
+  <div class="formula">T = IC × CPI / f</div>
+  <div class="formula">MIPS = f / (CPI × 10<sup>6</sup>)</div>
+  <div class="demo" id="demo-cpi">
+    <p class="demo-note">IC = 2×10<sup>6</sup>, f = 1 GHz, 60% CPI = 1, 40% CPI = 4.</p>
+    <p class="face">CPI</p>
+    <div class="demo-bar"><button class="btn" type="button" id="cpi-next">Bước tính tiếp</button></div>
+    <p class="demo-say" id="cpi-say">CPI trung bình trước, thời gian T sau, MIPS cuối cùng.</p>
+  </div>
+</section>
+
+<section class="sec" id="c3">
+  <h2><span class="num">03</span> Tập lệnh và pipeline</h2>
+    <div class="demo" id="demo-mnemo">
+    <p class="face">MOV</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="MOV" data-say="Mnemonic là tên chữ của lệnh, ví dụ MOV hoặc ADD.">Mnemonic</button>
+      <button class="btn" type="button" data-face="thành bit" data-say="Assembler đổi mnemonic thành mã máy, dãy bit mà CPU chạy.">Assembler</button>
+      <button class="btn" type="button" data-face="AX, BX" data-say="Toán hạng là số mà lệnh tác động tới.">Toán hạng</button>
+      <button class="btn" type="button" data-face="lệnh / thanh ghi / ô nhớ" data-say="Chế độ địa chỉ nói số nằm trong lệnh, trong thanh ghi, hay trong ô nhớ.">Chế độ địa chỉ</button>
+      <button class="btn" type="button" data-face="AC + [50CE]" data-say="50CE là địa chỉ dữ liệu. Cộng nội dung ô đó vào AC.">IAS trực tiếp</button>
+      <button class="btn" type="button" data-face="AC + [[50CE]]" data-say="Ô 50CE giữ địa chỉ khác. Lấy số ở ô được chỉ, không cộng chính số 50CE.">IAS gián tiếp</button>
+    </div>
+    <p class="demo-say">Hợp ngữ viết lệnh bằng chữ. Assembler đổi chữ đó thành bit. IAS viết một địa chỉ, nguồn còn lại ở AC.</p>
+  </div>
+  <h3>8086 chỉ vào một ô nhớ bằng bốn cách</h3>
+  <table>
+    <thead><tr><th>Chế độ</th><th>Địa chỉ hiệu dụng</th><th>Dòng phân biệt</th></tr></thead>
+    <tbody>
+      <tr><td>Gián tiếp thanh ghi</td><td>Nội dung của một thanh ghi địa chỉ</td><td><code>MOV AX, [BX]</code></td></tr>
+      <tr><td>Tương đối cơ sở</td><td>BX hoặc BP cộng độ dời</td><td><code>MOV CX, [BX+10]</code></td></tr>
+      <tr><td>Tương đối chỉ số</td><td>SI hoặc DI cộng độ dời</td><td><code>MOV CX, [DI+5]</code></td></tr>
+      <tr><td>Tương đối cơ sở–chỉ số</td><td>BX hoặc BP, cộng SI hoặc DI, cộng độ dời</td><td><code>MOV BX, [BX+DI+10]</code></td></tr>
+    </tbody>
+  </table>
+  
+  <div class="demo" id="demo-mov">
+    <p class="demo-note">BX = 2000h. Ô 2000h chứa 0034h. Ngoặc vuông là vào bộ nhớ.</p>
+    <p class="face">AX = ?</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-mov="reg">MOV AX, BX</button>
+      <button class="btn" type="button" data-mov="ind">MOV AX, [BX]</button>
+      <button class="btn" type="button" data-mov="base">MOV CX, [BX+10]</button>
+      <button class="btn" type="button" data-mov="both">MOV BX, [BX+DI+10]</button>
+    </div>
+    <p class="demo-say" id="mov-say">Ngoặc vuông là vào bộ nhớ.</p>
+  </div>
+  <figure class="anh">
+    <img src="hinh/hinh-06.jpg" alt="Định dạng lệnh gồm opcode và toán hạng, bảy nhóm lệnh, và lệnh ba địa chỉ, hai địa chỉ, một địa chỉ, không địa chỉ">
+    <figcaption>Hình 06. Opcode và toán hạng. IAS là lệnh một địa chỉ; 8086 thường là lệnh hai địa chỉ.</figcaption>
+  </figure>
+    <div class="demo" id="demo-opcode">
+    <p class="face">AX = AX + BX</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="8 + 12" data-say="Một lệnh IAS dài 20 bit: 8 bit opcode, 12 bit địa chỉ, không có ô mode riêng.">20 bit IAS</button>
+      <button class="btn" type="button" data-face="MOV" data-say="MOV chuyển dữ liệu và không sửa cờ. JMP đổi chỗ lệnh sẽ chạy tiếp.">Chuyển dữ liệu</button>
+      <button class="btn" type="button" data-face="ADD / AND" data-say="ADD thuộc số học. AND, OR, XOR thuộc logic. IN, OUT nói với thiết bị. HLT dừng máy.">Số học, logic</button>
+      <button class="btn" type="button" data-face="A1 = A2 phép A3" data-say="Ba địa chỉ ghi chỗ kết quả và hai nguồn.">Ba địa chỉ</button>
+      <button class="btn" type="button" data-face="AX = AX + BX" data-say="ADD AX, BX ghi kết quả đè lên AX. 8086 thuộc dạng này.">Hai địa chỉ</button>
+      <button class="btn" type="button" data-face="AC + [ô]" data-say="Một địa chỉ để nguồn còn lại ở AC. IAS cộng theo dạng này.">Một địa chỉ</button>
+      <button class="btn" type="button" data-face="đỉnh stack" data-say="Máy ngăn xếp thuần không ghi tên toán hạng. PUSH của 8086 vẫn ghi một toán hạng.">Không địa chỉ</button>
+    </div>
+    <p class="demo-say">Opcode nói làm phép gì. Toán hạng nói làm trên số nào. 8086 chủ yếu là lệnh hai địa chỉ.</p>
+  </div>
+  <figure class="anh">
+    <img src="hinh/hinh-07.jpg" alt="Bảng chín chế độ địa chỉ: tức thì, trực tiếp, thanh ghi, gián tiếp thanh ghi, chỉ số, cơ sở, tương đối PC, tự tăng và tự giảm">
+    <figcaption>Hình 07. Chín cách tìm toán hạng. Bốn cách 8086 hay gặp nằm ở bảng phía trên.</figcaption>
+  </figure>
+    <div class="demo" id="demo-9mode">
+    <p class="face">[BX+DI+10]</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="không EA" data-say="MOV AX, 25. Số nằm trong lệnh, không đụng bộ nhớ.">Tức thì</button>
+      <button class="btn" type="button" data-face="EA = 2000h" data-say="MOV AX, [2000h]. Lệnh chứa địa chỉ.">Trực tiếp</button>
+      <button class="btn" type="button" data-face="trong BX" data-say="MOV AX, BX. Không có EA.">Thanh ghi</button>
+      <button class="btn" type="button" data-face="EA = BX" data-say="MOV AX, [BX]. EA bằng nội dung BX.">Gián tiếp</button>
+      <button class="btn" type="button" data-face="DI + 5" data-say="Độ dời cộng SI hoặc DI, ví dụ [DI+5].">Chỉ số</button>
+      <button class="btn" type="button" data-face="BX + 10" data-say="BX hoặc BP cộng độ dời, ví dụ [BX+10].">Cơ sở</button>
+      <button class="btn" type="button" data-face="BX+DI+10" data-say="[BX+DI+10] có EA = BX + DI + 10. Hình gộp indexed với base; môn này giữ cách thứ ba riêng.">Cơ sở–chỉ số</button>
+      <button class="btn" type="button" data-face="IP + độ dời" data-say="Đích nhảy bằng IP đã tăng qua khỏi lệnh nhảy, cộng độ dời.">Tương đối PC</button>
+      <button class="btn" type="button" data-face="SI, DI ± 1 hoặc 2" data-say="LODSB, STOSB, MOVSB chỉnh SI và DI thêm 1 hoặc 2 byte. Chiều do DF.">Chuỗi</button>
+      <button class="btn" type="button" data-face="không phải chế độ" data-say="Parallel không phải tên một chế độ địa chỉ.">Parallel</button>
+    </div>
+    <p class="demo-say">EA là offset của toán hạng. Ba cách 8086 đứng riêng: cơ sở, chỉ số, cơ sở–chỉ số. (R1)+ không phải cú pháp 8086.</p>
+  </div>
+  <h3>Vài lệnh hay gặp</h3>
+    <div class="demo" id="demo-lenh">
+    <p class="face">CMP không ghi</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="đổi chỗ" data-say="XCHG hoán đổi hai toán hạng.">XCHG</button>
+      <button class="btn" type="button" data-face="offset" data-say="LEA nạp offset, không nạp nội dung ô nhớ.">LEA</button>
+      <button class="btn" type="button" data-face="cất / lấy" data-say="PUSH cất một từ. POP lấy một từ.">PUSH, POP</button>
+      <button class="btn" type="button" data-face="cổng" data-say="IN và OUT trao đổi với cổng, không với ô nhớ.">IN, OUT</button>
+      <button class="btn" type="button" data-face="+ CF" data-say="ADD cộng không kèm nhớ. ADC cộng thêm CF.">ADC</button>
+      <button class="btn" type="button" data-face="CF giữ" data-say="INC và DEC của 8086 không sửa CF. MOV không sửa cờ.">INC, MOV</button>
+      <button class="btn" type="button" data-face="cờ, không ghi" data-say="CMP lập cờ rồi bỏ hiệu. Hai toán hạng còn nguyên.">CMP</button>
+      <button class="btn" type="button" data-face="AX = 3000" data-say="PUSH 1000, 2000, 3000 rồi POP vào AX, BX, CX. AX = 3000, BX = 2000, CX = 1000.">LIFO 1000</button>
+    </div>
+    <p class="demo-say">CMP sửa cờ và giữ nguyên hai toán hạng. INC của 8086 không sửa CF.</p>
+  </div>
+  <h3>Pipeline</h3>
+    <p>Nhiều lệnh đứng ở các đoạn khác nhau trong cùng một nhịp. Thông lượng tăng. Một lệnh đơn vẫn đi đủ các đoạn.</p>
+  <div class="formula">Tăng tốc = (n × k) / (n + k − 1)</div>
+  <p>Bảng sau vẽ k = 5 đoạn, đặt tên F, D, E, M, W, với n = 4 lệnh để nhìn thấy công thức trước khi thay số lớn. Hàng là lệnh, cột là nhịp.</p>
+  <div class="demo">
+    <p class="demo-note">Bốn lệnh, năm giai đoạn. Ô đậm là giai đoạn đang chạy trong nhịp đó.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="pipe-next">Nhịp tiếp</button>
+      <button class="btn" type="button" id="pipe-run">Tự chạy</button>
+      <button class="btn" type="button" id="pipe-reset">Xóa sáng</button>
+    </div>
+    <p class="demo-say" id="pipe-say">Lệnh cuối ra ở nhịp 8. Tuần tự cùng bốn lệnh mất 20 nhịp.</p>
+  </div>
+  <table id="bang-pipe">
+    <thead><tr><th>Lệnh</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead>
+    <tbody>
+      <tr><td>I1</td><td>F</td><td>D</td><td>E</td><td>M</td><td>W</td><td></td><td></td><td></td></tr>
+      <tr><td>I2</td><td></td><td>F</td><td>D</td><td>E</td><td>M</td><td>W</td><td></td><td></td></tr>
+      <tr><td>I3</td><td></td><td></td><td>F</td><td>D</td><td>E</td><td>M</td><td>W</td><td></td></tr>
+      <tr><td>I4</td><td></td><td></td><td></td><td>F</td><td>D</td><td>E</td><td>M</td><td>W</td></tr>
+    </tbody>
+  </table>
+    <div class="demo" id="demo-pipe-so">
+    <p class="face">8 nhịp</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="8 nhịp" data-say="4 + 5 − 1 = 8. Tuần tự 4×5 = 20. Tăng tốc 20/8 = 2,5.">n = 4</button>
+      <button class="btn" type="button" data-face="24 nhịp" data-say="20 + 5 − 1 = 24 nhịp. Tuần tự 100. Tăng tốc 100/24 ≈ 4,17.">n = 20</button>
+      <button class="btn" type="button" data-face="trần = 5" data-say="Khi n rất lớn, tăng tốc tiến tới k. Với n hữu hạn, thương nhỏ hơn k.">Trần k</button>
+      <button class="btn" type="button" data-face="55 ns" data-say="Đoạn 40, 50, 30, 45, 35 ns và chốt 5 ns. Nhịp = 55 ns. Đoạn nhanh cũng chờ hết nhịp này.">Nhịp không đều</button>
+      <button class="btn" type="button" data-face="770 ns" data-say="(10 + 5 − 1)×55 = 770 ns. Không chồng: 2000 ns. Tăng tốc ≈ 2,60.">Mười lệnh</button>
+      <button class="btn" type="button" data-face="cùng một khối" data-say="Hai lệnh cùng một nhịp đòi một bộ cộng hoặc một cổng nhớ.">Structure</button>
+      <button class="btn" type="button" data-face="RAW" data-say="Lệnh sau đọc số mà lệnh trước chưa ghi xong.">Data</button>
+      <button class="btn" type="button" data-face="nhảy sai hướng" data-say="Lệnh nhảy làm các lệnh đã nạp phía sau thành sai hướng.">Control</button>
+      <button class="btn" type="button" data-face="không phải DMA" data-say="Pipeline không phải đường truyền một khối từ đĩa sang RAM.">Không phải chép khối</button>
+    </div>
+    <p class="demo-say">Không chờ: số nhịp = n + k − 1. Tăng tốc = n×k / (n + k − 1), trần bằng k.</p>
+  </div>
+  <figure class="anh">
+    <img src="hinh/hinh-13.jpg" alt="Pipeline năm giai đoạn IF, ID, EX, MEM, WB, công thức tăng tốc và ba loại hazard">
+    <figcaption>Hình 13. Pipeline. Thông lượng tăng. Thời gian của một lệnh đơn không bị chia cho số giai đoạn.</figcaption>
+  </figure>
+    <div class="demo" id="demo-hz">
+    <p class="face">thông lượng</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="không chia cho k" data-say="Pipeline tăng thông lượng. Thời gian một lệnh không còn một phần k.">Latency</button>
+      <button class="btn" type="button" data-face="nhịp trống" data-say="IF và MEM cùng cần nhớ thì tách nhớ lệnh khỏi nhớ dữ liệu, hoặc chèn nhịp trống.">Stall</button>
+      <button class="btn" type="button" data-face="đưa thẳng kết quả" data-say="RAW: đưa kết quả từ EX hoặc MEM sang lệnh sau. Không kịp thì chèn bubble.">Forwarding</button>
+      <button class="btn" type="button" data-face="xóa lệnh nạp nhầm" data-say="Control: đoán nhánh, stall, hoặc xóa lệnh đã nạp nhầm.">Đoán nhánh</button>
+    </div>
+    <p class="demo-say">IF, ID, EX, MEM, WB cùng vai với F, D, E, M, W. Hình viết (k − 1 + n), cùng tổng n + k − 1. Công thức chỉ đúng khi không có nhịp chờ.</p>
+  </div>
+  <h3>RISC và CISC</h3>
+  <figure class="anh">
+    <img src="hinh/hinh-14.jpg" alt="Bảng so sánh RISC và CISC, ví dụ biểu thức A bằng B cộng C nhân D dịch sang hai loại lệnh">
+    <figcaption>Hình 14. RISC và CISC. So độ dài lệnh, chỗ chứa toán hạng, số thanh ghi và cách làm bộ điều khiển.</figcaption>
+  </figure>
+    <div class="demo" id="demo-risc">
+    <p class="face">C, ×D, +B</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="độ dài cố định" data-say="Lệnh đơn giản, độ dài cố định, nhiều thanh ghi, điều khiển nối cứng. Chỉ LOAD và STORE đụng bộ nhớ.">RISC</button>
+      <button class="btn" type="button" data-face="độ dài đổi" data-say="Lệnh phức, độ dài thay đổi, ít thanh ghi, vi chương trình. Phép tính được đọc thẳng bộ nhớ.">CISC</button>
+      <button class="btn" type="button" data-face="vẫn là CISC" data-say="Chip x86 cắt lệnh thành vi lệnh rồi xếp pipeline. Ở mức tập lệnh của môn này, x86 vẫn là CISC.">x86</button>
+      <button class="btn" type="button" data-face="vừa đọc vừa cộng" data-say="8086 thuộc CISC vì một lệnh số học đọc được bộ nhớ.">ADD AX, [BX]</button>
+      <button class="btn" type="button" data-face="đúng thứ tự" data-say="Sáu lệnh RISC trên hình đúng: nạp B, C, D, nhân C với D, cộng B, cất A.">RISC 6</button>
+      <button class="btn" type="button" data-face="B×C+D" data-say="Bốn lệnh CISC in trên hình bắt đầu từ B, nhân C, rồi cộng D.">Hình đang tính</button>
+      <button class="btn" type="button" data-face="4 lệnh" data-say="Lấy C, nhân D, cộng B, cất vào A. Vẫn bốn lệnh.">Thứ tự đúng</button>
+      <button class="btn" type="button" data-face="so cấu trúc" data-say="So độ dài lệnh, số thanh ghi, lệnh nào đụng bộ nhớ, và bộ điều khiển nối cứng hay vi chương trình.">Hiệu năng</button>
+    </div>
+    <p class="demo-say">A = B + C×D. Thứ tự đúng là lấy C, nhân D, cộng B, cất A. Dãy CISC in trên hình đang tính B×C+D. 8086 là CISC.</p>
+  </div>
+  <h3>Xử lý song song và phân loại Flynn</h3>
+  <figure class="anh">
+    <img src="hinh/hinh-15.jpg" alt="Xử lý song song: SISD, SIMD, MISD, MIMD và các mức song song bit, lệnh, dữ liệu, tác vụ">
+    <figcaption>Hình 15. Song song nhiều bộ xử lý. Pipeline là song song mức lệnh trong một CPU.</figcaption>
+  </figure>
+    <div class="demo" id="demo-flynn">
+    <p class="face">SISD</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="SISD" data-say="Một lệnh, một dữ liệu. Máy tuần tự thông thường.">SISD</button>
+      <button class="btn" type="button" data-face="SIMD" data-say="Một lệnh trên nhiều dữ liệu, như cộng hai dãy từng phần tử.">SIMD</button>
+      <button class="btn" type="button" data-face="MISD" data-say="Nhiều lệnh trên cùng một dữ liệu. Kiểu ít gặp.">MISD</button>
+      <button class="btn" type="button" data-face="MIMD" data-say="Nhiều lệnh trên nhiều dữ liệu. Mỗi nhân một dòng điều khiển riêng.">MIMD</button>
+      <button class="btn" type="button" data-face="32 bit một lần" data-say="Mức bit là tính một phép rộng trong một lần.">Bit</button>
+      <button class="btn" type="button" data-face="trong một CPU" data-say="Mức lệnh là pipeline và siêu vô hướng. Pipeline không phải MIMD.">Lệnh</button>
+      <button class="btn" type="button" data-face="SIMD / nhiều nhân" data-say="Mức dữ liệu là SIMD. Mức tác vụ là nhiều chương trình trên nhiều nhân.">Dữ liệu, tác vụ</button>
+      <button class="btn" type="button" data-face="Amdahl" data-say="Phần không chia được cho nhiều bộ xử lý tính bằng định luật Amdahl ở mục công thức.">Phần tuần tự</button>
+    </div>
+    <p class="demo-say">Pipeline là mức lệnh trong một CPU. Cùng một lệnh trên nhiều dữ liệu là SIMD. Nhiều bộ xử lý, mỗi bộ một chương trình, là MIMD.</p>
+  </div>
+</section>
+
+<section class="sec" id="c4">
+  <h2><span class="num">04</span> Khối 8086 và thanh ghi</h2>
+    <div class="demo" id="demo-8086">
+    <p class="face">1 MiB</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="16 bit" data-say="Một lần ALU xử lý một từ hai byte.">Dữ liệu</button>
+      <button class="btn" type="button" data-face="2²⁰ = 1 MiB" data-say="20 bit chọn 2 mũ 20 byte.">Địa chỉ</button>
+      <button class="btn" type="button" data-face="song song" data-say="BIU tính địa chỉ và nạp trước byte lệnh. EU giải mã và thực hiện lệnh đang có trong hàng đợi.">BIU và EU</button>
+    </div>
+    <p class="demo-say">ALU xử lý 16 bit một lần. 20 bit địa chỉ chọn 1.048.576 byte, tức 1 MiB.</p>
+  </div>
+  <div class="formula">Địa chỉ vật lý 20 bit = (giá trị segment dịch trái 4 bit) + offset 16 bit</div>
+    <p>Nhân segment với 16, rồi cộng offset.</p>
+  <div class="demo" id="demo-seg">
+    <p class="demo-note">CS = 1A2Bh, IP = 0100h. Dịch trái bốn bit rồi cộng offset.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="seg-shift">Dịch trái 4 bit</button>
+      <button class="btn" type="button" id="seg-add">Cộng IP</button>
+    </div>
+    <p class="regs" id="seg-show">CS = 1A2Bh</p>
+    <p class="demo-say" id="seg-say">Dịch trái thêm một chữ số 0 bên phải.</p>
+  </div>
+    <div class="demo" id="demo-doan">
+    <p class="face">64 KiB</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="65.536 byte" data-say="Offset 16 bit đi được 2 mũ 16 byte.">Trong đoạn</button>
+      <button class="btn" type="button" data-face="cách 16 byte" data-say="Chân đoạn là bội của 16. Đoạn kế có thể bắt đầu chỉ cách 16 byte.">Chồng đoạn</button>
+      <button class="btn" type="button" data-face="nhiều cặp" data-say="Cùng một địa chỉ vật lý viết được bằng nhiều cặp segment:offset.">Nhiều cách viết</button>
+    </div>
+    <p class="demo-say">Một đoạn dài tối đa 64 KiB. Các đoạn có thể chồng nhau.</p>
+  </div>
+  <table>
+    <thead><tr><th>Thanh ghi</th><th>Việc nó giữ</th></tr></thead>
+    <tbody>
+      <tr><td>AX, gồm AH và AL</td><td>AH là byte cao, AL là byte thấp</td></tr>
+      <tr><td>BX</td><td>Thanh ghi cơ sở, được dùng trong địa chỉ nhớ</td></tr>
+      <tr><td>CX</td><td>Bộ đếm của <code>LOOP</code> và của các tiền tố lặp chuỗi</td></tr>
+      <tr><td>DX</td><td>Cổng vào–ra và nửa cao của tích</td></tr>
+      <tr><td>SI, DI</td><td>Chỉ số nguồn và đích</td></tr>
+      <tr><td>SP, BP</td><td>Đỉnh ngăn xếp và khung ngăn xếp. SS là đoạn ngăn xếp</td></tr>
+      <tr><td>CS, DS, ES, SS</td><td>Đoạn mã, dữ liệu, phụ và ngăn xếp. CS giữ đoạn chứa mã lệnh</td></tr>
+      <tr><td>IP</td><td>Offset của lệnh sắp lấy</td></tr>
+      <tr><td>FLAGS</td><td>CF, SF, OF là cờ kết quả; IF là cờ cho phép ngắt</td></tr>
+    </tbody>
+  </table>
+    <div class="demo" id="demo-reg">
+    <p class="face">AH = 12h</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="12h và 34h" data-say="Ghi AL làm đổi AX. Hàm DOS chọn việc bằng AH. Ký tự đọc về nằm ở AL.">AH, AL</button>
+      <button class="btn" type="button" data-face="tích 32 bit" data-say="Nhân hai số 16 bit: DX giữ nửa cao, AX giữ nửa thấp. Chia thì DX:AX là số bị chia.">DX:AX</button>
+      <button class="btn" type="button" data-face="lệnh kế" data-say="CS:IP là địa chỉ lệnh sắp lấy. DS đi với dữ liệu. SS đi với SP và BP.">CS:IP</button>
+      <button class="btn" type="button" data-face="PC của x86-64" data-say="Trên x86-64, thanh cùng vai trò với PC là RIP.">RIP</button>
+      <button class="btn" type="button" data-face="không phải kết quả" data-say="CF, SF, OF, ZF là cờ kết quả. IF cho phép ngắt.">IF</button>
+    </div>
+    <p class="demo-say">AX = 1234h thì AH = 12h và AL = 34h. Tích 32 bit nằm ở DX:AX.</p>
+  </div>
+</section>
+
+<section class="sec" id="cuphap">
+  <h2><span class="num">05</span> Dòng lệnh và khai báo</h2>
+    <div class="demo" id="demo-dong">
+    <p class="face">nhãn : lệnh</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="tên dòng" data-say="Nhãn là tên của dòng để JMP hoặc CALL còn chỗ trỏ tới.">Nhãn</button>
+      <button class="btn" type="button" data-face="MOV, ADD" data-say="Mnemonic sẽ thành mã máy.">Lệnh</button>
+      <button class="btn" type="button" data-face="sau mnemonic" data-say="Toán hạng đứng sau tên lệnh.">Toán hạng</button>
+      <button class="btn" type="button" data-face="bỏ qua" data-say="Assembler bỏ phần sau dấu chấm phẩy. CPU không chạy chữ chú thích.">Chấm phẩy</button>
+      <button class="btn" type="button" data-face="lời dặn" data-say="DB bảo assembler dành chỗ và ghi dữ liệu lúc dịch.">DB</button>
+    </div>
+    <p class="demo-say">Một dòng có bốn vị trí: nhãn, lệnh, toán hạng, chú thích. DB không phải lệnh của CPU.</p>
+  </div>
+  <pre><code>LAP:  ADD AX, CX    ; nhan, lenh, toan hang, chu thich
+S     DB  "PTIT", 0Dh, 0Ah, "$"
+N     DW  100 DUP(?)
+K     EQU 2</code></pre>
+    <p>$ là byte 24h. Hàm 09h dừng trước byte này.</p>
+  <table>
+    <thead><tr><th>Offset</th><th>0100h</th><th>0101h</th><th>0102h</th><th>0103h</th><th>0104h</th><th>0105h</th><th>0106h</th></tr></thead>
+    <tbody>
+      <tr><td>Nội dung</td><td>P</td><td>T</td><td>I</td><td>T</td><td>0Dh</td><td>0Ah</td><td>$</td></tr>
+    </tbody>
+  </table>
+  
+  
+    <p>EXE gán DS qua AX.</p>
+  <pre><code>MOV AX, @DATA
+MOV DS, AX</code></pre>
+    <div class="demo" id="demo-khai">
+    <p class="face">5450h</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="xuống dòng" data-say="Hai byte này về đầu dòng và xuống dòng. Chúng không kết thúc xâu.">0Dh, 0Ah</button>
+      <button class="btn" type="button" data-face="in tiếp" data-say="Thiếu dấu $, hàm 09h in tiếp cho đến khi gặp byte 24h.">Thiếu $</button>
+      <button class="btn" type="button" data-face="100 từ" data-say="DW lấy từng từ 16 bit. 100 DUP(?) là 200 byte và chưa ghi số ban đầu.">200 byte</button>
+      <button class="btn" type="button" data-face="không có ô" data-say="EQU không tạo ô nhớ. Muốn ô chứa 2 thì viết K DB 2.">EQU</button>
+      <button class="btn" type="button" data-face="cùng một đoạn" data-say="Tệp COM nạp với CS, DS, ES, SS trỏ cùng một đoạn.">COM</button>
+      <button class="btn" type="button" data-face="qua AX" data-say="EXE kiểu MODEL SMALL không chép thẳng hằng vào DS. MOV AX, @DATA rồi MOV DS, AX.">EXE</button>
+      <button class="btn" type="button" data-face="offset" data-say="LEA DX, S hoặc MOV DX, OFFSET S lấy offset. MOV AX, S đọc nội dung.">LEA</button>
+      <button class="btn" type="button" data-face="P rồi T" data-say="MOV DX, MSG của xâu PTIT đọc 5450h vì little endian. Hàm 09h cần offset.">5450h</button>
+    </div>
+    <p class="demo-say">N DW 100 DUP(?) chiếm 200 byte. MOV DX, MSG của PTIT đọc 5450h, không phải offset.</p>
+  </div>
+</section>
+
+<section class="sec" id="vet">
+  <h2><span class="num">06</span> Logic, nhảy và bốn vết</h2>
+    <div class="demo" id="demo-logic">
+    <p class="face">AND giữ bit 1</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="giữ hoặc xóa" data-say="Cột mặt nạ 1 thì giữ bit dữ liệu. Cột mặt nạ 0 thì xóa.">AND</button>
+      <button class="btn" type="button" data-face="bật 1" data-say="OR bật thành 1 mọi cột có mặt nạ bằng 1.">OR</button>
+      <button class="btn" type="button" data-face="đảo, hoặc xóa" data-say="XOR đảo bit ở cột mặt nạ bằng 1. XOR một thanh với chính nó ra 0 và xóa CF, OF.">XOR</button>
+      <button class="btn" type="button" data-face="không đụng cờ" data-say="NOT đảo mọi bit và không sửa cờ.">NOT</button>
+      <button class="btn" type="button" data-face="AND rồi bỏ" data-say="TEST lập cờ theo AND rồi bỏ kết quả. Toán hạng còn nguyên. JZ phía sau vẫn nhảy được.">TEST</button>
+    </div>
+    <p class="demo-say">AND giữ bit ở cột mặt nạ bằng 1. TEST làm AND để lập cờ rồi bỏ kết quả.</p>
+  </div>
+  <p>Ví dụ giữ nibble thấp của AL = B4h bằng mặt nạ 0Fh:</p>
+  <table>
+    <thead><tr><th></th><th>b7…b0</th><th>Hex</th></tr></thead>
+    <tbody>
+      <tr><td>AL</td><td>1011 0100</td><td>B4h</td></tr>
+      <tr><td>Mặt nạ</td><td>0000 1111</td><td>0Fh</td></tr>
+      <tr><td>AND</td><td>0000 0100</td><td>04h</td></tr>
+    </tbody>
+  </table>
+  
+  <div class="demo" id="demo-and">
+    <p class="demo-note">AL = 1011 0100. Mặt nạ = 0000 1111. AND làm từng cột.</p>
+    <p class="regs" id="and-show">Dữ liệu 10110100<br>Mặt nạ 00001111<br>Kết quả --------</p>
+    <div class="demo-bar"><button class="btn" type="button" id="and-next">Cột tiếp</button></div>
+    <p class="demo-say" id="and-say">Cột mặt nạ bằng 0 thì bit dữ liệu thành 0. Cột mặt nạ bằng 1 thì bit dữ liệu được giữ.</p>
+  </div>
+    <div class="demo" id="demo-shift">
+    <p class="face" id="shift-face">10110100</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="sh-shl">SHL / SAL</button>
+      <button class="btn" type="button" id="sh-shr">SHR</button>
+      <button class="btn" type="button" id="sh-sar">SAR</button>
+    </div>
+    <div class="board">
+      <button class="btn" type="button" data-say="ROL và ROR xoay trong thanh ghi, không điền 0.">ROL, ROR</button>
+      <button class="btn" type="button" data-say="RCL và RCR xoay qua CF.">RCL, RCR</button>
+    </div>
+    <p class="demo-say" id="shift-say">SHL và SAL cùng mã trên 8086. SHR điền 0. SAR điền bit dấu.</p>
+  </div>
+    <p>AL = B4h. Tám lần SHL, BX đếm các lần CF = 0.</p>
+  <pre><code>MOV CX, 8
+XOR BX, BX
+LAP: SHL AL, 1
+     JC  BO
+     INC BX
+BO:  LOOP LAP</code></pre>
+  <div class="demo" id="demo-zero">
+    <p class="face" id="zero-face">AL 10110100   BX = 0</p>
+    <div class="demo-bar"><button class="btn" type="button" id="zero-next">Dịch lần tiếp</button></div>
+    <p class="demo-say" id="zero-say">CF lần lượt 1, 0, 1, 1, 0, 1, 0, 0. BX kết thúc bằng 4. AL thành 0.</p>
+  </div>
+  <h3>Nhảy có dấu và không dấu</h3>
+    <div class="demo" id="demo-jdef">
+    <p class="face">FFh − 1</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="ZF = 1" data-say="Hai lệnh này chỉ nhìn ZF. Hai số bằng nhau thì hiệu bằng 0.">JE, JZ</button>
+      <button class="btn" type="button" data-face="CF = 0, ZF = 0" data-say="JA là lớn hơn theo không dấu.">JA</button>
+      <button class="btn" type="button" data-face="SF = OF, ZF = 0" data-say="JG là lớn hơn theo có dấu.">JG</button>
+      <button class="btn" type="button" data-face="255 hay −1" data-say="AL = FFh so với 1. Hiệu FEh. CF = 0, ZF = 0, SF = 1, OF = 0. JA nhảy, JG đứng. AL vẫn FFh.">Mẫu FFh</button>
+    </div>
+    <p class="demo-say">CMP lập cờ rồi bỏ hiệu. JA nhìn không dấu. JG nhìn có dấu.</p>
+  </div>
+  <div class="demo" id="demo-jcc">
+    <p class="demo-note">AL = FFh vừa so với 1. Không dấu là 255. Có dấu là −1.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="jcc-ja">JA</button>
+      <button class="btn" type="button" id="jcc-jg">JG</button>
+    </div>
+    <p class="demo-say" id="jcc-say">JA nhìn số không dấu. JG nhìn số có dấu.</p>
+  </div>
+  <h3>Vết 1 — LOOP cộng dồn</h3>
+  
+  <pre><code>MOV CX, 5
+MOV AX, 0
+LAP: ADD AX, CX
+     LOOP LAP</code></pre>
+  <div class="demo" id="demo-loop">
+    <p class="face">n(n+1)/2</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="loop-next">Dòng tiếp</button>
+      <button class="btn" type="button" data-face="65.536 vòng" data-say="CX = 0 ngay trước LOOP thành FFFFh. Vòng chạy 65536 lần. LOOP không đọc cờ.">CX = 0</button>
+      <button class="btn" type="button" data-face="28" data-say="n = 7 thì AX = 28. ADD thấy CX trước khi LOOP giảm. n = 5 thì AX = 15.">n = 7</button>
+    </div>
+    <p class="demo-say" id="loop-say">LOOP giảm CX rồi nhảy nếu CX khác 0. AX = n(n+1)/2.</p>
+  </div>
+  <table id="trace-loop">
+    <thead><tr><th>Sau lệnh</th><th>AX</th><th>CX</th><th>Việc vừa xảy ra</th></tr></thead>
+    <tbody>
+      <tr><td><code>MOV CX, 5</code> / <code>MOV AX, 0</code></td><td>0000h</td><td>0005h</td><td>Khởi tạo</td></tr>
+      <tr><td><code>ADD</code> rồi <code>LOOP</code></td><td>0005h</td><td>0004h</td><td>Cộng 5, còn quay lại</td></tr>
+      <tr><td><code>ADD</code> rồi <code>LOOP</code></td><td>0009h</td><td>0003h</td><td>Cộng 4</td></tr>
+      <tr><td><code>ADD</code> rồi <code>LOOP</code></td><td>000Ch</td><td>0002h</td><td>Cộng 3</td></tr>
+      <tr><td><code>ADD</code> rồi <code>LOOP</code></td><td>000Eh</td><td>0001h</td><td>Cộng 2</td></tr>
+      <tr><td><code>ADD</code> rồi <code>LOOP</code></td><td>000Fh</td><td>0000h</td><td>Cộng 1, CX = 0 thì dừng</td></tr>
+    </tbody>
+  </table>
+  
+  <h3>Vết 2 — CMP / JLE</h3>
+  <pre><code>MOV AX, 0
+MOV CX, 3
+LAP: ADD AX, CX
+     INC CX
+     CMP CX, 6
+     JLE LAP</code></pre>
+  <div class="demo">
+    <div class="demo-bar"><button class="btn" type="button" id="jle-next">Lần tiếp</button></div>
+    <p class="demo-say" id="jle-say">Vòng cộng từ 3 đến 6. Số 6 vẫn được cộng vì INC đứng sau ADD.</p>
+  </div>
+  <table id="trace-jle">
+    <thead><tr><th>Lần</th><th>CX lúc cộng</th><th>AX sau ADD</th><th>CX sau INC</th><th>JLE</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>3</td><td>3</td><td>4</td><td>4 ≤ 6, nhảy</td></tr>
+      <tr><td>2</td><td>4</td><td>7</td><td>5</td><td>nhảy</td></tr>
+      <tr><td>3</td><td>5</td><td>12</td><td>6</td><td>6 ≤ 6, nhảy</td></tr>
+      <tr><td>4</td><td>6</td><td>18</td><td>7</td><td>7 ≤ 6, rơi xuống</td></tr>
+    </tbody>
+  </table>
+  
+  <h3>Vết 3 — XOR mặt nạ</h3>
+  <pre><code>MOV AX, 3C3Ch
+MOV BX, 0F0Fh
+XOR AX, BX</code></pre>
+    <div class="demo" id="demo-xor">
+    <p class="face">3333h</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="AX = 3333h" data-say="3C XOR 0F bằng 33. AX = 3333h. BX vẫn 0F0Fh.">XOR</button>
+      <button class="btn" type="button" data-face="CF = 0, OF = 0" data-say="XOR xóa CF và OF. ZF = 0. SF = 0. Byte 33h có bốn bit 1 nên PF = 1.">Cờ</button>
+      <button class="btn" type="button" data-face="AX = 0320h" data-say="AL = 200 = C8h, BL = 4. 200×4 = 800 = 0320h. AH = 03h, AL = 20h.">MUL byte</button>
+      <button class="btn" type="button" data-face="AL = 04h" data-say="AL = B4h AND 0Fh cho 04h. Mặt nạ 0Fh giữ nibble thấp.">AND B4h</button>
+    </div>
+    <p class="demo-say">XOR AX, BX ghi AX. MUL byte ghi tích 16 bit vào cả AX.</p>
+  </div>
+  <h3>Vết 4 — SUB, CMP, JG, NEG</h3>
+  <pre><code>MOV AX, 8
+MOV BX, 20
+SUB AX, BX
+CMP AX, 0
+JG  DUONG
+NEG AX
+JMP TIEP
+DUONG: ADD AX, 5
+       JMP XONG
+TIEP:  ADD AX, 30
+XONG:</code></pre>
+    <div class="demo" id="demo-t4">
+    <p class="face" id="t4-face">AX = 8</p>
+    <div class="demo-bar"><button class="btn" type="button" id="t4-next">Bước tiếp</button></div>
+    <p class="demo-say" id="t4-say">8 trừ 20. JG không vào DUONG. NEG rồi cộng 30.</p>
+  </div>
+</section>
+
+<section class="sec" id="ngat">
+  <h2><span class="num">07</span> Ngắt 21h</h2>
+    <p>INT 21h gọi DOS. Số trong AH chọn việc.</p>
+  <table>
+    <thead><tr><th>AH</th><th>Việc</th><th>Thanh ghi đi kèm</th></tr></thead>
+    <tbody>
+      <tr><td>01h</td><td>Đọc một ký tự từ bàn phím, có hiện lại</td><td>Ký tự vào AL</td></tr>
+      <tr><td>02h</td><td>In một ký tự</td><td>Mã ASCII đặt ở DL trước khi gọi</td></tr>
+      <tr><td>09h</td><td>In một xâu</td><td>DX = offset xâu trong DS; xâu kết thúc bằng <code>$</code>, dấu này không được in</td></tr>
+      <tr><td>4Ch</td><td>Kết thúc chương trình</td><td>AL là mã trả về. Cách viết gọn: <code>MOV AX, 4C00h</code></td></tr>
+    </tbody>
+  </table>
+  <div class="demo" id="demo-int">
+    <p class="demo-note">INT 21h làm việc nào là do số đang nằm trong AH.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-int="01">AH = 01h</button>
+      <button class="btn" type="button" data-int="02">AH = 02h</button>
+      <button class="btn" type="button" data-int="09">AH = 09h</button>
+      <button class="btn" type="button" data-int="4C">AH = 4Ch</button>
+    </div>
+    <p class="demo-say" id="int-say">AH chọn hàm. AL, DL và DX là chỗ đặt ký tự hoặc địa chỉ xâu.</p>
+  </div>
+  <pre><code>LEA DX, BUFFER
+MOV AH, 09h
+INT 21h</code></pre>
+  
+  <table>
+    <thead><tr><th>Sau dòng</th><th>AH</th><th>DX</th><th>Ý nghĩa</th></tr></thead>
+    <tbody>
+      <tr><td><code>LEA DX, BUFFER</code></td><td>chưa đổi</td><td>offset của BUFFER</td><td>DX giữ địa chỉ, không giữ các chữ của xâu</td></tr>
+      <tr><td><code>MOV AH, 09h</code></td><td>09h</td><td>giữ nguyên</td><td>Chọn hàm in xâu. AL không tham gia việc chọn hàm</td></tr>
+      <tr><td><code>INT 21h</code></td><td>09h</td><td>giữ nguyên</td><td>DOS đọc DS:DX cho đến trước dấu $ rồi hiện lên màn hình</td></tr>
+    </tbody>
+  </table>
+  
+    <p>Enter, mã 0Dh, bị so trước khi tăng CX nên không được đếm.</p>
+  <pre><code>MOV CX, 0
+MOV AH, 01h
+DOC: INT 21h
+     CMP AL, 0Dh
+     JE  XONG
+     INC CX
+     JMP DOC
+XONG:</code></pre>
+  
+  <div class="demo" id="demo-ascii">
+    <p class="demo-note">Mã 45 là một ký tự. Mã của chữ số 4 là 34h, tức 52.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="asc-45">DL = 45</button>
+      <button class="btn" type="button" id="asc-34">DL = 34h</button>
+      <button class="btn" type="button" data-face="34h = chữ 4" data-say="In số 45 thì in chữ 4 rồi chữ 5. Mỗi chữ số cộng 30h. 34h là chữ số 4.">Cộng 30h</button>
+    </div>
+    <p class="screen" id="asc-show"> </p>
+    <p class="demo-say" id="asc-say">Hàm 02h in đúng một ký tự có mã đang nằm trong DL.</p>
+  </div>
+    <div class="demo" id="demo-bios">
+    <p class="face">byte 0 = max</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="3 phần" data-say="Byte 0 là số ký tự tối đa, kể cả Enter. Byte 1 để 0; DOS ghi số ký tự đã gõ, không tính Enter. Từ byte 2 là các chữ.">0Ah</button>
+      <button class="btn" type="button" data-face="nhầm hàm" data-say="INT 21h làm đúng hàm đang nằm trong AH. EXE chưa gán DS thì DX trỏ nhầm đoạn.">Quên AH</button>
+      <button class="btn" type="button" data-face="AL = FFh" data-say="AL = FFh nếu có phím đang chờ, AL = 00h nếu không. Phím vẫn nằm trong bộ đệm.">0Bh</button>
+      <button class="btn" type="button" data-face="AH = 0Eh" data-say="Ngắt BIOS. Hàm 0Eh in ký tự đang ở AL và đi tiếp con trỏ. Xâu không cần dấu $.">INT 10h</button>
+    </div>
+    <p class="demo-say">Hàm 0Ah: DX trỏ byte sức chứa. Hàm 0Bh chỉ báo có phím, không lấy phím ra. INT 10h hàm 0Eh in ký tự trong AL, không cần dấu $.</p>
+  </div>
+</section>
+
+<section class="sec" id="call">
+  <h2><span class="num">08</span> Ngăn xếp, thủ tục và macro</h2>
+    <p>PUSH giảm SP đi 2. POP tăng SP lên 2. Từ đẩy sau được lấy trước.</p>
+  <div class="demo" id="demo-stack">
+    <p class="demo-note">Đĩa đặt sau nằm trên. Lấy ra theo thứ tự ngược với lúc đẩy.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" id="stk-push">Đẩy AX, BX, CX</button>
+      <button class="btn" type="button" id="stk-pop">Lấy ra</button>
+    </div>
+    <div class="stk-wrap">
+      <div class="pile" id="pile"></div>
+      <p class="regs" id="stk-regs">AX = 1111h<br>BX = 2222h<br>CX = 3333h</p>
+    </div>
+    <p class="demo-say" id="stk-say">Ngăn xếp đang trống. SP sẽ giảm 2 mỗi lần đẩy một từ.</p>
+  </div>
+    <p>CALL gần đẩy IP của lệnh kế rồi mới ghi IP. JMP không đẩy.</p>
+  <div class="demo" id="demo-call">
+    <p class="demo-note">Lệnh kế sau lời gọi nằm ở 0106h. Thủ tục nằm ở 0200h.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-call="jmp">JMP 0200h</button>
+      <button class="btn" type="button" data-call="call">CALL 0200h</button>
+      <button class="btn" type="button" data-call="ret">RET</button>
+    </div>
+    <p class="regs" id="call-show">IP = 0103h · ngăn xếp trống</p>
+    <p class="demo-say" id="call-say">JMP đổi IP. CALL đổi IP và còn cất địa chỉ của lệnh kế.</p>
+  </div>
+    <div class="demo" id="demo-proc">
+    <p class="face">NEAR = IP</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="chỉ IP" data-say="Thủ tục NEAR nằm cùng đoạn. Địa chỉ trở về chỉ là IP.">NEAR</button>
+      <button class="btn" type="button" data-face="CS và IP" data-say="FAR có thể nằm ở đoạn khác. CALL xa đẩy cả CS lẫn IP. RET xa lấy lại cả hai.">FAR</button>
+      <button class="btn" type="button" data-face="RET lấy nhầm" data-say="Một PUSH chưa có POP thì RET lấy chính số đó làm địa chỉ.">Quên POP</button>
+      <button class="btn" type="button" data-face="trước CALL" data-say="Bên gọi ghi tham số vào AX hoặc BX. Thủ tục đọc đúng thanh đó. Kết quả thường trả ở AX.">Thanh ghi</button>
+      <button class="btn" type="button" data-face="địa chỉ ở đỉnh" data-say="PUSH tham số trước CALL. Ngay sau CALL, đỉnh là địa chỉ trở về, tham số nằm bên dưới. Đọc bằng BP, không POP địa chỉ đó.">Stack</button>
+      <button class="btn" type="button" data-face="trừ AX" data-say="Thanh dùng tạm thì đẩy lúc vào và lấy ra trước RET.">Giữ thanh</button>
+      <button class="btn" type="button" data-face="chèn chữ" data-say="Assembler chép macro vào chỗ gọi. Không có CALL, không có địa chỉ trở về. Dùng nhiều lần thì mã dài ra. Thanh nào macro dùng thì bị sửa tại chỗ chèn.">Macro</button>
+    </div>
+    <p class="demo-say">NEAR chỉ cất IP. FAR cất CS và IP. Macro chèn chữ lúc dịch, không có CALL.</p>
+  </div>
+</section>
+
+<section class="sec" id="dk">
+  <h2><span class="num">09</span> Sáu cấu trúc điều khiển</h2>
+    <p>8086 không có chữ if. Mỗi cấu trúc là CMP, một lệnh nhảy, và đôi khi một JMP để khỏi rơi sang nhánh bên.</p>
+  <div class="demo" id="demo-dk">
+    <p class="demo-note">Mỗi cấu trúc là một cách đặt CMP và lệnh nhảy.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-dk="if">IF</button>
+      <button class="btn" type="button" data-dk="else">IF-ELSE</button>
+      <button class="btn" type="button" data-dk="sw">SWITCH</button>
+      <button class="btn" type="button" data-dk="for">FOR</button>
+      <button class="btn" type="button" data-dk="while">WHILE</button>
+      <button class="btn" type="button" data-dk="do">DO-WHILE</button>
+    </div>
+    <p class="demo-say" id="dk-say">JLE nhảy qua lệnh cần bảo vệ. JMP ra khỏi nhánh then để khỏi rơi vào else.</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="SF, OF, ZF" data-say="JG và JLE là so sánh có dấu.">Có dấu</button>
+      <button class="btn" type="button" data-face="CF, ZF" data-say="JA và JBE là so sánh không dấu.">Không dấu</button>
+      <button class="btn" type="button" data-face="AX = BX thì sang else" data-say="Điều kiện lớn hơn nghiêm ngặt. AX bằng BX thì JLE vẫn nhảy.">Bằng nhau</button>
+      <button class="btn" type="button" data-face="31h" data-say="Ký tự 1 có mã 31h, không phải số 1. JE chỉ cần ZF.">Mã của chữ 1</button>
+      <button class="btn" type="button" data-face="65.536 lần" data-say="CX = 0 ngay trước LOOP thì CX thành FFFFh. Không viết while bằng mỗi lệnh LOOP khi CX có thể bắt đầu từ 0.">CX = 0</button>
+      <button class="btn" type="button" data-face="CF không đổi" data-say="DEC không sửa CF. Vòng mẫu này không đọc CF.">DEC</button>
+      <button class="btn" type="button" data-face="0 lần / 1 lần" data-say="WHILE với BX = 0 không chạy thân. DO-WHILE với BX = 0 vẫn cộng một lần.">BX = 0</button>
+    </div>
+  </div>
+  <h3>IF, không có nhánh else</h3>
+  <p>Chỉ cộng khi AX &gt; 0. So sánh có dấu.</p>
+  <pre><code>    CMP AX, 0
+    JLE BOQUA
+    ADD BX, AX
+BOQUA:</code></pre>
+  
+  <h3>IF-ELSE</h3>
+  <p>CX = 1 khi AX &gt; BX, so sánh có dấu. Mỗi nhánh có một JMP ra ngoài.</p>
+  <pre><code>    CMP AX, BX
+    JLE NHO
+    MOV CX, 1
+    JMP XONG
+NHO:
+    MOV CX, 0
+XONG:</code></pre>
+  
+  <h3>SWITCH</h3>
+  <p>Ba nhánh theo ký tự trong AL. Mỗi nhánh JMP tới XONG.</p>
+  <pre><code>    CMP AL, '1'
+    JE  MOT
+    CMP AL, '2'
+    JE  HAI
+    JMP KHAC
+MOT:
+    MOV BL, 1
+    JMP XONG
+HAI:
+    MOV BL, 2
+    JMP XONG
+KHAC:
+    MOV BL, 0
+XONG:</code></pre>
+  
+  <h3>FOR, lặp đủ một số lần đã biết</h3>
+  <p>CX đếm ngược. LOOP giảm CX rồi quay lại nếu CX khác 0.</p>
+  <pre><code>    MOV CX, 4
+    MOV AX, 0
+LAP:
+    ADD AX, CX
+    LOOP LAP</code></pre>
+  
+  <h3>WHILE, kiểm tra trước khi vào thân</h3>
+  <p>BX = 0 thì thân không chạy.</p>
+  <pre><code>LAP:
+    CMP BX, 0
+    JLE XONG
+    ADD AX, 2
+    DEC BX
+    JMP LAP
+XONG:</code></pre>
+  
+  <h3>DO-WHILE, thân chạy rồi mới xét</h3>
+  <p>Thân chạy một lần rồi mới CMP. BX = 0 vẫn bị cộng một lần.</p>
+  <pre><code>LAP:
+    ADD AX, 2
+    DEC BX
+    CMP BX, 0
+    JG  LAP</code></pre>
+  
+</section>
+
+<section class="sec" id="nho">
+  <h2><span class="num">10</span> Bộ nhớ và cache</h2>
+  <p>Buổi 9 giảng cache. Hai hình dưới tính số đường địa chỉ, hit, miss và ba cách đặt khối.</p>
+  <figure class="anh">
+    <img src="hinh/hinh-08.jpg" alt="Bộ nhớ như mảng các từ, đường địa chỉ, đơn vị nhớ 8 bit và bảng số đường địa chỉ theo số từ">
+    <figcaption>Hình 08. Bộ nhớ là mảng các từ. n đường địa chỉ chọn được 2 mũ n vị trí.</figcaption>
+  </figure>
+    <div class="demo" id="demo-nline">
+    <p class="face">2ⁿ ô</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="4 đường" data-say="2 mũ 4 = 16.">16 ô</button>
+      <button class="btn" type="button" data-face="8 đường" data-say="2 mũ 8 = 256.">256 ô</button>
+      <button class="btn" type="button" data-face="10 đường" data-say="2 mũ 10 = 1024.">1024 ô</button>
+      <button class="btn" type="button" data-face="12 đường" data-say="2 mũ 12 = 4096.">4096 ô</button>
+      <button class="btn" type="button" data-face="không quyết số ô" data-say="8086 chuyển 16 bit một lần. Số ô vẫn do 20 đường địa chỉ quyết định.">Bus dữ liệu</button>
+      <button class="btn" type="button" data-face="quy ước của hình" data-say="Trên sơ đồ này RD = 0 và WR = 1 là đang đọc. Sơ đồ khác có thể đảo mức. Lúc đọc, dữ liệu đi từ nhớ ra bus.">RD, WR</button>
+      <button class="btn" type="button" data-face="không làm tươi" data-say="SRAM không cần làm tươi. Cache thường là SRAM.">SRAM</button>
+      <button class="btn" type="button" data-face="phải làm tươi" data-say="DRAM phải làm tươi. RAM chính của máy đa dụng thường là DRAM. ROM còn khi mất điện.">DRAM</button>
+    </div>
+    <p class="demo-say">n đường địa chỉ chọn 2 mũ n ô. 8086 có 20 đường, mỗi ô một byte, ra 1 MiB.</p>
+  </div>
+  <figure class="anh">
+    <img src="hinh/hinh-09.jpg" alt="Cache hit và miss, ba cách ánh xạ, tháp phân cấp bộ nhớ từ thanh ghi xuống đĩa">
+    <figcaption>Hình 09. Cache và tháp nhớ. Hit là có sẵn trong cache. Miss thì phải lấy khối từ bộ nhớ chính.</figcaption>
+  </figure>
+    <p>Hit là khối đã nằm trong cache. Làm theo đúng công thức đang in trong bài.</p>
+  <div class="demo" id="demo-cache">
+    <p class="demo-note">Hit time 2 ns. Miss rate 5%. Miss penalty 100 ns.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-cache="hit">Hit</button>
+      <button class="btn" type="button" data-cache="miss">Miss</button>
+      <button class="btn" type="button" data-cache="f9">Công thức hình 09</button>
+      <button class="btn" type="button" data-cache="f16">Công thức hình 16</button>
+    </div>
+    <p class="demo-say" id="cache-say">Hình 09: 0,95×2 + 0,05×100 = 6,9 ns. Hình 16: 2 + 0,05×100 = 7 ns.</p>
+  </div>
+    <div class="demo" id="demo-map">
+    <p class="face">tag + index + offset</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="một line" data-say="Mỗi khối chỉ vào đúng một line. Line = số khối mod số line.">Trực tiếp</button>
+      <button class="btn" type="button" data-face="so mọi tag" data-say="Khối vào bất kỳ line nào, nên phải so tag của mọi line.">Toàn phần</button>
+      <button class="btn" type="button" data-face="đúng một set" data-say="Khối vào đúng một set, rồi chọn line trong set đó.">Tập hợp</button>
+      <button class="btn" type="button" data-face="cộng đủ bit địa chỉ" data-say="Tag nói khối nào. Index nói line hoặc set. Offset nói byte trong khối.">Ba trường</button>
+      <button class="btn" type="button" data-face="thanh ghi xuống đĩa" data-say="Thanh ghi, L1, L2, L3, DRAM, rồi đĩa hoặc SSD. Lên đỉnh thì nhanh hơn và nhỏ hơn.">Tháp nhớ</button>
+      <button class="btn" type="button" data-face="chỉ giảm thời gian" data-say="Thêm cache để giảm thời gian truy cập trung bình. Dung lượng bộ nhớ chính không tăng.">Không tăng RAM</button>
+    </div>
+    <p class="demo-say">Trực tiếp: line = số khối chia dư cho số line. Cache không làm tăng dung lượng DRAM.</p>
+  </div>
+</section>
+
+<section class="sec" id="iora">
+  <h2><span class="num">11</span> Tổ chức vào–ra</h2>
+  <figure class="anh">
+    <img src="hinh/hinh-10.jpg" alt="Ba cách truyền vào-ra: programmed I/O, ngắt, DMA, và so sánh memory-mapped với isolated I/O">
+    <figcaption>Hình 10. Vào–ra. 8086 dùng IN và OUT, tức không gian địa chỉ vào–ra riêng.</figcaption>
+  </figure>
+    <div class="demo" id="demo-iface">
+    <p class="face">data, status, control</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="dữ liệu, trạng thái, điều khiển" data-say="CPU ghi lệnh vào thanh điều khiển, đọc cờ sẵn sàng ở thanh trạng thái, chuyển số qua thanh dữ liệu.">Ba thanh ghi</button>
+      <button class="btn" type="button" data-face="yêu cầu / xác nhận" data-say="Hai bên chỉ chuyển số khi cả hai đã thấy dữ liệu trên đường ổn định.">Bắt tay</button>
+    </div>
+    <p class="demo-say">Giữa thiết bị và CPU là mạch giao tiếp, với thanh ghi dữ liệu, trạng thái và điều khiển.</p>
+  </div>
+  <div class="demo" id="demo-io">
+    <p class="demo-note">Ba cách đưa một khối dữ liệu giữa thiết bị và bộ nhớ.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-io="poll">CPU hỏi vòng</button>
+      <button class="btn" type="button" data-io="int">Thiết bị ngắt</button>
+      <button class="btn" type="button" data-io="dma">DMA</button>
+    </div>
+    <p class="demo-say" id="io-say">Hỏi vòng thì CPU bận suốt lúc chờ. Ngắt thì CPU làm việc khác. DMA chuyển cả khối, CPU không chuyển từng byte.</p>
+  </div>
+    <div class="demo" id="demo-iomap">
+    <p class="face">cổng 60h</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="chung địa chỉ" data-say="Thanh ghi thiết bị nằm chung không gian với bộ nhớ. Lệnh đọc ghi nhớ cũng là lệnh vào–ra.">Ánh xạ nhớ</button>
+      <button class="btn" type="button" data-face="IN, OUT" data-say="Không gian địa chỉ riêng và lệnh riêng. MOV nói với bộ nhớ. IN và OUT nói với cổng.">Cổng riêng</button>
+    </div>
+    <p class="demo-say">8086 dùng IN và OUT. IN AL, 60h đọc cổng 60h, không phải ô nhớ 60h.</p>
+  </div>
+</section>
+
+<section class="sec" id="bus">
+  <h2><span class="num">12</span> Bus hệ thống</h2>
+  <figure class="anh">
+    <img src="hinh/hinh-12.jpg" alt="Bus dữ liệu, bus địa chỉ, bus điều khiển, ví dụ đọc bộ nhớ năm bước và các kiểu bus">
+    <figcaption>Hình 12. Ba bus. Hai mươi đường địa chỉ, mỗi vị trí một byte, cho 1 MiB.</figcaption>
+  </figure>
+    <p>20 đường địa chỉ chọn 1 MiB. 16 đường dữ liệu chuyển hai byte mỗi lần.</p>
+  <div class="demo" id="demo-bus">
+    <p class="demo-note">8086 có 20 đường địa chỉ và 16 đường dữ liệu.</p>
+    <div class="demo-bar">
+      <button class="btn" type="button" data-bus="addr">Bus địa chỉ</button>
+      <button class="btn" type="button" data-bus="data">Bus dữ liệu</button>
+      <button class="btn" type="button" data-bus="ctrl">Bus điều khiển</button>
+    </div>
+    <p class="demo-say" id="bus-say">Địa chỉ chọn ô nào. Dữ liệu mang nội dung ô đó. Điều khiển nói đang đọc hay đang ghi.</p>
+  </div>
+    <div class="demo" id="demo-bstep">
+    <p class="face">địa chỉ, rồi Read</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="địa chỉ trước" data-say="Địa chỉ ổn định trước khi dữ liệu được lấy. Bus điều khiển mang Read, Write, chọn chip, ngắt và đồng hồ.">Năm bước</button>
+      <button class="btn" type="button" data-face="cấp quyền" data-say="Khi DMA và CPU cùng cần bus, mạch phân xử cấp quyền cho một bên.">Phân xử</button>
+      <button class="btn" type="button" data-face="một đường" data-say="Lệnh và dữ liệu đi chung. Trong một nhịp không vừa lấy lệnh vừa đọc dữ liệu.">Single bus</button>
+      <button class="btn" type="button" data-face="nhớ riêng, vào–ra riêng" data-say="Đường bộ nhớ và đường vào–ra tách nhau.">Tách bus</button>
+      <button class="btn" type="button" data-face="nhanh gần CPU" data-say="Bus nhanh gần CPU, bus chậm ra phía thiết bị.">Phân cấp</button>
+      <button class="btn" type="button" data-face="từng cặp một đường" data-say="Từng cặp khối có đường riêng.">Point-to-point</button>
+    </div>
+    <p class="demo-say">Đọc: đặt địa chỉ, bật Read, nhớ đưa dữ liệu, CPU lấy, tắt Read. Một bus dùng chung là nút thắt von Neumann.</p>
+  </div>
+</section>
+
+<section class="sec" id="congthuc">
+  <h2><span class="num">13</span> Các bài tính in trên hình</h2>
+  <figure class="anh">
+    <img src="hinh/hinh-16.jpg" alt="Tờ công thức: thời gian CPU, MIPS, Amdahl, AMAT, ánh xạ cache, trang ảo, băng thông bus và CPI trung bình">
+    <figcaption>Hình 16. Tờ công thức. Mỗi ô là một dạng bài. Công thức cache phải đọc đúng đề cho.</figcaption>
+  </figure>
+    <div class="demo" id="demo-sheet">
+    <p class="face">1 s</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="1 s" data-say="IC = 10⁹, CPI = 2, f = 2 GHz. T = 1 giây. MIPS = 1000 theo cả hai cách.">1 giây</button>
+      <button class="btn" type="button" data-face="2,5" data-say="P = 0,8 và N = 4. Mẫu số = 0,2 + 0,2 = 0,4. S = 2,5. N rất lớn thì S tiến tới 5.">Amdahl</button>
+      <button class="btn" type="button" data-face="1,4" data-say="40% lệnh CPI = 2 và 60% lệnh CPI = 1. 0,4×2 + 0,6×1 = 1,4.">CPI 1,4</button>
+      <button class="btn" type="button" data-face="800×10⁶ byte/s" data-say="Bus 64 bit ở 100 MHz, mỗi nhịp một lần: 8 byte × 10⁸. Hình lấy mega là 10⁶. Một lần chuyển mất nhiều nhịp thì nhân thêm số nhịp đó.">800 MB/s</button>
+      <button class="btn" type="button" data-face="trực tiếp" data-say="Cache 32 KB, khối 64 byte, 512 line. Offset 6, index 9, tag 17. Chỉ đúng ánh xạ trực tiếp.">17 + 9 + 6</button>
+      <button class="btn" type="button" data-face="tag 18" data-say="Cùng kích thước, tập hợp hai đường: 256 set, index 8 bit, tag 18 bit.">Hai đường</button>
+      <button class="btn" type="button" data-face="30 mod 16" data-say="Địa chỉ word 120, mỗi khối 4 word, 16 line. Khối 30. Line = 14. Hit khi tag khớp và valid = 1.">Line 14</button>
+      <button class="btn" type="button" data-face="offset 345h" data-say="Trang 4 KB nên 12 bit thấp là offset. Địa chỉ 12345h có số trang 12h và offset 345h.">Trang 12h</button>
+    </div>
+    <p class="demo-say">T = IC × CPI / f. Amdahl và pipeline là hai công thức tăng tốc khác nhau. Câu cache dùng tag, index, offset. Câu trang dùng số trang và offset trong trang.</p>
+  </div>
+</section>
+
+<section class="sec" id="onhinh">
+  <h2><span class="num">14</span> Tờ ôn mười lăm ô</h2>
+  <figure class="anh">
+    <img src="hinh/hinh-17.jpg" alt="Tờ ôn mười câu ngắn và mười lăm ô tóm tắt từ kiến trúc máy tính đến các đơn vị thường gặp">
+    <figcaption>Hình 17. Tờ ôn. Đọc cùng các mục phía trên. Vài ô gom chế độ địa chỉ ngắn hơn bài giảng.</figcaption>
+  </figure>
+    <div class="demo" id="demo-on">
+    <p class="face">thiếu cơ sở–chỉ số</p>
+    <div class="board">
+      <button class="btn" type="button" data-face="còn [BX+DI]" data-say="Tờ chỉ ghi cơ sở kèm độ dời. 8086 còn có dòng chứa cả BX lẫn SI hoặc DI.">Địa chỉ</button>
+      <button class="btn" type="button" data-face="thông lượng" data-say="Thông lượng tăng. Thời gian một lệnh không bị chia cho số giai đoạn.">Pipeline</button>
+      <button class="btn" type="button" data-face="CISC" data-say="Ô RISC/CISC gọi tên cấu trúc. x86 vẫn là CISC ở mức tập lệnh.">x86</button>
+      <button class="btn" type="button" data-face="7 ns và 6,9 ns" data-say="Một ô cộng miss penalty sau hit time. Ô kia lấy trung bình có trọng số. Làm theo công thức bài đang viết.">Hai AMAT</button>
+      <button class="btn" type="button" data-face="lâu chưa dùng" data-say="Khi cache đầy, một cách chọn khối bị đẩy là khối lâu rồi chưa được dùng.">LRU</button>
+      <button class="btn" type="button" data-face="trang, bảng trang" data-say="Chương trình thấy không gian lớn hơn DRAM đang lắp. Câu này không trả lời bằng tag của cache.">Bộ nhớ ảo</button>
+    </div>
+    <p class="demo-say">Ô địa chỉ trên tờ thiếu cơ sở–chỉ số. x86 vẫn là CISC ở mức tập lệnh. Hai công thức cache cho 7 ns và 6,9 ns.</p>
+  </div>
+</section>
+
+<section class="sec" id="trenlop">
+  <h2><span class="num">15</span> Bài tập trên lớp</h2>
+  <p>Sáu bài dùng chung một bộ số cho cả phòng. Viết vào phiếu Word. Lời giải để đóng trong lúc làm; mở từng bài sau khi đã có kết quả trên giấy, hoặc bấm Hiện lời giải khi chữa chung.</p>
+  <p class="files"><a href="BAI-TAP-TREN-LOP-BUOI-08.docx">Phiếu bài tập trên lớp (Word)</a></p>
+  <h3>TL1. Endian và bù hai</h3>
+  <p>Từ 5A3Ch ghi tại 1000h trên 8086. Byte tại 1000h và tại 1001h là gì? Mẫu 8 bit 11100110, đọc theo bù hai, bằng bao nhiêu? Cùng mẫu đó đọc không dấu bằng bao nhiêu?</p>
+  <details class="lg">
+    <summary>Lời giải TL1</summary>
+    <p>8086 là little endian: byte trọng số thấp ở địa chỉ thấp. 5A3Ch tách thành byte thấp 3Ch và byte cao 5Ah. Ô 1000h giữ 3Ch, ô 1001h giữ 5Ah.</p>
+    <p>11100110b không dấu = 128 + 64 + 32 + 4 + 2 = 230. Bit dấu bằng 1 nên giá trị bù hai = 230 − 256 = −26. Kiểm tra bằng đảo bit: đảo 11100110 được 00011001 = 25, cộng 1 được 26, vậy mẫu là −26.</p>
+  </details>
+  <h3>TL2. CPI, thời gian, MIPS</h3>
+  <p>f = 2 GHz, IC = 4×10<sup>6</sup>. 50% chỉ thị CPI = 1, 30% CPI = 2, 20% CPI = 5. Tính CPI, thời gian CPU theo ms, và MIPS.</p>
+  <details class="lg">
+    <summary>Lời giải TL2</summary>
+    <p>CPI = 0,50×1 + 0,30×2 + 0,20×5 = 0,5 + 0,6 + 1,0 = 2,1.</p>
+    <p>T = IC × CPI / f = 4×10<sup>6</sup> × 2,1 / (2×10<sup>9</sup>) = 4,2×10<sup>−3</sup> s = 4,2 ms.</p>
+    <p>MIPS = f / (CPI × 10<sup>6</sup>) = 2×10<sup>9</sup> / (2,1×10<sup>6</sup>) = 2000 / 2,1 = 952,4.</p>
+  </details>
+  <h3>TL3. Chế độ địa chỉ</h3>
+  <p>BX = 1500h, DI = 0020h. Gọi tên chế độ và ghi offset của toán hạng nguồn: <code>MOV AX, [BX]</code>; <code>MOV AX, [BX+6]</code>; <code>MOV AX, [DI+6]</code>; <code>MOV AX, [BX+DI+6]</code>.</p>
+  <details class="lg">
+    <summary>Lời giải TL3</summary>
+    <p><code>[BX]</code> là gián tiếp qua thanh ghi, offset 1500h. <code>[BX+6]</code> là dựa trên nền (based), offset 1506h. <code>[DI+6]</code> là chỉ số (indexed), offset 0026h. <code>[BX+DI+6]</code> là nền kết hợp chỉ số (based-indexed), offset 1500h + 0020h + 6 = 1526h. Cả bốn lệnh đều đọc nhớ; giá trị nạp vào AX là nội dung tại offset đó trong đoạn DS, không phải chính cái offset.</p>
+  </details>
+  <h3>TL4. JA và JG</h3>
+  <p>AL = 80h. Thực hiện <code>CMP AL, 1</code>. Xác định CF, ZF, SF, OF. <code>JA</code> có nhảy không? <code>JG</code> có nhảy không? AL còn bằng bao nhiêu?</p>
+  <details class="lg">
+    <summary>Lời giải TL4</summary>
+    <p>80h không dấu = 128, có dấu = −128. Phép giả của CMP là 80h − 1 = 7Fh. Không mượn vì 128 &gt; 1, nên CF = 0. Kết quả khác 0, ZF = 0. Bit 7 của 7Fh bằng 0, SF = 0. Có dấu: −128 − 1 = −129, nằm ngoài −128..127, nên OF = 1.</p>
+    <p><code>JA</code> cần CF = 0 và ZF = 0, cả hai đều đúng, nên JA nhảy. <code>JG</code> cần ZF = 0 và SF = OF. ZF = 0 nhưng SF = 0 khác OF = 1, nên JG không nhảy. <code>CMP</code> không ghi AL, AL vẫn 80h.</p>
+  </details>
+  <h3>TL5. Vết LOOP</h3>
+  <pre><code>MOV AX, 0
+MOV CX, 6
+LAP:
+    ADD AX, CX
+    LOOP LAP</code></pre>
+  <details class="lg">
+    <summary>Lời giải TL5</summary>
+    <p>ADD nhìn CX trước khi LOOP giảm. Các số được cộng là 6, 5, 4, 3, 2, 1. AX = 21. CX cuối = 0. Công thức n(n+1)/2 với n = 6 cho cùng 21, vì n ở đây chính là CX ban đầu.</p>
+  </details>
+  <h3>TL6. IF-ELSE có dấu</h3>
+  <p>Dịch: nếu AX &gt; BX thì CX = 1, ngược lại CX = 0. So sánh có dấu.</p>
+  <details class="lg">
+    <summary>Lời giải TL6</summary>
+    <pre><code>    CMP AX, BX
+    JLE NHO
+    MOV CX, 1
+    JMP XONG
+NHO:
+    MOV CX, 0
+XONG:</code></pre>
+    <p><code>JLE</code> gom cả trường hợp bằng, đúng với điều kiện lớn hơn nghiêm ngặt. Đảo cấu trúc bằng <code>JG LON</code> rồi gán CX = 0 ở nhánh rơi xuống cũng đúng, miễn là mỗi nhánh có đường thoát riêng và CX không bị ghi hai lần.</p>
+  </details>
+</section>
+
+<section class="sec" id="venha">
+  <h2><span class="num">16</span> Bài tập về nhà</h2>
+  <p>N là hai chữ số cuối MSSV, từ 0 đến 99. K là chữ số tận cùng, từ 0 đến 9. MSSV kết thúc bằng 27 thì N = 27 và K = 7; đó là cách đọc, mỗi người thay số của mình. Làm vào phiếu Word. Hạn nộp: đầu buổi 9, ngày 07/10/2026. File đặt tên <code>MSSV-BTVN-Buoi08</code>.</p>
+  <p class="files"><a href="BAI-TAP-VE-NHA-BUOI-08.docx">Phiếu bài tập về nhà (Word)</a></p>
+  <p><strong>Bài 1 (2 điểm).</strong> X = −(40 + K), biểu diễn 8 bit. Viết |X| nhị phân, mã bù 1, mã bù 2, dạng hex, và giá trị không dấu của cùng mẫu bit.</p>
+  <p><strong>Bài 2 (2 điểm).</strong> f = 1 GHz, IC = (3 + K)×10<sup>6</sup>. 50% CPI = 1, 30% CPI = 3, 20% CPI = (2 + K). Tính CPI, thời gian CPU theo ms, và MIPS.</p>
+  <p><strong>Bài 3 (2 điểm).</strong> CS = 1A00h + N×10h, IP = 0200h + 2×K. Tính CS, CS dịch trái 4 bit, địa chỉ vật lý, địa chỉ đầu đoạn và cuối đoạn. Nêu kích thước tối đa của một đoạn.</p>
+  <p><strong>Bài 4 (2 điểm).</strong> AX = 0, CX = 3 + K, rồi lặp <code>ADD AX, CX</code> và <code>LOOP</code>. Tìm dãy số được cộng, AX và CX lúc dừng, và nói LOOP có đọc cờ hay không.</p>
+  <p><strong>Bài 5 (1 điểm).</strong> Dịch có dấu: nếu AX ≥ 10 thì CX = AX, ngược lại CX = 10. Nói rõ nhánh nào chạy khi AX = 10.</p>
+  <p><strong>Bài 6 (1 điểm).</strong> In xâu <code>MSG DB "PTIT", 0Dh, 0Ah, "$"</code> bằng INT 21h rồi thoát với mã 0. Giải thích LEA. Sau đó AX = 00A0h + K, BX = 00B0h + K, thực hiện PUSH AX, PUSH BX, POP AX: tìm AX, nói BX có đổi không, và SP đổi bao nhiêu byte.</p>
+  <details class="lg">
+    <summary>Công thức chấm — mở sau khi đã giao đề</summary>
+    <p>Bài 1. |X| = 40 + K. Mã bù 2 8 bit, đọc không dấu, bằng 256 − (40 + K). Dạng hex là byte đó. Ví dụ chấm khi K = 7, không phải đề chung: |X| = 47 = 00101111b, bù 1 = 11010000b, bù 2 = 11010001b = D1h, không dấu = 209.</p>
+    <p>Bài 2. CPI = 0,50×1 + 0,30×3 + 0,20×(2 + K) = 1,8 + 0,2K. T (ms) = (3 + K) × CPI, vì IC / f = (3 + K)×10<sup>6</sup> / 10<sup>9</sup> = (3 + K)×10<sup>−3</sup> giây và 10<sup>−3</sup> giây chính là 1 ms. MIPS = 1000 / CPI. K = 0 thì CPI = 1,8, T = 5,4 ms, MIPS = 555,6. K = 7 thì CPI = 3,2, IC = 10×10<sup>6</sup>, T = 32 ms, MIPS = 312,5.</p>
+    <p>Bài 3. CS = 1A00h + N×10h. Dịch trái 4 bit là viết thêm một chữ số hex 0. Địa chỉ vật lý = CS đã dịch + IP, với IP = 0200h + 2K. Đầu đoạn = CS đã dịch. Cuối đoạn = đầu đoạn + FFFFh. Một đoạn dài tối đa 64 KiB. Ví dụ chấm N = 27, K = 7: 27×10h = 01B0h, CS = 1BB0h, dịch = 1BB00h, IP = 020Eh, địa chỉ vật lý = 1BD0Eh, cuối đoạn = 2BAFFh.</p>
+    <p>Bài 4. n = 3 + K. ADD cộng n, n−1, …, 1. AX = n(n+1)/2. CX cuối = 0. LOOP không đọc cờ. K = 7 thì n = 10, AX = 55.</p>
+    <p>Bài 5. Một lời giải:</p>
+    <pre><code>    CMP AX, 10
+    JL  NHO
+    MOV CX, AX
+    JMP XONG
+NHO:
+    MOV CX, 10
+XONG:</code></pre>
+    <p>AX = 10 thì JL không nhảy, CX = AX = 10, đúng với ≥. <code>JGE</code> đi vào nhánh gán CX = AX cũng được nếu nhánh else vẫn có lối thoát.</p>
+    <p>Bài 6. In và thoát, với DS đã trỏ đúng đoạn:</p>
+    <pre><code>LEA DX, MSG
+MOV AH, 09h
+INT 21h
+MOV AX, 4C00h
+INT 21h</code></pre>
+    <p><code>MOV DX, MSG</code> đọc một từ tại MSG. Hai byte đầu là <code>'P'</code>, <code>'T'</code>, tức 50h rồi 54h, little endian thành 5450h. Đó không phải offset. LEA lấy offset.</p>
+    <p>PUSH AX rồi PUSH BX để giá trị của BX ở đỉnh. POP AX nên AX = 00B0h + K. BX không bị lệnh nào ghi, vẫn 00B0h + K. Hai PUSH làm SP giảm 4, một POP làm SP tăng 2, SP còn giảm 2 byte so với trước chuỗi lệnh.</p>
+  </details>
+</section>
+
+<section class="sec" id="baitap">
+  <h2><span class="num">17</span> Bài đã giao từ các buổi trước</h2>
+  <table>
+    <thead><tr><th>Bài</th><th>Việc cần làm được</th><th>Mốc của lớp</th></tr></thead>
+    <tbody>
+      <tr><td>Phiếu 1</td><td>Đổi cơ số, bù hai 8 bit, đọc ASCII. Phiếu chấm lời giải đầy đủ</td><td>Đã nộp ở buổi online 1</td></tr>
+      <tr><td>Phiếu 2</td><td>CPI trung bình, thời gian chạy, MIPS, tăng tốc khi một lớp lệnh đổi CPI</td><td>Đã chữa cùng buổi online 1</td></tr>
+      <tr><td>Phiếu 3 và pipeline</td><td>Gọi tên chế độ địa chỉ; nói pipeline tăng thông lượng; nhận structure hazard và data hazard</td><td>Buổi 3 và buổi 5</td></tr>
+      <tr><td>Phiếu 3 phần B, câu 9–10, và bài về nhà 06</td><td>Viết IF, vòng lặp, và một đoạn có số liệu theo mã sinh viên. Vết ở mục 06 là khuôn</td><td>Hạn buổi 8, 30/09</td></tr>
+      <tr><td>Thực hành 2</td><td>Đọc xâu bằng ngắt 21h, xử lý, in kết quả, giải thích đúng thanh ghi mình đã dùng</td><td>Giao hôm nay, bảo vệ buổi online 3 ngày 14/10</td></tr>
+    </tbody>
+  </table>
+  <div class="box ok"><p class="t">Việc giao thêm trong buổi 8</p><p>Nhóm được phân công chuẩn bị seminar chương 6, báo cáo vào buổi 11 ngày 21/10. Chủ đề là đĩa, SSD, RAID, NAS và SAN. Phần này chưa giảng hôm nay.</p></div>
+</section>
+
+<section class="sec" id="quiz">
+  <h2><span class="num">18</span> Mười hai câu tự kiểm</h2>
+  <p>Mười hai câu đặt cho buổi này. Số liệu khác các phiếu. Chọn một phương án rồi bấm Chấm. Lời giải hiện dưới từng câu.</p>
+  <form id="quiz-form" class="no-print-form">
+    <div id="quiz-root"></div>
+    <p>
+      <button class="btn" type="submit">Chấm</button>
+      <button class="btn" type="button" id="reset">Làm lại</button>
+    </p>
+    <p class="score" id="score" aria-live="polite"></p>
+  </form>
+</section>
+
+<section class="sec" id="nguon">
+  <h2><span class="num">19</span> Căn cứ</h2>
+  <footer class="note">
+    <p>Đề cương học phần Kiến trúc máy tính, mã INT13145. Lịch nhóm 01: ngày 30/09/2026 là hợp ngữ 8086 phần 2. Trong đề cương gốc, chương 4 là bộ nhớ trong. Lớp này và phiếu BM.08 đặt hợp ngữ ở chương 4, bộ nhớ trong ở chương 5. Mục 10 đến 14 của trang là phần đọc hình cho các buổi sau.</p>
+    <p>BM.08 có 39, 65, 71 và 82 câu cho bốn chương đầu. Ma trận đề cuối kỳ lấy 4, 10, 10 và 10 câu. Các ví dụ số và đoạn mã trong trang được tính lại cho buổi học. Phiếu bài tập 1, 2, 3, bài về nhà 06 và đề Thực hành 2 là việc đã giao. Hai phiếu Word buổi 8 soạn cho ngày 30/09/2026, tham số N và K lấy từ MSSV. Mười sáu hình trong thư mục hinh là tranh minh họa. Chỗ hình ghi hai công thức cache khác nhau, hoặc đảo thứ tự nhân của biểu thức A = B + C×D, được tính lại ngay dưới hình.</p>
+  </footer>
+</section>
+</main>
+</div>
+<script>
+const QUESTIONS = [
+  {chap:"01", stem:"Bốn chức năng cơ bản của máy tính, theo cách trình bày của môn này, gồm những mục nào?",
+   options:["Lưu trữ, xử lý, trao đổi dữ liệu và điều khiển","CPU, RAM, đĩa và màn hình","Nhận dữ liệu, biên dịch, liên kết và nạp","Điều khiển, kết nối Internet, in và lưu"],
+   answer:0, why:"Bốn chức năng là lưu trữ, xử lý, trao đổi và điều khiển. CPU hay RAM là thành phần, không phải tên chức năng."},
+  {chap:"01", stem:"Từ 1234h được ghi tại địa chỉ 2000h trên 8086. Hai byte tại 2000h và 2001h lần lượt là gì?",
+   options:["12h rồi 34h","34h rồi 12h","00h rồi 1234h","12h tại cả hai ô"],
+   answer:1, why:"8086 là little endian: byte trọng số thấp đứng ở địa chỉ thấp. 34h ở 2000h, 12h ở 2001h. Địa chỉ cao giữ byte trọng số cao."},
+  {chap:"01", stem:"Mẫu 8 bit 10001111, hiểu theo số bù hai, có giá trị nào?",
+   options:["143","−15","−113","113"],
+   answer:2, why:"Bit dấu bằng 1. Trị không dấu của 10001111b là 143. Giá trị có dấu bằng 143 − 256 = −113."},
+  {chap:"01", stem:"Khi một từ lệnh IAS vừa được nạp, chỉ thị bên phải của từ được đặt vào thanh ghi nào?",
+   options:["IBR","PC","MAR","AC"],
+   answer:0, why:"Từ 40 bit chứa hai chỉ thị 20 bit. Chỉ thị trái vào IR để thực hiện, chỉ thị phải vào IBR để chờ lượt sau."},
+  {chap:"02", stem:"Phép cộng 8 bit của hai số không dấu 11110000 và 00110000 bật cờ nào trong cặp CF, OF?",
+   options:["CF = 1 và OF = 1","CF = 1 và OF = 0","CF = 0 và OF = 1","CF = 0 và OF = 0"],
+   answer:1, why:"Tổng là 100100000b, có nhớ ra bit thứ 8 nên CF = 1. Xét có dấu, hai toán hạng là −16 và +48, tổng +32 còn trong 8 bit, OF = 0. Có nhớ không kéo theo tràn dấu."},
+  {chap:"02", stem:"MIPS đo đại lượng nào?",
+   options:["Số triệu chỉ thị thực hiện trong một giây","Dung lượng RAM tính bằng mebibyte","Số megahertz của bus nhớ","Số lệnh của một chương trình"],
+   answer:0, why:"MIPS là triệu chỉ thị mỗi giây. Với CPI không đổi, MIPS = f / (CPI × 10^6). Nó không phải dung lượng bộ nhớ."},
+  {chap:"03", stem:"Phát biểu nào đúng với pipeline chỉ thị k đoạn, khi không nói tới stall?",
+   options:["Mỗi chỉ thị một mình kết thúc sớm hơn lúc chưa có pipeline","Thông lượng tăng; thời gian một chỉ thị đơn không được pipeline rút xuống còn 1/k","Pipeline là cách truyền một khối dữ liệu giữa đĩa và RAM","Mọi chương trình đều đạt đúng tăng tốc k"],
+   answer:1, why:"Pipeline tăng số lệnh hoàn thành mỗi đơn vị thời gian. Một lệnh vẫn đi qua các đoạn. Tăng tốc tiến tới k khi số lệnh lớn, và nhỏ hơn k với số lệnh hữu hạn."},
+  {chap:"03", stem:"Hai chỉ thị trong cùng một nhịp cùng cần một bộ cộng duy nhất. Hazard này thuộc loại nào?",
+   options:["Data hazard","Control hazard","Structure hazard","Hazard về endian"],
+   answer:2, why:"Tranh một tài nguyên phần cứng là structure hazard. Data hazard là lệ thuộc dữ liệu giữa lệnh trước và lệnh sau. Control hazard gắn với lệnh làm đổi PC."},
+  {chap:"04", stem:"Độ rộng dữ liệu và độ rộng địa chỉ của 8086 là bao nhiêu?",
+   options:["8 bit dữ liệu, 16 bit địa chỉ","16 bit dữ liệu, 16 bit địa chỉ","16 bit dữ liệu, 20 bit địa chỉ","32 bit dữ liệu, 32 bit địa chỉ"],
+   answer:2, why:"EU xử lý toán hạng 16 bit. BIU phát địa chỉ 20 bit, không gian 1 MiB. Một đoạn vẫn chỉ dài 64 KiB vì offset là 16 bit."},
+  {chap:"04", stem:"Để in xâu kết thúc bằng dấu $, trước INT 21h cần đặt gì?",
+   options:["AH = 01h và DX = số ký tự","AH = 02h và DL = dấu $","AH = 09h và DX = offset của xâu","AH = 4Ch và AL = 09h"],
+   answer:2, why:"Hàm 09h in xâu. DX giữ offset, DS giữ đoạn. Dấu $ không được in. Hàm 02h chỉ in một ký tự đang nằm trong DL. Hàm 4Ch kết thúc chương trình."},
+  {chap:"04", stem:"AX = 0, CX = 4, rồi lặp ADD AX, CX và LOOP cho đến khi dừng. AX bằng bao nhiêu?",
+   options:["4","7","10","16"],
+   answer:2, why:"Các giá trị được cộng là 4, 3, 2 và 1 vì LOOP giảm CX sau phép ADD. Tổng bằng 10. CX cuối cùng bằng 0."},
+  {chap:"04", stem:"AX = 4, BX = 9. Thực hiện SUB AX, BX rồi CMP AX, 0. JG không nhảy, NEG AX, sau đó ADD AX, 10. AX cuối cùng bằng bao nhiêu?",
+   options:["−5","5","14","15"],
+   answer:3, why:"4 − 9 = −5, JG không nhảy vì kết quả âm. NEG đổi thành 5. Cộng 10 được 15. Nhánh JG không được cộng thêm."}
+];
+const root = document.getElementById("quiz-root");
+QUESTIONS.forEach(function (q, i) {
+  const box = document.createElement("article");
+  box.className = "q";
+  box.dataset.i = String(i);
+  const p = document.createElement("p");
+  p.innerHTML = "<strong>Câu " + (i + 1) + "</strong> <span class=\"tag n\">chương " + q.chap + "</span><br>" + q.stem;
+  box.appendChild(p);
+  const ul = document.createElement("ul");
+  ul.className = "opts";
+  q.options.forEach(function (text, j) {
+    const li = document.createElement("li");
+    const id = "q" + i + "o" + j;
+    li.innerHTML = "<label for=\"" + id + "\"><input type=\"radio\" name=\"q" + i + "\" id=\"" + id + "\" value=\"" + j + "\"> " + text + "</label>";
+    ul.appendChild(li);
+  });
+  box.appendChild(ul);
+  const fb = document.createElement("div");
+  fb.className = "fb";
+  box.appendChild(fb);
+  root.appendChild(box);
+});
+document.getElementById("quiz-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  let ok = 0;
+  QUESTIONS.forEach(function (q, i) {
+    const box = root.children[i];
+    const chosen = box.querySelector("input:checked");
+    const fb = box.querySelector(".fb");
+    box.classList.remove("good", "bad");
+    box.classList.add("graded");
+    if (chosen && Number(chosen.value) === q.answer) {
+      ok += 1;
+      box.classList.add("good");
+      fb.textContent = "Đúng. " + q.why;
+    } else {
+      box.classList.add("bad");
+      fb.textContent = "Đáp án: " + q.options[q.answer] + ". " + q.why;
+    }
+  });
+  document.getElementById("score").textContent = ok + " / " + QUESTIONS.length + " câu khớp lời giải.";
+});
+document.getElementById("reset").addEventListener("click", function () {
+  document.getElementById("quiz-form").reset();
+  document.getElementById("score").textContent = "";
+  Array.prototype.forEach.call(root.children, function (box) {
+    box.classList.remove("good", "bad", "graded");
+    box.querySelector(".fb").textContent = "";
+  });
+});
+const links = Array.prototype.slice.call(document.querySelectorAll(".side a"));
+const sections = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+function spy() {
+  let current = 0;
+  sections.forEach(function (sec, i) {
+    if (sec && sec.getBoundingClientRect().top < 90 * currentZoom()) current = i;
+  });
+  links.forEach(function (a, i) { a.classList.toggle("active", i === current); });
+}
+document.addEventListener("scroll", spy, {passive: true});
+spy();
+
+var STEPS = [1, 1.2, 1.4, 1.6, 1.8, 2];
+function currentZoom() {
+  var z = Number(getComputedStyle(document.documentElement).getPropertyValue("--s"));
+  if (!(z >= 1 && z <= 2)) z = 1.6;
+  return z;
+}
+function nearestIndex(z) {
+  var best = 0;
+  var dist = 99;
+  STEPS.forEach(function (step, i) {
+    var d = Math.abs(step - z);
+    if (d < dist) { dist = d; best = i; }
+  });
+  return best;
+}
+var zoomIndex = 0;
+function applyZoom(index) {
+  zoomIndex = index;
+  var z = STEPS[index];
+  document.documentElement.style.setProperty("--s", String(z));
+  var label = document.getElementById("zoom-label");
+  if (label) label.textContent = Math.round(z * 100) + "%";
+  try { localStorage.setItem("ktmt-b8-zoom", String(z)); } catch (e) {}
+}
+applyZoom(nearestIndex(currentZoom()));
+document.getElementById("zoom-in").addEventListener("click", function () {
+  if (zoomIndex < STEPS.length - 1) applyZoom(zoomIndex + 1);
+});
+document.getElementById("zoom-out").addEventListener("click", function () {
+  if (zoomIndex > 0) applyZoom(zoomIndex - 1);
+});
+var chieuBtn = document.getElementById("chieu");
+chieuBtn.addEventListener("click", function () {
+  document.body.classList.toggle("chieu");
+  var on = document.body.classList.contains("chieu");
+  chieuBtn.textContent = on ? "Thoát chiếu" : "Chế độ chiếu";
+  if (on && STEPS[zoomIndex] < 1.6) applyZoom(nearestIndex(1.6));
+});
+var keysOn = false;
+var keysBtn = document.getElementById("keys");
+keysBtn.addEventListener("click", function () {
+  keysOn = !keysOn;
+  Array.prototype.forEach.call(document.querySelectorAll("details.lg"), function (d) { d.open = keysOn; });
+  keysBtn.textContent = keysOn ? "Ẩn lời giải" : "Hiện lời giải";
+});
+</script>
+<script>
+(function () {
+  function say(id, text) {
+    var n = document.getElementById(id);
+    if (n) n.textContent = text;
+  }
+
+  var bits = [0, 0, 0, 0, 0, 0, 0, 0];
+  var bitrow = document.getElementById("bitrow");
+  function paintBits() {
+    if (!bitrow) return;
+    var v = 0;
+    bitrow.innerHTML = "";
+    for (var i = 0; i < 8; i++) {
+      v = v * 2 + bits[i];
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "bit" + (bits[i] ? " on" : "");
+      b.textContent = String(bits[i]);
+      b.setAttribute("data-i", String(i));
+      b.addEventListener("click", function () {
+        var k = Number(this.getAttribute("data-i"));
+        bits[k] = bits[k] ? 0 : 1;
+        paintBits();
+      });
+      bitrow.appendChild(b);
+    }
+    var hex = v.toString(16).toUpperCase();
+    if (hex.length < 2) hex = "0" + hex;
+    say("bit-say", "Không dấu = " + v + " (" + hex + "h). Đọc bù hai = " + (v >= 128 ? v - 256 : v) + ".");
+  }
+  function loadBits(s) {
+    for (var i = 0; i < 8; i++) bits[i] = s.charAt(i) === "1" ? 1 : 0;
+    paintBits();
+  }
+  if (bitrow) {
+    paintBits();
+    document.getElementById("bit-zero").addEventListener("click", function () { loadBits("00000000"); });
+    document.getElementById("bit-b4").addEventListener("click", function () { loadBits("10110100"); });
+    document.getElementById("bit-ee").addEventListener("click", function () { loadBits("11101110"); });
+  }
+
+  function playEndian(mode) {
+    var vals = mode === "le" ? ["34h", "12h"] : ["12h", "34h"];
+    var slots = document.querySelectorAll("#demo-endian [data-slot]");
+    for (var i = 0; i < slots.length; i++) {
+      slots[i].textContent = "";
+      slots[i].classList.remove("drop");
+    }
+    Array.prototype.forEach.call(slots, function (el, i) {
+      setTimeout(function () {
+        el.textContent = vals[i];
+        el.classList.add("drop");
+      }, 160 + i * 320);
+    });
+    say("end-say", mode === "le"
+      ? "Little endian: byte thấp 34h vào 2000h, byte cao 12h vào 2001h."
+      : "Big endian: byte cao 12h vào 2000h, byte thấp 34h vào 2001h. 8086 dùng little endian.");
+  }
+  if (document.getElementById("end-le")) {
+    document.getElementById("end-le").addEventListener("click", function () { playEndian("le"); });
+    document.getElementById("end-be").addEventListener("click", function () { playEndian("be"); });
+  }
+
+  var twosRow = document.getElementById("twos-row");
+  function setTwos(str, msg) {
+    if (!twosRow) return;
+    twosRow.innerHTML = "";
+    for (var i = 0; i < str.length; i++) {
+      var s = document.createElement("span");
+      s.className = "bit" + (str.charAt(i) === "1" ? " on" : "");
+      s.textContent = str.charAt(i);
+      twosRow.appendChild(s);
+    }
+    say("twos-say", msg);
+  }
+  if (twosRow) {
+    setTwos("11101110", "Mẫu gốc 11101110. Bit trái bằng 1, đây là số âm.");
+    document.getElementById("twos-reset").addEventListener("click", function () {
+      setTwos("11101110", "Mẫu gốc 11101110. Bit trái bằng 1, đây là số âm.");
+    });
+    document.getElementById("twos-flip").addEventListener("click", function () {
+      setTwos("00010001", "Đảo bit được 00010001. Đây mới là bù một.");
+    });
+    document.getElementById("twos-inc").addEventListener("click", function () {
+      setTwos("00010010", "Cộng 1 được 00010010 = 18. Mẫu gốc là −18.");
+    });
+  }
+
+  if (document.getElementById("cf-go")) {
+    document.getElementById("cf-go").addEventListener("click", function () {
+      var names = ["cf-bit", "cf-cf", "cf-of"];
+      var texts = ["Bit nhớ: 1", "CF = 1", "OF = 0"];
+      for (var i = 0; i < names.length; i++) {
+        var el = document.getElementById(names[i]);
+        el.textContent = texts[i];
+        el.className = "on";
+      }
+      say("cf-say", "Tám bit còn lại là 00100000 = 32. Có nhớ. Không tràn dấu.");
+    });
+  }
+
+  var pipeStep = -1;
+  var pipeTimer = null;
+  function stopPipe() {
+    if (pipeTimer) { clearInterval(pipeTimer); pipeTimer = null; }
+  }
+  function showPipe(s) {
+    var table = document.getElementById("bang-pipe");
+    var rows = table.querySelectorAll("tbody tr");
+    var parts = [];
+    for (var r = 0; r < rows.length; r++) {
+      var cells = rows[r].cells;
+      for (var c = 1; c < cells.length; c++) {
+        cells[c].classList.remove("pipe-now", "pipe-done");
+        var txt = cells[c].textContent.replace(/\s/g, "");
+        if (!txt) continue;
+        if (c - 1 < s) cells[c].classList.add("pipe-done");
+        if (c - 1 === s) {
+          cells[c].classList.add("pipe-now");
+          parts.push(cells[0].textContent.trim() + " đang " + txt);
+        }
+      }
+    }
+    say("pipe-say", "Nhịp " + (s + 1) + ": " + parts.join(", ") + ".");
+  }
+  if (document.getElementById("pipe-next")) {
+    document.getElementById("pipe-next").addEventListener("click", function () {
+      stopPipe();
+      pipeStep = pipeStep >= 7 ? 0 : pipeStep + 1;
+      showPipe(pipeStep);
+    });
+    document.getElementById("pipe-run").addEventListener("click", function () {
+      stopPipe();
+      pipeStep = -1;
+      pipeTimer = setInterval(function () {
+        pipeStep += 1;
+        if (pipeStep > 7) {
+          stopPipe();
+          say("pipe-say", "Hết 8 nhịp. Tuần tự cùng bốn lệnh mất 20 nhịp. Tăng tốc của ví dụ này là 2,5.");
+          return;
+        }
+        showPipe(pipeStep);
+      }, 700);
+    });
+    document.getElementById("pipe-reset").addEventListener("click", function () {
+      stopPipe();
+      pipeStep = -1;
+      var cells = document.querySelectorAll("#bang-pipe td");
+      for (var i = 0; i < cells.length; i++) cells[i].classList.remove("pipe-now", "pipe-done");
+      say("pipe-say", "Đã xóa sáng. Bảng vẫn đủ 8 nhịp.");
+    });
+  }
+
+  var movFace = { reg: "AX = 2000h", ind: "AX = 0034h", base: "offset 200Ah", both: "offset 202Ah" };
+  var movText = {
+    reg: "Không có ngoặc. AX nhận 2000h, đúng số đang nằm trong BX. Chế độ thanh ghi.",
+    ind: "Có ngoặc. 2000h là địa chỉ. AX nhận 0034h, nội dung của ô đó. Gián tiếp thanh ghi.",
+    base: "Cơ sở BX cộng độ dời 10. Offset = 200Ah. CX nhận nội dung ô 200Ah.",
+    both: "Cơ sở, chỉ số và độ dời cộng với nhau. Nếu DI = 0020h thì offset = 202Ah. Chế độ cơ sở–chỉ số."
+  };
+  var movButtons = document.querySelectorAll("#demo-mov [data-mov]");
+  Array.prototype.forEach.call(movButtons, function (btn) {
+    btn.addEventListener("click", function () {
+      var el = document.getElementById("mov-say");
+      el.className = "demo-say";
+      void el.offsetWidth;
+      el.className = "demo-say do-jump";
+      el.textContent = movText[btn.getAttribute("data-mov")];
+      var mf = document.querySelector("#demo-mov .face");
+      if (mf) {
+        mf.textContent = movFace[btn.getAttribute("data-mov")];
+        mf.className = "face";
+        void mf.offsetWidth;
+        mf.className = "face do-jump";
+      }
+    });
+  });
+
+  var segShow = document.getElementById("seg-show");
+  if (segShow) {
+    document.getElementById("seg-shift").addEventListener("click", function () {
+      segShow.textContent = "1A2Bh → 1A2B0h";
+      segShow.className = "regs";
+      void segShow.offsetWidth;
+      segShow.className = "regs do-jump";
+      say("seg-say", "Thêm một chữ số hex 0 bên phải. Đó là địa chỉ đầu đoạn.");
+    });
+    document.getElementById("seg-add").addEventListener("click", function () {
+      segShow.textContent = "1A2B0h + 0100h = 1A3B0h";
+      segShow.className = "regs";
+      void segShow.offsetWidth;
+      segShow.className = "regs do-jump";
+      say("seg-say", "Địa chỉ vật lý của lệnh sắp lấy là 1A3B0h.");
+    });
+  }
+
+  var jccSay = document.getElementById("jcc-say");
+  if (jccSay) {
+    document.getElementById("jcc-ja").addEventListener("click", function () {
+      jccSay.className = "demo-say do-jump";
+      jccSay.textContent = "JA nhảy. 255 lớn hơn 1. CF = 0 và ZF = 0.";
+    });
+    document.getElementById("jcc-jg").addEventListener("click", function () {
+      jccSay.className = "demo-say do-stay";
+      jccSay.textContent = "JG đứng yên. −1 không lớn hơn 1. SF khác OF.";
+    });
+  }
+
+  function wireTrace(tableId, btnId, sayId, lines) {
+    var table = document.getElementById(tableId);
+    var btn = document.getElementById(btnId);
+    if (!table || !btn) return;
+    var rows = table.querySelectorAll("tbody tr");
+    var i = -1;
+    btn.addEventListener("click", function () {
+      i = (i + 1) % rows.length;
+      for (var r = 0; r < rows.length; r++) rows[r].classList.toggle("hot", r === i);
+      say(sayId, lines[i]);
+    });
+  }
+  wireTrace("trace-loop", "loop-next", "loop-say", [
+    "Khởi tạo: AX = 0, CX = 5.",
+    "Cộng 5. LOOP giảm CX xuống 4 và quay lại.",
+    "Cộng 4. AX = 9. CX còn 3.",
+    "Cộng 3. AX = 000Ch. CX còn 2.",
+    "Cộng 2. AX = 000Eh. CX còn 1.",
+    "Cộng 1. AX = 000Fh. CX = 0, LOOP dừng."
+  ]);
+  wireTrace("trace-jle", "jle-next", "jle-say", [
+    "Cộng 3. CX thành 4, 4 ≤ 6 nên nhảy.",
+    "Cộng 4. AX = 7. CX = 5, vẫn nhảy.",
+    "Cộng 5. AX = 12. CX = 6, 6 ≤ 6 vẫn nhảy.",
+    "Cộng 6. AX = 18. CX = 7, không nhảy nữa."
+  ]);
+
+  var pile = document.getElementById("pile");
+  var stack = [];
+  var popCount = 0;
+  var regs = { AX: "1111h", BX: "2222h", CX: "3333h" };
+  function drawRegs() {
+    var n = document.getElementById("stk-regs");
+    if (n) n.innerHTML = "AX = " + regs.AX + "<br>BX = " + regs.BX + "<br>CX = " + regs.CX;
+  }
+  function drawPile() {
+    pile.innerHTML = "";
+    for (var i = 0; i < stack.length; i++) {
+      var d = document.createElement("div");
+      d.className = "plate";
+      d.textContent = stack[i];
+      pile.appendChild(d);
+    }
+  }
+  if (pile) {
+    document.getElementById("stk-push").addEventListener("click", function () {
+      stack = [];
+      popCount = 0;
+      regs = { AX: "1111h", BX: "2222h", CX: "3333h" };
+      drawRegs();
+      var seq = ["1111h", "2222h", "3333h"];
+      var k = 0;
+      function step() {
+        if (k >= seq.length) {
+          say("stk-say", "Đỉnh là 3333h. Ba từ đã chiếm 6 byte, SP giảm 6.");
+          return;
+        }
+        stack.push(seq[k]);
+        k += 1;
+        drawPile();
+        say("stk-say", "Vừa đẩy " + stack[stack.length - 1] + ". SP giảm 2.");
+        setTimeout(step, 420);
+      }
+      step();
+    });
+    document.getElementById("stk-pop").addEventListener("click", function () {
+      if (!stack.length) {
+        say("stk-say", "Ngăn xếp đang trống. Chưa có từ nào trên đỉnh.");
+        return;
+      }
+      var top = stack.pop();
+      popCount += 1;
+      drawPile();
+      if (popCount === 1) regs.AX = top;
+      else if (popCount === 2) regs.BX = top;
+      else regs.CX = top;
+      drawRegs();
+      say("stk-say", popCount < 3
+        ? "Lấy " + top + " ra khỏi đỉnh."
+        : "AX = 3333h, BX = 2222h, CX = 1111h. AX và CX đã đổi chỗ.");
+    });
+  }
+
+  function mark(btn) {
+    if (!btn || !btn.parentNode) return;
+    var kids = btn.parentNode.querySelectorAll("button");
+    for (var i = 0; i < kids.length; i++) kids[i].classList.remove("on");
+    btn.classList.add("on");
+  }
+  function showSay(btn) {
+    mark(btn);
+    var node = btn, host = null;
+    while (node && node !== document.body) {
+      if (node.classList && node.classList.contains("demo")) { host = node; break; }
+      node = node.parentNode;
+    }
+    if (!host) return;
+    var el = host.querySelector(".demo-say");
+    if (el) {
+      el.className = "demo-say";
+      void el.offsetWidth;
+      el.className = "demo-say do-jump";
+      el.textContent = btn.getAttribute("data-say") || "";
+    }
+    var face = btn.getAttribute("data-face");
+    var box = host.querySelector(".face");
+    if (face && box) {
+      box.textContent = face;
+      box.className = "face";
+      void box.offsetWidth;
+      box.className = "face do-jump";
+    }
+    var step = btn.getAttribute("data-step");
+    if (step !== null && step !== "") {
+      var spans = host.querySelectorAll(".step span");
+      var n = Number(step);
+      for (var i = 0; i < spans.length; i++) {
+        spans[i].classList.remove("on", "done");
+        if (i < n) spans[i].classList.add("done");
+        if (i === n) spans[i].classList.add("on");
+      }
+    }
+  }
+  function bindMap(rootSel, attr, sayId, map) {
+    var root = document.querySelector(rootSel);
+    if (!root) return;
+    Array.prototype.forEach.call(root.querySelectorAll("[" + attr + "]"), function (btn) {
+      btn.addEventListener("click", function () {
+        mark(btn);
+        var el = document.getElementById(sayId);
+        el.className = "demo-say";
+        void el.offsetWidth;
+        el.className = "demo-say do-jump";
+        el.textContent = map[btn.getAttribute(attr)];
+      });
+    });
+  }
+
+  var hexBar = document.getElementById("hex-bar");
+  if (hexBar) {
+    var hexName = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+    for (var h = 0; h < 16; h++) {
+      var hb = document.createElement("button");
+      hb.className = "btn";
+      hb.type = "button";
+      hb.textContent = hexName[h];
+      hb.setAttribute("data-hex", String(h));
+      hexBar.appendChild(hb);
+    }
+    Array.prototype.forEach.call(hexBar.querySelectorAll("button"), function (btn) {
+      btn.addEventListener("click", function () {
+        mark(btn);
+        var n = Number(btn.getAttribute("data-hex"));
+        var bits = "";
+        for (var k = 3; k >= 0; k--) bits += (n >> k) & 1;
+        document.getElementById("hex-bits").textContent = bits;
+        var ten = n === 10 ? " Chữ A là mười." : (n === 15 ? " Chữ F là mười lăm." : "");
+        say("hex-say", "Chữ " + hexName[n] + " là bốn bit " + bits + ", giá trị " + n + "." + ten + " Hai chữ hex ghép thành một byte.");
+      });
+    });
+  }
+
+  bindMap("#demo-fn", "data-fn", "fn-say", {
+    store: "Lưu trữ thuộc hệ thống nhớ: RAM, ROM và thanh ghi. Chúng giữ lệnh và dữ liệu để dùng lại.",
+    proc: "Xử lý thuộc ALU trong bộ xử lý. ALU cộng, trừ, và làm AND, OR.",
+    io: "Trao đổi thuộc bàn phím, màn hình, máy in và đĩa. Số đi vào máy và kết quả đi ra ở khối này.",
+    ctrl: "Điều khiển thuộc khối điều khiển trong CPU. Khối này chọn bước nào đang chạy."
+  });
+  bindMap("#demo-arch", "data-arch", "arch-say", {
+    vn: "Von Neumann: lệnh và dữ liệu nằm chung một bộ nhớ, đi chung một bus. Một nhịp của bus chỉ chở được một trong hai.",
+    hv: "Harvard: lệnh một bộ nhớ, dữ liệu một bộ nhớ, mỗi bên một bus. Lấy lệnh sau có thể xảy ra trong lúc đang đọc dữ liệu."
+  });
+
+  var fetchBtn = document.getElementById("fetch-next");
+  if (fetchBtn) {
+    var fetchLines = [
+      { show: "PC = 0100h → IR = ADD AX, BX · PC = 0102h", say: "Nạp: đọc ô mà PC đang trỏ, đưa lệnh vào IR, rồi tăng PC. PC đã trỏ sẵn lệnh kế. ADD AX, BX dài hai byte, nên PC thành 0102h." },
+      { show: "IR = ADD AX, BX · đường vào ALU mở", say: "Giải mã: mã trong IR sang khối điều khiển. Khối này chọn phép cộng và mở AX cùng BX." },
+      { show: "ALU cộng AX với BX", say: "Thực hiện: ALU tính. Phép số học lập cờ ở bước này, trước khi kết quả được cất." },
+      { show: "Tổng ghi vào AX", say: "Cất: tổng vào AX. Lệnh MOV không sửa cờ. Lệnh nhảy ghi địa chỉ mới vào PC ở bước thực hiện." }
+    ];
+    var fetchI = -1;
+    var fetchSpans = document.querySelectorAll("#fetch-steps span");
+    fetchBtn.addEventListener("click", function () {
+      fetchI = (fetchI + 1) % fetchLines.length;
+      for (var i = 0; i < fetchSpans.length; i++) {
+        fetchSpans[i].classList.remove("on", "done");
+        if (i < fetchI) fetchSpans[i].classList.add("done");
+        if (i === fetchI) fetchSpans[i].classList.add("on");
+      }
+      document.getElementById("fetch-show").textContent = fetchLines[fetchI].show;
+      say("fetch-say", fetchLines[fetchI].say);
+    });
+  }
+
+  var cpiBtn = document.getElementById("cpi-next");
+  if (cpiBtn) {
+    var cpiLines = [
+      "CPI = 0,6×1 + 0,4×4 = 0,6 + 1,6 = 2,2 chu kỳ mỗi lệnh.",
+      "T = 2×10⁶ × 2,2 / 10⁹ = 4,4×10⁻³ giây = 4,4 ms.",
+      "MIPS = 10⁹ / (2,2×10⁶) = 1000 / 2,2 ≈ 455. Máy hoàn thành khoảng 455 triệu lệnh mỗi giây với hỗn hợp này.",
+      "Lớp thứ hai xuống CPI = 2 thì CPI mới = 1,4. T = 2,8 ms. Tăng tốc = 4,4 / 2,8 ≈ 1,57. Không lấy 4 chia 2, vì lớp đó chỉ chiếm 40%."
+    ];
+    var cpiFace = ["2,2", "4,4 ms", "≈ 455", "≈ 1,57"];
+    var cpiI = -1;
+    cpiBtn.addEventListener("click", function () {
+      cpiI = (cpiI + 1) % cpiLines.length;
+      var box = document.querySelector("#demo-cpi .face");
+      if (box) {
+        box.textContent = cpiFace[cpiI];
+        box.className = "face";
+        void box.offsetWidth;
+        box.className = "face do-jump";
+      }
+      say("cpi-say", "Bước " + (cpiI + 1) + ". " + cpiLines[cpiI]);
+    });
+  }
+
+  var andBtn = document.getElementById("and-next");
+  if (andBtn) {
+    var dataB = "10110100";
+    var maskB = "00001111";
+    var outB = "--------";
+    var col = -1;
+    andBtn.addEventListener("click", function () {
+      col = (col + 1) % 8;
+      if (col === 0) outB = "--------";
+      var bit = (dataB.charAt(col) === "1" && maskB.charAt(col) === "1") ? "1" : "0";
+      outB = outB.substring(0, col) + bit + outB.substring(col + 1);
+      document.getElementById("and-show").innerHTML = "Dữ liệu " + dataB + "<br>Mặt nạ " + maskB + "<br>Kết quả " + outB;
+      var why = maskB.charAt(col) === "0"
+        ? "Mặt nạ bằng 0, bit dữ liệu " + dataB.charAt(col) + " thành 0."
+        : "Mặt nạ bằng 1, bit dữ liệu " + dataB.charAt(col) + " được giữ.";
+      var tail = col === 7 ? " Kết quả 00000100 = 04h. Nibble cao mất, nibble thấp còn 0100." : "";
+      say("and-say", "Cột " + (col + 1) + " tính từ bit cao. " + why + tail);
+    });
+  }
+
+  bindMap("#demo-int", "data-int", "int-say", {
+    "01": "AH = 01h: đọc một phím, hiện lại lên màn hình, mã ASCII vào AL.",
+    "02": "AH = 02h: in một ký tự. Mã của ký tự phải đặt ở DL trước INT 21h.",
+    "09": "AH = 09h: in một xâu. DX giữ offset của xâu trong DS. Dấu $ kết thúc xâu và không được in.",
+    "4C": "AH = 4Ch: kết thúc chương trình. MOV AX, 4C00h đặt AH = 4Ch và mã trả về AL = 0."
+  });
+
+  var asc45 = document.getElementById("asc-45");
+  if (asc45) {
+    asc45.addEventListener("click", function () {
+      mark(asc45);
+      document.getElementById("asc-show").textContent = "-";
+      say("asc-say", "45 là mã của dấu gạch nối. Màn hình hiện một ký tự, không hiện hai chữ số 4 và 5.");
+    });
+    document.getElementById("asc-34").addEventListener("click", function () {
+      mark(document.getElementById("asc-34"));
+      document.getElementById("asc-show").textContent = "4";
+      say("asc-say", "34h = 52 = 30h + 4. Đó là mã của chữ số 4. In số 45 thì in chữ 4, rồi in chữ 5, mỗi lần một mã trong DL.");
+    });
+  }
+
+  var callShow = document.getElementById("call-show");
+  var callTop = "";
+  if (callShow) {
+    Array.prototype.forEach.call(document.querySelectorAll("#demo-call [data-call]"), function (btn) {
+      btn.addEventListener("click", function () {
+        mark(btn);
+        var k = btn.getAttribute("data-call");
+        if (k === "jmp") {
+          callTop = "";
+          callShow.textContent = "IP = 0200h · ngăn xếp trống";
+          say("call-say", "JMP ghi 0200h vào IP. Không đẩy gì, nên không còn số nào để quay về 0106h.");
+        } else if (k === "call") {
+          callTop = "0106h";
+          callShow.textContent = "IP = 0200h · đỉnh stack = 0106h";
+          say("call-say", "CALL đẩy IP của lệnh kế, 0106h, rồi mới ghi IP = 0200h. SP giảm 2.");
+        } else if (!callTop) {
+          callShow.textContent = "IP không đổi · ngăn xếp trống";
+          say("call-say", "Đỉnh stack không giữ địa chỉ trở về. Một PUSH chưa được POP sẽ khiến RET lấy nhầm số đó làm địa chỉ.");
+        } else {
+          callTop = "";
+          callShow.textContent = "IP = 0106h · ngăn xếp trống";
+          say("call-say", "RET lấy 0106h ghi vào IP. Chương trình chạy tiếp đúng lệnh đứng sau CALL.");
+        }
+      });
+    });
+  }
+
+  bindMap("#demo-dk", "data-dk", "dk-say", {
+    "if": "IF: CMP rồi JLE nhảy qua ADD khi AX ≤ 0. Không có nhánh else, nên không cần JMP.",
+    "else": "IF-ELSE: JLE vào nhánh CX = 0. Nhánh CX = 1 phải JMP XONG, nếu không CX bị ghi đè.",
+    "sw": "SWITCH: '1' là mã 31h, không phải số 1. Mỗi nhánh JMP XONG. Thiếu JMP thì BL của nhánh sau ghi đè.",
+    "for": "FOR: LOOP giảm CX rồi nhảy nếu CX khác 0. CX = 4, 3, 2, 1 được cộng. AX = 10. Cờ không tham gia.",
+    "while": "WHILE kiểm tra trước thân. BX = 0 thì JLE nhảy ngay, ADD không chạy lần nào.",
+    "do": "DO-WHILE chạy thân một lần rồi mới CMP. BX = 0 vẫn bị cộng một lần. LOOP khi CX khác 0 cũng thuộc kiểu này."
+  });
+  bindMap("#demo-cache", "data-cache", "cache-say", {
+    hit: "Hit: khối đã nằm trong cache. CPU nhận dữ liệu sau hit time, ở ví dụ này là 2 ns.",
+    miss: "Miss: khối chưa có trong cache. Cả khối được nạp từ bộ nhớ chính vào một line, rồi CPU mới lấy.",
+    f9: "Hình 09: 0,95×2 + 0,05×100 = 6,9 ns. Thời gian miss thay cho hit time.",
+    f16: "Hình 16: 2 + 0,05×100 = 7 ns. Miss penalty là phần cộng thêm sau hit time. Làm theo đúng công thức đang in trong bài."
+  });
+  bindMap("#demo-io", "data-io", "io-say", {
+    poll: "CPU hỏi vòng: đọc thanh ghi trạng thái cho đến khi thiết bị sẵn sàng. Đơn giản, và CPU bận suốt lúc chờ.",
+    int: "Ngắt: thiết bị báo khi sẵn sàng. CPU cất địa chỉ trở về, vào chương trình phục vụ, rồi làm tiếp việc cũ.",
+    dma: "DMA: cả khối đi giữa thiết bị và bộ nhớ. CPU lập trình bộ điều khiển lúc đầu, nhường bus, rồi nhận lại bus. CPU không chuyển từng byte."
+  });
+  bindMap("#demo-bus", "data-bus", "bus-say", {
+    addr: "Bus địa chỉ đi từ CPU ra, một chiều. 20 đường chọn được 2²⁰ = 1.048.576 byte, tức 1 MiB.",
+    data: "Bus dữ liệu đi hai chiều. 8086 có 16 đường, mỗi lần chuyển hai byte. Số ô nhớ vẫn do bus địa chỉ quyết định.",
+    ctrl: "Bus điều khiển mang Read, Write và các tín hiệu chọn. Thiết bị cũng gửi trạng thái ngược về CPU, nên bó này hai chiều."
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("main table"), function (table) {
+    if (table.id === "bang-pipe" || table.id === "trace-loop" || table.id === "trace-jle") return;
+    var rows = table.querySelectorAll("tbody tr");
+    Array.prototype.forEach.call(rows, function (tr) {
+      tr.addEventListener("click", function () {
+        Array.prototype.forEach.call(rows, function (r) { r.classList.remove("hot"); });
+        tr.classList.add("hot");
+      });
+    });
+  });
+
+  var lb = document.createElement("div");
+  lb.id = "lightbox";
+  lb.hidden = true;
+  lb.innerHTML = "<img id=\"lb-img\" alt=\"\"><p id=\"lb-cap\"></p><p><button class=\"btn\" type=\"button\" id=\"lb-x\">Đóng</button></p>";
+  document.body.appendChild(lb);
+  function closeLb() { lb.hidden = true; }
+  document.getElementById("lb-x").addEventListener("click", closeLb);
+  lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLb(); });
+  Array.prototype.forEach.call(document.querySelectorAll("figure.anh"), function (fig) {
+    fig.addEventListener("click", function () {
+      var img = fig.querySelector("img");
+      var cap = fig.querySelector("figcaption");
+      document.getElementById("lb-img").src = img.getAttribute("src");
+      document.getElementById("lb-img").alt = img.getAttribute("alt") || "";
+      document.getElementById("lb-cap").textContent = cap ? cap.textContent : "";
+      lb.hidden = false;
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-say]"), function (btn) {
+    btn.addEventListener("click", function () { showSay(btn); });
+  });
+
+  var shiftFace = document.getElementById("shift-face");
+  if (shiftFace) {
+    var sBits = "10110100";
+    function paintShift(next, cf, msg, btn) {
+      mark(btn);
+      sBits = next;
+      shiftFace.textContent = next + "   CF = " + cf;
+      shiftFace.className = "face";
+      void shiftFace.offsetWidth;
+      shiftFace.className = "face do-jump";
+      say("shift-say", msg);
+    }
+    document.getElementById("sh-shl").addEventListener("click", function () {
+      paintShift(sBits.slice(1) + "0", sBits.charAt(0), "SHL dịch trái, điền 0. SAL cùng mã. Chưa tràn thì nhân 2.", this);
+    });
+    document.getElementById("sh-shr").addEventListener("click", function () {
+      paintShift("0" + sBits.slice(0, 7), sBits.charAt(7), "SHR dịch phải logic, điền 0.", this);
+    });
+    document.getElementById("sh-sar").addEventListener("click", function () {
+      paintShift(sBits.charAt(0) + sBits.slice(0, 7), sBits.charAt(7), "SAR điền lại bit dấu. Dịch phải số học là chia 2 có dấu.", this);
+    });
+  }
+
+  var zeroBtn = document.getElementById("zero-next");
+  if (zeroBtn) {
+    var zBits = "10110100";
+    var zBx = 0;
+    var zN = 0;
+    zeroBtn.addEventListener("click", function () {
+      if (zN >= 8) {
+        zBits = "10110100"; zBx = 0; zN = 0;
+      }
+      var cf = zBits.charAt(0);
+      if (cf === "0") zBx += 1;
+      zBits = zBits.slice(1) + "0";
+      zN += 1;
+      document.getElementById("zero-face").textContent = "AL " + zBits + "   BX = " + zBx;
+      say("zero-say", zN < 8
+        ? "Lần " + zN + ": CF = " + cf + (cf === "0" ? ", BX tăng." : ", BX giữ.")
+        : "Tám lần xong. CF từng rơi 1,0,1,1,0,1,0,0. BX = 4. AL = 0.");
+    });
+  }
+
+  var t4Btn = document.getElementById("t4-next");
+  if (t4Btn) {
+    var t4 = [
+      ["AX = 8", "BX = 20. Sắp trừ."],
+      ["AX = −12", "8 − 20 = −12 = FFF4h. CF = 1, SF = 1, OF = 0."],
+      ["JG đứng", "JG cần SF = OF. Ở đây SF khác OF, không vào DUONG."],
+      ["AX = 12", "NEG đổi −12 thành 12, rồi JMP TIEP."],
+      ["AX = 42", "Cộng 30. AX = 002Ah. Nhánh ADD AX, 5 không chạy."]
+    ];
+    var t4i = -1;
+    t4Btn.addEventListener("click", function () {
+      t4i = (t4i + 1) % t4.length;
+      var box = document.getElementById("t4-face");
+      box.textContent = t4[t4i][0];
+      box.className = "face";
+      void box.offsetWidth;
+      box.className = "face do-jump";
+      say("t4-say", t4[t4i][1]);
+    });
+  }
+})();
+</script>
+</body>
+</html>

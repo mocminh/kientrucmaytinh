@@ -1,0 +1,2254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BÀI GIẢNG CHƯƠNG 3: TẬP LỆNH MÁY TÍNH & HỢP NGỮ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-box: #f1f5f9;
+      --border: #cbd5e1;
+      --border-strong: #94a3b8;
+      --border-light: #e2e8f0;
+      
+      --text-main: #0f172a;
+      --text-body: #1e293b;
+      --text-muted: #475569;
+      --text-light: #64748b;
+      
+      --navy: #16305a;
+      --navy-light: #eef3f9;
+      --copper: #9a3412;
+      --copper-light: #fff7ed;
+      --cyan: #0e7490;
+      --cyan-light: #ecfeff;
+      --green: #166534;
+      --green-light: #f0fdf4;
+      --red: #991b1b;
+      --red-light: #fef2f2;
+      --purple: #6b21a8;
+      --purple-light: #faf5ff;
+      --amber: #b45309;
+      
+      --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Lora', Georgia, 'Times New Roman', serif;
+      --font-mono: 'Fira Code', Consolas, Monaco, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-body);
+      font-family: var(--font-body);
+      font-size: 16.5px;
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 120px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-main);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    code, pre, .mono {
+      font-family: var(--font-mono);
+      font-size: 0.92em;
+    }
+
+    /* Math Formula Typography (Dinh dang toan hoc chuan, khong dung ky tu do-la) */
+    .math {
+      font-family: var(--font-body);
+      font-style: italic;
+      color: var(--navy);
+      font-weight: 500;
+    }
+    .math b, .math strong {
+      font-family: var(--font-heading);
+      font-style: normal;
+    }
+    .math-display {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 20px;
+      margin: 14px 0;
+      font-family: var(--font-body);
+      font-style: italic;
+      color: var(--navy);
+      font-size: 1.1em;
+      text-align: center;
+    }
+
+    /* Top Academic Header */
+    .lecture-header {
+      background: #ffffff;
+      border-bottom: 2px solid var(--border-strong);
+      padding: 40px 0 32px;
+    }
+    .header-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .inst-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 34px;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--navy);
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 960px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .meta-table {
+      border-collapse: collapse;
+      font-family: var(--font-heading);
+      font-size: 13.5px;
+      width: 100%;
+      max-width: 800px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .meta-table td {
+      padding: 8px 16px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .meta-table tr:last-child td { border-bottom: none; }
+    .meta-table td:last-child { border-right: none; }
+    .meta-table td.lbl {
+      color: var(--text-muted);
+      width: 170px;
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+    .meta-table td.val {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    /* Main Layout */
+    .layout-container {
+      max-width: 1240px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 48px;
+    }
+
+    @media (max-width: 1024px) {
+      .layout-container { grid-template-columns: 1fr; }
+      .toc-sidebar { display: none; }
+    }
+
+    /* Sticky Sidebar Navigation */
+    .toc-sidebar {
+      position: sticky;
+      top: 24px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      padding-right: 16px;
+      font-family: var(--font-heading);
+    }
+    .toc-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .toc-list {
+      list-style: none;
+      font-size: 13px;
+    }
+    .toc-item {
+      margin-bottom: 9px;
+    }
+    .toc-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      display: block;
+      padding: 5px 8px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+      line-height: 1.4;
+    }
+    .toc-link:hover {
+      color: var(--navy);
+      background: var(--bg-box);
+      font-weight: 600;
+    }
+
+    /* Content Sections */
+    .lecture-article { min-width: 0; }
+    .lecture-sec {
+      margin-bottom: 60px;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 48px;
+    }
+    .lecture-sec:last-child { border-bottom: none; }
+
+    .sec-heading {
+      font-size: 26px;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+      color: var(--navy);
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .sec-heading .num {
+      font-size: 20px;
+      color: var(--copper);
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+    .sub-heading {
+      font-size: 20px;
+      margin-top: 32px;
+      margin-bottom: 14px;
+      color: var(--text-main);
+    }
+
+    p { margin-bottom: 16px; text-align: justify; }
+    ul, ol { margin-left: 24px; margin-bottom: 20px; }
+    li { margin-bottom: 8px; }
+
+    /* Pedagogical Boxes */
+    .box {
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      padding: 20px 24px;
+      margin: 24px 0;
+      border-radius: 6px;
+    }
+    .box-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .box-metaphor { border-left: 5px solid var(--cyan); background: var(--cyan-light); }
+    .box-metaphor .box-title { color: var(--cyan); }
+    .box-def { border-left: 5px solid var(--navy); background: var(--navy-light); }
+    .box-def .box-title { color: var(--navy); }
+    .box-example { border-left: 5px solid var(--green); background: var(--green-light); }
+    .box-example .box-title { color: var(--green); }
+    .box-warn { border-left: 5px solid var(--red); background: var(--red-light); }
+    .box-warn .box-title { color: var(--red); }
+    .box-app { border-left: 5px solid var(--purple); background: var(--purple-light); }
+    .box-app .box-title { color: var(--purple); }
+
+    /* Code Blocks */
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 16px 20px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      line-height: 1.6;
+    }
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; }
+
+    .syntax-spec {
+      font-family: var(--font-mono);
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-weight: 600;
+    }
+
+    /* Academic Tables */
+    .academic-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14.5px;
+      background: #ffffff;
+      border-top: 2px solid var(--text-main);
+      border-bottom: 2px solid var(--text-main);
+    }
+    .academic-table th {
+      background: #f8fafc;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      border-bottom: 1px solid var(--border-strong);
+      text-align: left;
+      color: var(--text-main);
+    }
+    .academic-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+    }
+    .academic-table tr:last-child td { border-bottom: none; }
+    .table-responsive { overflow-x: auto; margin-bottom: 24px; }
+
+    /* Micro-Example Cards */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      margin: 20px 0 28px;
+    }
+    .micro-card {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #ffffff;
+      padding: 16px 18px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .micro-card:hover {
+      border-color: var(--navy);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .micro-title {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .micro-badge {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      text-transform: uppercase;
+      background: var(--bg-box);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .micro-code {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+    .micro-desc {
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+    .micro-result {
+      font-size: 13px;
+      background: var(--green-light);
+      color: var(--green);
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    /* Step boxes */
+    .step-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--navy);
+      padding: 14px 18px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 15px;
+    }
+    .step-box .step-num {
+      font-weight: 700;
+      color: var(--copper);
+      font-family: var(--font-heading);
+      margin-bottom: 4px;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* ANIMATION COMPONENTS STYLING                                  */
+    /* ------------------------------------------------------------- */
+    .anim-card {
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      background: #ffffff;
+      margin: 28px 0 36px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    }
+    .anim-header {
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .anim-title {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .anim-btn-group {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-anim {
+      background: var(--navy);
+      color: #ffffff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-family: var(--font-heading);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-anim:hover { background: #1e3a8a; }
+    .btn-anim.btn-secondary {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border-strong);
+    }
+    .btn-anim.btn-secondary:hover { background: var(--bg-box); }
+
+    /* Memory Studio Grid */
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 480px;
+    }
+    @media (max-width: 900px) {
+      .studio-grid { grid-template-columns: 1fr; }
+    }
+
+    .asm-program-list {
+      background: #f8fafc;
+      border-right: 1px solid var(--border);
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    .asm-program-list h4 {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-line-item {
+      padding: 8px 10px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .code-line-item:hover {
+      background: #e2e8f0;
+    }
+    .code-line-item.active {
+      background: #ffffff;
+      border-color: var(--navy);
+      font-weight: 700;
+      color: var(--navy);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Datapath Stage */
+    .datapath-stage {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background: #ffffff;
+    }
+
+    .studio-hardware-row {
+      display: flex;
+      justify-content: space-around;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .hw-box {
+      border: 2px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 12px 14px;
+      min-width: 110px;
+      text-align: center;
+      background: #ffffff;
+      transition: all 0.25s ease;
+    }
+    .hw-box.highlight {
+      border-color: var(--copper);
+      background: var(--copper-light);
+      box-shadow: 0 0 12px rgba(154, 52, 18, 0.2);
+    }
+    .hw-label {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .hw-value {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* System Buses */
+    .bus-indicator-bar {
+      border: 1px dashed var(--border-strong);
+      border-radius: 6px;
+      background: #f8fafc;
+      padding: 12px 16px;
+      margin: 16px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+    .bus-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bus-light {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: all 0.2s;
+    }
+    .bus-light.active-addr { background: #0284c7; box-shadow: 0 0 8px #0284c7; }
+    .bus-light.active-data { background: #16a34a; box-shadow: 0 0 8px #16a34a; }
+    .bus-light.active-ctrl { background: #dc2626; box-shadow: 0 0 8px #dc2626; }
+
+    /* RAM Grid */
+    .ram-grid-container {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #f8fafc;
+      padding: 16px;
+    }
+    .ram-grid-header {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .ram-cells-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+    }
+    .ram-cell {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #ffffff;
+      padding: 8px 6px;
+      text-align: center;
+      font-family: var(--font-mono);
+      transition: all 0.25s;
+    }
+    .ram-cell.reading {
+      border-color: var(--cyan);
+      background: var(--cyan-light);
+      box-shadow: 0 0 10px rgba(14, 116, 144, 0.3);
+    }
+    .ram-cell.writing {
+      border-color: var(--red);
+      background: var(--red-light);
+      box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+    }
+    .cell-addr {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 2px;
+    }
+    .cell-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Narration Box */
+    .studio-narration {
+      background: var(--navy-light);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--navy);
+      line-height: 1.5;
+    }
+
+    /* Flying packet */
+    .flying-packet {
+      position: absolute;
+      width: 48px;
+      height: 24px;
+      background: var(--copper);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .flying-packet.flying { opacity: 1; }
+
+    /* Pipeline Conveyor */
+    .pipeline-conveyor-wrap {
+      padding: 20px;
+      background: #ffffff;
+    }
+    .conveyor-track {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .conveyor-stage-box {
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 10px;
+      background: #f8fafc;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .conveyor-stage-title {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--navy);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .conveyor-cell {
+      height: 48px;
+      background: #ffffff;
+      border: 1px dashed var(--border-strong);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .conveyor-cell.has-item {
+      border: 1px solid var(--navy);
+      background: var(--navy-light);
+      color: var(--navy);
+    }
+    .conveyor-cell.has-stall {
+      border: 1px solid var(--red);
+      background: var(--red-light);
+      color: var(--red);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Academic Top Header -->
+  <header class="lecture-header">
+    <div class="header-inner">
+      <div class="inst-badge">
+        <span>Học viện Công nghệ Bưu chính Viễn thông</span>
+        <span>·</span>
+        <span>Khoa Kỹ thuật Điện tử 2 · Tài liệu bài giảng</span>
+      </div>
+      <h1 class="hero-title">CHƯƠNG 3: TẬP LỆNH MÁY TÍNH & HỢP NGỮ</h1>
+      <p class="hero-sub">
+        Tài liệu bài giảng Chương 3: Phân tích cấu trúc tập lệnh máy tính, cú pháp hợp ngữ x86/MIPS/RISC-V, các chế độ định địa chỉ, cấu trúc điều khiển, ví dụ minh họa và mô phỏng trực quan đường dữ liệu CPU cùng bộ nhớ.
+      </p>
+
+      <table class="meta-table">
+        <tr>
+          <td class="lbl">Học phần:</td>
+          <td class="val">Kiến trúc máy tính (INT13145)</td>
+          <td class="lbl">Thời lượng:</td>
+          <td class="val">8 tiết lý thuyết + 4 tiết thực hành</td>
+        </tr>
+        <tr>
+          <td class="lbl">Đối tượng:</td>
+          <td class="val">Sinh viên ngành Kỹ thuật Điện tử / Viễn thông</td>
+          <td class="lbl">Mô hình:</td>
+          <td class="val">Mô phỏng đường dữ liệu CPU + Đường ống Pipeline</td>
+        </tr>
+      </table>
+    </div>
+  </header>
+
+  <!-- Layout Container -->
+  <div class="layout-container">
+    
+    <!-- Sidebar TOC -->
+    <aside class="toc-sidebar">
+      <div class="toc-title">Mục lục nội dung</div>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#c3-zero" class="toc-link">3.0 Tổng quan: Nguyên lý hoạt động của máy tính</a></li>
+        <li class="toc-item"><a href="#c3-registers" class="toc-link">3.1 Cấu trúc thanh ghi bên trong CPU (Registers)</a></li>
+        <li class="toc-item"><a href="#c3-syntax-rules" class="toc-link">3.2 Khái niệm Hợp ngữ (Assembly) và quy ước cú pháp</a></li>
+        <li class="toc-item"><a href="#c3-micro-examples" class="toc-link">3.3 Các nhóm lệnh cơ bản và ví dụ minh họa</a></li>
+        <li class="toc-item"><a href="#c3-control-flow" class="toc-link">3.4 Cấu trúc Điều khiển Cơ bản (if-else, loop, mảng)</a></li>
+        <li class="toc-item"><a href="#c3-practical-apps" class="toc-link">3.5 Các ví dụ ứng dụng thực tế trong kỹ thuật</a></li>
+        <li class="toc-item"><a href="#c3-operands" class="toc-link">3.6 Phân loại kiến trúc theo số địa chỉ toán hạng (0–3 địa chỉ)</a></li>
+        <li class="toc-item"><a href="#c3-addressing" class="toc-link">3.7 Các chế độ định địa chỉ (Addressing Modes)</a></li>
+        <li class="toc-item"><a href="#c3-mem-anim" class="toc-link">3.8 Mô hình tương tác đường dữ liệu CPU và Bộ nhớ</a></li>
+        <li class="toc-item"><a href="#c3-flags" class="toc-link">3.9 Thanh ghi trạng thái và cờ hiệu (Flags Register)</a></li>
+        <li class="toc-item"><a href="#c3-cisc-risc" class="toc-link">3.10 So sánh kiến trúc CISC và RISC</a></li>
+        <li class="toc-item"><a href="#c3-pipeline" class="toc-link">3.11 Cơ chế đường ống lệnh (Pipeline)</a></li>
+        <li class="toc-item"><a href="#c3-hazards" class="toc-link">3.12 Xung đột đường ống (Pipeline Hazards) và giải pháp</a></li>
+        <li class="toc-item"><a href="#c3-exercises" class="toc-link">3.13 Bài tập tính toán mẫu</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Article Content -->
+    <main class="lecture-article">
+
+      <!-- ============================================================== -->
+      <section id="c3-zero" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.0</span> Tổng quan: Nguyên lý hoạt động của máy tính</h2>
+        
+        <p>
+          Để hiểu kiến trúc máy tính và tập lệnh, chúng ta xem xét mô hình xử lý tương tác giữa bộ vi xử lý (CPU) và hệ thống nhớ:
+        </p>
+
+        <div class="box box-metaphor">
+          <div class="box-title">Mô hình phân cấp: CPU, Tập thanh ghi và Bộ nhớ chính</div>
+          <p>Mối quan hệ giữa các thành phần cơ bản trong cấu trúc máy tính:</p>
+          <ul>
+            <li><b>Bộ xử lý CPU (Central Processing Unit):</b> Trực tiếp thực thi các phép toán số học, logic và điều khiển luồng chương trình.</li>
+            <li><b>Các thanh ghi (Registers):</b> Không gian lưu trữ dữ liệu tạm thời nằm ngay trong CPU có tốc độ truy xuất nhanh nhất nhưng dung lượng giới hạn.</li>
+            <li><b>Bộ nhớ RAM (Random Access Memory):</b> Bộ nhớ chính lưu trữ mã chương trình và dữ liệu đang hoạt động. Dung lượng lớn hơn nhiều so với thanh ghi nhưng thời gian truy cập chậm hơn.</li>
+            <li><b>Lệnh máy (Instruction):</b> Các chỉ thị nhị phân điều khiển CPU thực hiện từng thao tác cụ thể theo tuần tự.</li>
+          </ul>
+        </div>
+
+        <h3 class="sub-heading">Bit, Byte và Từ máy (Word)</h3>
+        <p>
+          Máy tính số hoạt động dựa trên hệ nhị phân với hai trạng thái logic cơ bản: <code>0</code> và <code>1</code>.
+        </p>
+        <ul>
+          <li><b>Bit (Binary Digit):</b> Là đơn vị thông tin nhỏ nhất, chỉ có thể là <code>0</code> hoặc <code>1</code>.</li>
+          <li><b>Byte:</b> Là nhóm gồm <b>8 bit</b> liên tiếp (ví dụ: <code>10110001</code>), đại diện cho một ký tự mã ASCII hoặc một số nguyên không dấu từ 0 đến 255.</li>
+          <li><b>Word (Từ máy):</b> Phụ thuộc vào kiến trúc của bộ xử lý: 16 bit (2 Byte) đối với Intel 8086; 32 bit (4 Byte) đối với kiến trúc IA-32/MIPS32/RV32; hoặc 64 bit (8 Byte) đối với kiến trúc x86-64/RV64.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-registers" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.1</span> Cấu trúc thanh ghi bên trong CPU (Registers)</h2>
+        <p>
+          Thanh ghi là các ô nhớ tốc độ cao nằm trực tiếp trong bộ xử lý. Mọi toán hạng cần tính toán thường được nạp vào thanh ghi trước khi đưa qua khối tính toán số học & logic (ALU).
+        </p>
+        <p>
+          Trong kiến trúc vi xử lý Intel x86 (16-bit), CPU trang bị <b>4 thanh ghi đa năng chính</b>, mỗi thanh ghi có độ rộng 16 bit:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 20px 0;">
+          <div class="box" style="margin:0;">
+            <div class="box-title" style="color:var(--navy); font-family:var(--font-mono); font-size:1.1rem;">AX (Accumulator)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Thanh ghi tích lũy:</b> Sử dụng ưu tiên cho các phép nhân, chia, chuyển đổi dữ liệu và thao tác nhập/xuất (I/O).</p>
+          </div>
+          <div class="box" style="margin:0;">
+            <div class="box-title" style="color:var(--copper); font-family:var(--font-mono); font-size:1.1rem;">BX (Base Register)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Thanh ghi cơ sở:</b> Thường dùng chứa địa chỉ cơ sở trong các chế độ định địa chỉ gián tiếp qua bộ nhớ.</p>
+          </div>
+          <div class="box" style="margin:0;">
+            <div class="box-title" style="color:var(--green); font-family:var(--font-mono); font-size:1.1rem;">CX (Count Register)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Thanh ghi đếm:</b> Tự động giảm giá trị trong các lệnh lặp (LOOP) và dịch bit (Shift/Rotate).</p>
+          </div>
+          <div class="box" style="margin:0;">
+            <div class="box-title" style="color:var(--cyan); font-family:var(--font-mono); font-size:1.1rem;">DX (Data Register)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Thanh ghi dữ liệu:</b> Phối hợp với AX trong các phép nhân/chia số học 32-bit và chứa địa chỉ cổng I/O gián tiếp.</p>
+          </div>
+        </div>
+
+        <div class="box box-def">
+          <div class="box-title">Khả năng truy xuất byte cao / byte thấp trong thanh ghi 16-bit</div>
+          <p>
+            Mỗi thanh ghi 16-bit đa năng (như <code>AX</code>) có thể truy xuất độc lập theo từng phần 8-bit:
+            <code>AH</code> (Accumulator High - byte cao) và <code>AL</code> (Accumulator Low - byte thấp). Tương tự ta có <code>BH/BL</code>, <code>CH/CL</code>, <code>DH/DL</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-syntax-rules" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.2</span> Khái niệm Hợp ngữ (Assembly) và quy ước cú pháp</h2>
+        
+        <p>
+          Để biểu diễn các lệnh máy nhị phân một cách trực quan và dễ quản lý, <b>Hợp ngữ (Assembly Language)</b> sử dụng các từ khóa gợi nhớ (mnemonics) tiếng Anh:
+          <code>MOV</code> (Move / Chuyển dữ liệu), <code>ADD</code> (Cộng), <code>SUB</code> (Trừ), <code>CMP</code> (So sánh).
+        </p>
+
+        <div class="box box-rule" style="background:#f8fafc; border-left:5px solid var(--navy);">
+          <div class="box-title" style="color:var(--navy);">Quy ước cú pháp câu lệnh Hợp ngữ Intel x86</div>
+          <p style="font-size: 1.15rem; font-family: var(--font-mono); font-weight: 700; color: var(--navy); margin-bottom: 8px;">
+            TÊN_LỆNH &nbsp; Đích, &nbsp; Nguồn
+          </p>
+          <p>
+            Quy ước hoạt động: <b>Toán hạng đích (Destination) nhận kết quả sau khi thực hiện thao tác với toán hạng nguồn (Source).</b>
+          </p>
+        </div>
+
+        <div class="box box-warn">
+          <div class="box-title">Các lỗi cú pháp thường gặp khi lập trình hợp ngữ x86</div>
+          <ol>
+            <li><b>Không cho phép thao tác trực tiếp bộ nhớ - bộ nhớ:</b> Lệnh <code>MOV [1000H], [2000H]</code> là <b>không hợp lệ</b> trong kiến trúc x86. Kiến trúc phần cứng không hỗ trợ hai chu kỳ truy xuất bộ nhớ cùng lúc trong một lệnh; cần thông qua thanh ghi trung gian: <code>MOV AX, [2000H]</code> sau đó <code>MOV [1000H], AX</code>.</li>
+            <li><b>Không tương thích kích thước toán hạng (Size Mismatch):</b> Ví dụ <code>MOV AL, BX</code> sẽ bị trình biên dịch báo lỗi vì <code>AL</code> là 8-bit còn <code>BX</code> là 16-bit.</li>
+            <li><b>Toán hạng đích không thể là hằng số:</b> Viết <code>MOV 5, AX</code> là không hợp lệ vì hằng số không thể là nơi nhận giá trị.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-micro-examples" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.3</span> Các nhóm lệnh cơ bản và ví dụ minh họa</h2>
+        <p>
+          Dưới đây là các ví dụ minh họa cho từng lệnh cụ thể, bao gồm: <b>Trạng thái ban đầu &rarr; Lệnh thực thi &rarr; Kết quả thực thi</b>.
+        </p>
+
+        <!-- Group 1: Data Transfer -->
+        <h3 class="sub-heading">Nhóm 1: Lệnh Sao chép & Chuyển dịch Dữ liệu (Data Transfer)</h3>
+        <div class="example-grid">
+          
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>MOV reg, imm</span>
+              <span class="micro-badge">Nạp hằng số</span>
+            </div>
+            <div class="micro-code">MOV AX, 1234H</div>
+            <div class="micro-desc">Lấy con số tức thời <code>1234H</code> nạp thẳng vào chiếc hộp <code>AX</code>.</div>
+            <div class="micro-result">&rarr; Kết quả: AX = 1234H (AH=12H, AL=34H)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>MOV reg, reg</span>
+              <span class="micro-badge">Sao chép hộp</span>
+            </div>
+            <div class="micro-code">MOV BX, AX</div>
+            <div class="micro-desc">Sao chép giá trị từ hộp <code>AX</code> sang hộp <code>BX</code>. Giá trị trong <code>AX</code> vẫn còn nguyên, không bị mất!</div>
+            <div class="micro-result">&rarr; Kết quả: BX = AX = 1234H</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>MOV [mem], reg</span>
+              <span class="micro-badge">Ghi vào RAM</span>
+            </div>
+            <div class="micro-code">MOV [1000H], AX</div>
+            <div class="micro-desc">Cất số từ <code>AX</code> vào ô nhớ RAM có số nhà <code>1000H</code>. Theo Little-Endian: ô 1000H nhận 34H, ô 1001H nhận 12H.</div>
+            <div class="micro-result">&rarr; Kết quả: RAM[1000H..1001H] = 1234H</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>MOV reg, [mem]</span>
+              <span class="micro-badge">Đọc từ RAM</span>
+            </div>
+            <div class="micro-code">MOV CX, [1000H]</div>
+            <div class="micro-desc">CPU chạy xuống mở ô nhớ RAM <code>1000H</code> nhấc dữ liệu ra và nạp vào thanh ghi <code>CX</code>.</div>
+            <div class="micro-result">&rarr; Kết quả: CX = 1234H</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>XCHG reg, reg</span>
+              <span class="micro-badge">Đổi chỗ tức thì</span>
+            </div>
+            <div class="micro-code">XCHG AX, BX</div>
+            <div class="micro-desc">Hoán đổi giá trị của 2 thanh ghi cho nhau chỉ trong 1 lệnh duy nhất, không cần biến trung gian tạm thời!</div>
+            <div class="micro-result">&rarr; Kết quả: AX nhận số của BX, BX nhận số cũ của AX</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>LEA reg, [mem]</span>
+              <span class="micro-badge">Lấy biển số nhà</span>
+            </div>
+            <div class="micro-code">LEA BX, [SI+4]</div>
+            <div class="micro-desc">Nếu <code>SI = 1000H</code>, CPU tính nhẩm: 1000H + 4 = 1004H rồi nạp số 1004H vào BX. <b>Tuyệt đối không đụng vào RAM!</b></div>
+            <div class="micro-result">&rarr; Kết quả: BX = 1004H (Chỉ lấy địa chỉ)</div>
+          </div>
+
+        </div>
+
+        <!-- Group 2: Arithmetic -->
+        <h3 class="sub-heading">Nhóm 2: Lệnh Số học (Arithmetic Operations)</h3>
+        <div class="example-grid">
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>ADD reg, imm</span>
+              <span class="micro-badge">Phép cộng</span>
+            </div>
+            <div class="micro-code">
+              MOV AX, 5<br>
+              ADD AX, 3
+            </div>
+            <div class="micro-desc">Lấy 3 cộng dồn vào giá trị đang có trong AX (5 + 3 = 8). Kết quả lưu đè vào AX.</div>
+            <div class="micro-result">&rarr; Kết quả: AX = 8</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>SUB reg, reg</span>
+              <span class="micro-badge">Phép trừ</span>
+            </div>
+            <div class="micro-code">
+              MOV AX, 10<br>
+              MOV BX, 4<br>
+              SUB AX, BX
+            </div>
+            <div class="micro-desc">Lấy AX trừ đi BX (10 - 4 = 6). Kết quả lưu đè vào AX.</div>
+            <div class="micro-result">&rarr; Kết quả: AX = 6, BX vẫn bằng 4</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>INC / DEC</span>
+              <span class="micro-badge">Tăng / Giảm 1</span>
+            </div>
+            <div class="micro-code">
+              INC AX<br>
+              DEC CX
+            </div>
+            <div class="micro-desc"><code>INC</code> tăng giá trị thêm 1 (AX = AX + 1). <code>DEC</code> giảm giá trị đi 1 (CX = CX - 1). Chuyên dùng cho đếm vòng lặp.</div>
+            <div class="micro-result">&rarr; Tối ưu hơn lệnh ADD/SUB 1 rất nhiều</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>MUL src</span>
+              <span class="micro-badge">Phép nhân</span>
+            </div>
+            <div class="micro-code">
+              MOV AL, 6<br>
+              MOV BL, 7<br>
+              MUL BL
+            </div>
+            <div class="micro-desc">Phép nhân 8-bit ngầm định: CPU lấy <code>AL &times; BL = 6 &times; 7 = 42</code> (2AH). Kết quả 16-bit tự động cất vào toàn bộ thanh ghi <code>AX</code>!</div>
+            <div class="micro-result">&rarr; Kết quả: AX = 002AH (42 thập phân)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>DIV src</span>
+              <span class="micro-badge">Phép chia & Số dư</span>
+            </div>
+            <div class="micro-code">
+              MOV AX, 23<br>
+              MOV BL, 5<br>
+              DIV BL
+            </div>
+            <div class="micro-desc">Lấy <code>AX / BL = 23 / 5</code>. Thương số nguyên (4) cất vào <code>AL</code>; Số dư (3) tự động cất vào <code>AH</code>!</div>
+            <div class="micro-result">&rarr; Kết quả: AL = 4 (Thương), AH = 3 (Số dư)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>NEG reg</span>
+              <span class="micro-badge">Đổi dấu âm dương</span>
+            </div>
+            <div class="micro-code">
+              MOV AL, 5<br>
+              NEG AL
+            </div>
+            <div class="micro-desc">Thực hiện đảo dấu số học theo quy tắc số bù 2 (Two's Complement). Biến số dương +5 thành số âm -5 (FBH).</div>
+            <div class="micro-result">&rarr; Kết quả: AL = -5 (FBH)</div>
+          </div>
+
+        </div>
+
+        <!-- Group 3: Bitwise Logic -->
+        <h3 class="sub-heading">Nhóm 3: Lệnh Thao tác Bit & Logic (Bitwise Operations)</h3>
+        <div class="example-grid">
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>AND reg, mask</span>
+              <span class="micro-badge">Kiểm tra Chẵn / Lẻ</span>
+            </div>
+            <div class="micro-code">
+              MOV AL, 7 &nbsp;; 0000 0111b<br>
+              AND AL, 1 &nbsp;; 0000 0001b
+            </div>
+            <div class="micro-desc">Phép AND trích xuất bit LSB: nếu bằng 1 là số lẻ, bằng 0 là số chẵn; tối ưu hơn phép chia lấy dư.</div>
+            <div class="micro-result">&rarr; Kết quả: AL = 1 (Số 7 là số lẻ)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>OR reg, mask</span>
+              <span class="micro-badge">Bật (Set) bit lên 1</span>
+            </div>
+            <div class="micro-code">
+              MOV AL, 00000000b<br>
+              OR  AL, 00000100b
+            </div>
+            <div class="micro-desc">Phép OR dùng để bật một chân công tắc (bit thứ 2) lên 1 mà không làm thay đổi các bit khác.</div>
+            <div class="micro-result">&rarr; Kết quả: AL = 00000100b (Bit 2 đã bật)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>XOR reg, reg</span>
+              <span class="micro-badge">Xóa thanh ghi về 0</span>
+            </div>
+            <div class="micro-code">XOR AX, AX</div>
+            <div class="micro-desc">Mọi số XOR với chính nó đều ra 0 (1 XOR 1 = 0, 0 XOR 0 = 0). Đây là mẹo kinh điển để xóa trắng thanh ghi nhanh hơn lệnh MOV AX, 0!</div>
+            <div class="micro-result">&rarr; Kết quả: AX = 0000H (Mã máy chỉ tốn 2 byte)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>SHL reg, 1</span>
+              <span class="micro-badge">Nhân nhanh với 2</span>
+            </div>
+            <div class="micro-code">
+              MOV AL, 5 &nbsp;; 0000 0101b<br>
+              SHL AL, 1 &nbsp;; 0000 1010b
+            </div>
+            <div class="micro-desc">Dịch toàn bộ các bit sang trái 1 vị trí, chèn số 0 vào đuôi. Về mặt toán học, điều này tương đương với <code>5 &times; 2 = 10</code>!</div>
+            <div class="micro-result">&rarr; Kết quả: AL = 10 (Nhanh gấp 5 lần lệnh MUL)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>SHR reg, 1</span>
+              <span class="micro-badge">Chia nhanh cho 2</span>
+            </div>
+            <div class="micro-code">
+              MOV AL, 14 ; 0000 1110b<br>
+              SHR AL, 1 &nbsp;; 0000 0111b
+            </div>
+            <div class="micro-desc">Dịch các bit sang phải 1 vị trí. Tương đương với phép chia nguyên <code>14 / 2 = 7</code>!</div>
+            <div class="micro-result">&rarr; Kết quả: AL = 7 (Nhanh gấp 10 lần lệnh DIV)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>NOT reg</span>
+              <span class="micro-badge">Đảo bit toàn bộ</span>
+            </div>
+            <div class="micro-code">
+              MOV AL, 11110000b<br>
+              NOT AL
+            </div>
+            <div class="micro-desc">Biến mọi bit 0 thành 1, và bit 1 thành 0 (phép đảo bù 1).</div>
+            <div class="micro-result">&rarr; Kết quả: AL = 00001111b (0FH)</div>
+          </div>
+
+        </div>
+
+        <!-- Group 4: Comparison & Jumps -->
+        <h3 class="sub-heading">Nhóm 4: Lệnh So sánh & Rẽ nhánh (Comparison & Control Flow)</h3>
+        <div class="example-grid">
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>CMP reg, imm</span>
+              <span class="micro-badge">So sánh hai số</span>
+            </div>
+            <div class="micro-code">
+              MOV AX, 10<br>
+              CMP AX, 10
+            </div>
+            <div class="micro-desc">CPU thực hiện phép trừ ngầm <code>AX - 10 = 10 - 10 = 0</code>. Vì kết quả bằng 0 nên đèn cờ <b>Zero Flag (ZF = 1)</b> bật sáng!</div>
+            <div class="micro-result">&rarr; Bật cờ ZF = 1 (Hai số bằng nhau)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>JE / JZ</span>
+              <span class="micro-badge">Nhảy nếu Bằng nhau</span>
+            </div>
+            <div class="micro-code">
+              CMP AX, BX<br>
+              JE  LABEL_BANG_NHAU
+            </div>
+            <div class="micro-desc">Nếu cờ ZF = 1 (tức AX bằng BX), CPU lập tức nhảy đến nhãn <code>LABEL_BANG_NHAU</code> để thực thi. Nếu không bằng thì đi tiếp dòng dưới.</div>
+            <div class="micro-result">&rarr; Rẽ nhánh theo điều kiện bằng</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>JG / JL</span>
+              <span class="micro-badge">Lớn hơn / Nhỏ hơn</span>
+            </div>
+            <div class="micro-code">
+              CMP AX, BX<br>
+              JG  AX_LON_HON
+            </div>
+            <div class="micro-desc"><code>JG</code> (Jump if Greater): Nhảy nếu AX &gt; BX. <code>JL</code> (Jump if Less): Nhảy nếu AX &lt; BX.</div>
+            <div class="micro-result">&rarr; Cơ sở xây dựng cấu trúc if (a &gt; b)</div>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-title">
+              <span>JMP label</span>
+              <span class="micro-badge">Nhảy vô điều kiện</span>
+            </div>
+            <div class="micro-code">JMP KET_THUC</div>
+            <div class="micro-desc">Không cần kiểm tra cờ nào cả, CPU lập tức đổi con trỏ lệnh <code>PC/IP</code> nhảy thẳng đến nhãn <code>KET_THUC</code>.</div>
+            <div class="micro-result">&rarr; Giống lệnh goto hoặc break</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-control-flow" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.4</span> Các Cấu trúc Điều khiển Cơ bản (Control Flow Idioms)</h2>
+        <p>
+          Trong các ngôn ngữ bậc cao (như C/C++, Python), bạn đã quen thuộc với <code>if-else</code>, <code>while</code>, <code>for</code>. Dưới đây là cách chuyển dịch trực tiếp chúng sang Hợp ngữ máy tính:
+        </p>
+
+        <!-- Pattern 1: if-else -->
+        <h3 class="sub-heading">Mẫu 1: Cấu trúc Rẽ nhánh Điều kiện if-else</h3>
+        <p><b>Bài toán:</b> Nếu <span class="math"><i>a</i> == <i>b</i></span> thì gán <span class="math"><i>c</i> = 10</span>, ngược lại gán <span class="math"><i>c</i> = 20</span>.</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+          <div>
+            <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px;">Ngôn ngữ C bậc cao:</div>
+            <pre><code>if (a == b) {
+    c = 10;
+} else {
+    c = 20;
+}</code></pre>
+          </div>
+          <div>
+            <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--navy); margin-bottom:4px;">Hợp ngữ Intel x86 tương đương:</div>
+            <pre><code>    MOV AX, [A]       ; Nạp a vào AX
+    CMP AX, [B]       ; So sánh a với b
+    JNE NHAN_ELSE     ; Nếu không bằng -> Nhảy sang ELSE
+    
+    MOV WORD PTR [C], 10 ; Nhánh IF: c = 10
+    JMP KET_THUC      ; Thoát khỏi khối if-else
+    
+NHAN_ELSE:
+    MOV WORD PTR [C], 20 ; Nhánh ELSE: c = 20
+    
+KET_THUC:
+    ; Chạy tiếp chương trình...</code></pre>
+          </div>
+        </div>
+
+        <!-- Pattern 2: For Loop -->
+        <h3 class="sub-heading">Mẫu 2: Vòng lặp For tính Tổng dãy số: S = 1 + 2 + ... + N</h3>
+        <p><b>Bài toán:</b> Tính tổng các số từ 1 đến 5 (<span class="math">1 + 2 + 3 + 4 + 5 = 15</span>). Sử dụng thanh ghi đếm <code>CX</code> và lệnh lặp thông minh <code>LOOP</code>:</p>
+        <pre><code>    MOV AX, 0         ; AX là hộp tích lũy (Sum = 0)
+    MOV CX, 5         ; CX là bộ đếm số lần lặp (Count = 5)
+    
+VONG_LAP:
+    ADD AX, CX        ; Cộng dồn: Sum = Sum + CX (lần lượt cộng 5, 4, 3, 2, 1)
+    LOOP VONG_LAP     ; Lệnh LOOP tự động làm 2 việc:
+                      ; 1. Giảm CX đi 1 (CX = CX - 1)
+                      ; 2. Nếu CX != 0 thì tự động nhảy ngược lại VONG_LAP!
+                      
+    ; Khi CX giảm về 0, vòng lặp kết thúc. Kết quả trong AX = 15 (0FH)!</code></pre>
+
+        <!-- Pattern 3: Find Max in Array -->
+        <h3 class="sub-heading">Mẫu 3: Thuật toán tìm số lớn nhất (MAX) trong Mảng bộ nhớ</h3>
+        <p><b>Bài toán:</b> Cho một mảng 4 phần tử trong RAM: <code>[12, 45, 8, 30]</code>. Tìm giá trị lớn nhất:</p>
+        <pre><code>    ; Giả sử mảng bắt đầu tại địa chỉ ARRAY_DATA
+    MOV SI, 0              ; SI là con trỏ chỉ số phần tử (Index = 0)
+    MOV AX, [ARRAY_DATA]   ; Tạm coi phần tử đầu tiên là MAX (AX = 12)
+    MOV CX, 3              ; Còn lại 3 phần tử cần so sánh (CX = 3)
+    
+DUYET_MANG:
+    ADD SI, 2              ; Mỗi số 16-bit chiếm 2 byte -> nhảy sang số tiếp theo
+    CMP [ARRAY_DATA + SI], AX ; So sánh số hiện tại với MAX đang giữ trong AX
+    JLE KHONG_DOI          ; Nếu số hiện tại &lt;= AX thì bỏ qua
+    
+    MOV AX, [ARRAY_DATA + SI] ; Nếu lớn hơn -> cập nhật kỷ lục MAX mới vào AX!
+    
+KHONG_DOI:
+    LOOP DUYET_MANG        ; Giảm CX và tiếp tục duyệt phần tử kế tiếp
+    
+    ; Kết thúc: AX chứa giá trị MAX = 45!</code></pre>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-practical-apps" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.5</span> Các ví dụ ứng dụng thực tế trong kỹ thuật</h2>
+        <p>
+          Dưới đây là 5 ví dụ ứng dụng kỹ thuật thực tế được lập trình trực tiếp bằng hợp ngữ trong các hệ thống nhúng, vi điều khiển IoT và phần mềm hệ thống:
+        </p>
+
+        <!-- App 1: ASCII Uppercase -->
+        <div class="box box-app">
+          <div class="box-title">Ứng dụng 1: Xử lý chuỗi ký tự - Chuyển chữ thường sang chữ hoa (To Uppercase)</div>
+          <p>
+            <b>Đặc điểm của bảng mã ASCII:</b> Ký tự chữ thường <code>'a'</code> có mã nhị phân là <code>0110 0001b</code> (61H = 97). Ký tự chữ hoa <code>'A'</code> có mã là <code>0100 0001b</code> (41H = 65).
+          </p>
+          <p>
+            Hai ký tự này <b>chỉ khác nhau ở bit số 5</b> (bit 5 bằng 1 đại diện chữ thường, bằng 0 đại diện chữ hoa). Do đó, để chuyển đổi chữ thường sang chữ hoa, CPU chỉ cần thực hiện một phép toán logic bit:
+          </p>
+          <pre><code>; Hàm biến đổi ký tự trong AL từ thường sang hoa:
+TO_UPPER:
+    CMP AL, 'a'       ; Kiểm tra ký tự có nhỏ hơn 'a' không
+    JB  BO_QUA        ; Nhỏ hơn 'a' -> Không phải chữ thường, bỏ qua
+    CMP AL, 'z'       ; Kiểm tra ký tự có lớn hơn 'z' không
+    JA  BO_QUA        ; Lớn hơn 'z' -> Bỏ qua
+    
+    AND AL, 11011111b ; Xóa bit số 5 về 0 (phép AND với hằng số DFH)
+                      ; Chuyển 'a' (01100001b) thành 'A' (01000001b)
+BO_QUA:
+    RET</code></pre>
+        </div>
+
+        <!-- App 2: Reverse String with Stack -->
+        <div class="box box-app">
+          <div class="box-title">Ứng dụng 2: Đảo ngược chuỗi (String Reverse) bằng Ngăn xếp Stack</div>
+          <p>
+            Ngăn xếp Stack có đặc tính vật lý kinh điển: <b>LIFO (Last-In, First-Out: Vào sau cùng sẽ chui ra đầu tiên)</b>. Đây chính là công cụ hoàn hảo nhất để đảo ngược một chuỗi như chữ <code>"HELLO"</code> &rarr; <code>"OLLEH"</code>:
+          </p>
+          <pre><code>; Bước 1: Lần lượt cất từng chữ cái vào Stack
+    PUSH 'H'          ; 'H' nằm dưới đáy sâu nhất
+    PUSH 'E'
+    PUSH 'L'
+    PUSH 'L'
+    PUSH 'O'          ; 'O' vào sau cùng nên nằm ngay trên đỉnh Stack
+    
+; Bước 2: Rút ngược ra nạp vào chuỗi kết quả
+    POP AX            ; Rút ra đầu tiên -> nhận được chữ 'O'!
+    POP BX            ; Rút tiếp -> chữ 'L'!
+    POP CX            ; Rút tiếp -> chữ 'L'!
+    POP DX            ; Rút tiếp -> chữ 'E'!
+    POP SI            ; Rút cuối cùng -> chữ 'H'!
+    ; Chuỗi tự động được đảo ngược hoàn toàn thành "OLLEH"!</code></pre>
+        </div>
+
+        <!-- App 3: IoT Sensor Monitor -->
+        <div class="box box-app">
+          <div class="box-title">Ứng dụng 3: Vi điều khiển IoT giám sát cảm biến nhiệt độ thông minh</div>
+          <p>
+            Trong các vi điều khiển nhúng phòng máy chủ hoặc lò ấp trứng, hợp ngữ được dùng để đọc trực tiếp cổng vào cảm biến và kích hoạt còi báo động khẩn cấp:
+          </p>
+          <pre><code>KIEM_TRA_NHIET_DO:
+    IN  AL, 40H       ; Đọc giá trị nhiệt độ hiện tại từ cổng cảm biến 40H vào AL
+    CMP AL, 45        ; So sánh nhiệt độ với ngưỡng an toàn: 45 độ C
+    JLE NHIET_DO_ON   ; Nếu AL &lt;= 45: Nhiệt độ bình thường, bỏ qua
+    
+    ; Nếu vượt quá 45 độ: Kích hoạt hệ thống làm mát và chuông báo động!
+    MOV AL, 11110000b ; Mã lệnh: Bật quạt công suất tối đa + Bật còi
+    OUT 50H, AL       ; Xuất tín hiệu điều khiển ra cổng rơ-le 50H
+    JMP KET_THUC_KT
+    
+NHIET_DO_ON:
+    MOV AL, 00000000b ; Tắt còi báo động
+    OUT 50H, AL
+    
+KET_THUC_KT:</code></pre>
+        </div>
+
+        <!-- App 4: XOR Encryption -->
+        <div class="box box-app">
+          <div class="box-title">Ứng dụng 4: Thuật toán Mã hóa và Giải mã Mật mã bằng phép XOR (XOR Cipher)</div>
+          <p>
+            Phép toán <code>XOR</code> có tính chất tự nghịch đảo đối xứng:
+            <span class="math">(<i>A</i> &oplus; <i>Khóa</i>) &oplus; <i>Khóa</i> = <i>A</i></span>.
+            Do đó, khi thực hiện phép XOR dữ liệu gốc với khóa (Key), ta thu được bản mã (Ciphertext); thực hiện XOR bản mã với chính khóa đó sẽ khôi phục lại dữ liệu gốc (Plaintext).
+          </p>
+          <pre><code>; Khóa bí mật đối xứng: KEY = 0AAH (1010 1010b)
+; Dữ liệu gốc cần truyền: 'P' (ASCII: 50H = 0101 0000b)
+
+    MOV AL, 50H       ; AL chứa mã ký tự 'P'
+    XOR AL, 0AAH      ; Mã hóa: 01010000b XOR 10101010b = 11111010b (FAH)
+                      ; AL chứa dữ liệu đã mã hóa (FAH) để truyền qua mạng
+
+; Bên nhận thực hiện giải mã:
+    XOR AL, 0AAH      ; Lấy FAH XOR lại với khóa 0AAH:
+                      ; 11111010b XOR 10101010b = 01010000b (50H = ký tự 'P' ban đầu)</code></pre>
+        </div>
+
+        <!-- App 5: AI Dot Product -->
+        <div class="box box-app">
+          <div class="box-title">Ứng dụng 5: Tích vô hướng Vector (Dot Product) - Nền tảng Mạng nơ-ron AI & Xử lý Tín hiệu Số (DSP)</div>
+          <p>
+            Trong mọi mô hình Trí tuệ nhân tạo (AI/Deep Learning), phép toán cốt lõi nhất được thực hiện hàng tỷ lần mỗi giây là tính tích vô hướng giữa Vector đầu vào <span class="math"><i>X</i></span> và Trọng số nơ-ron <span class="math"><i>W</i></span>:
+            <span class="math"><i>Y</i> = &sum; (<i>X</i>[<i>i</i>] &times; <i>W</i>[<i>i</i>])</span>.
+          </p>
+          <pre><code>; Giả sử mảng X và W có N phần tử. Thanh ghi DX chứa tổng tích lũy (Sum = 0)
+    MOV DX, 0         ; DX = 0 (Bộ tích lũy)
+    MOV SI, 0         ; Chỉ số duyệt mảng i = 0
+    MOV CX, 4         ; Giả sử vector có 4 chiều (N = 4)
+    
+TINH_TICH_VO_HUONG:
+    MOV AL, [X + SI]  ; Nạp giá trị X[i]
+    MOV BL, [W + SI]  ; Nạp trọng số W[i]
+    MUL BL            ; Nhân AL x BL -> kết quả chứa trong AX
+    ADD DX, AX        ; Cộng dồn vào biến tổng: DX = DX + (X[i] * W[i])
+    
+    INC SI            ; Tăng chỉ số mảng sang phần tử kế tiếp
+    LOOP TINH_TICH_VO_HUONG ; Lặp lại cho đủ 4 phần tử
+    
+    ; Kết quả trong DX chính là đầu ra nơ-ron nhân tạo sẵn sàng đưa qua hàm kích hoạt!</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-operands" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.6</span> Phân loại kiến trúc theo số địa chỉ toán hạng (0–3 địa chỉ)</h2>
+        <p>
+          So sánh phương thức thực thi biểu thức số học <span class="math"><i>Y</i> = (<i>A</i> + <i>B</i>) &times; (<i>C</i> - <i>D</i>)</span> trên 4 mô hình kiến trúc tập lệnh:
+        </p>
+
+        <div class="table-responsive">
+          <table class="academic-table">
+            <thead>
+              <tr>
+                <th style="width: 170px;">Loại kiến trúc</th>
+                <th style="width: 220px;">Cách ra lệnh & Ý nghĩa</th>
+                <th style="width: 260px;">Đoạn lệnh tính Y = (A+B)*(C-D)</th>
+                <th>Giải thích bằng lời dễ hiểu</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>1. Máy 3 địa chỉ</b><br>(RISC, MIPS, ARM)</td>
+                <td>
+                  <code>LỆNH Đích, Nguồn1, Nguồn2</code><br>
+                  <span class="syntax-spec">Đích &larr; Nguồn1 PHÉP_TÍNH Nguồn2</span>
+                </td>
+                <td>
+                  <code>ADD R1, A, B</code><br>
+                  <code>SUB R2, C, D</code><br>
+                  <code>MUL Y,  R1, R2</code>
+                </td>
+                <td>Lấy A cộng B bỏ vào R1; Lấy C trừ D bỏ vào R2; Lấy R1 nhân R2 bỏ vào Y. Giá trị ban đầu của A, B, C, D không hề bị mất.</td>
+              </tr>
+              <tr>
+                <td><b>2. Máy 2 địa chỉ</b><br>(Intel x86 trong PC)</td>
+                <td>
+                  <code>LỆNH Đích, Nguồn</code><br>
+                  <span class="syntax-spec">Đích &larr; Đích PHÉP_TÍNH Nguồn</span>
+                </td>
+                <td>
+                  <code>MOV R1, A</code><br>
+                  <code>ADD R1, B</code><br>
+                  <code>MOV R2, C</code><br>
+                  <code>SUB R2, D</code><br>
+                  <code>MUL R1, R2</code><br>
+                  <code>MOV Y,  R1</code>
+                </td>
+                <td>Chiếc hộp Đích vừa là nguồn vừa nhận kết quả (giá trị cũ trong R1 bị ghi đè). Câu lệnh ngắn gọn hơn máy 3 địa chỉ.</td>
+              </tr>
+              <tr>
+                <td><b>3. Máy 1 địa chỉ</b><br>(Máy tính bỏ túi có nút M+)</td>
+                <td>
+                  <code>LỆNH Toán_hạng</code><br>
+                  <span class="syntax-spec">AC &larr; AC PHÉP_TÍNH Toán_hạng</span>
+                </td>
+                <td>
+                  <code>LOAD  A</code><br>
+                  <code>ADD   B</code><br>
+                  <code>STORE Y</code><br>
+                  <code>LOAD  C</code><br>
+                  <code>SUB   D</code><br>
+                  <code>MUL   Y</code><br>
+                  <code>STORE Y</code>
+                </td>
+                <td>Chỉ có duy nhất 1 thanh ghi tích lũy ngầm định gọi là AC (Accumulator). Mọi phép tính cộng trừ đều diễn ra trên màn hình AC này.</td>
+              </tr>
+              <tr>
+                <td><b>4. Máy 0 địa chỉ</b><br>(Ngăn xếp Stack / Java JVM)</td>
+                <td>
+                  <code>LỆNH (Không cần ghi tên ai)</code><br>
+                  <span class="syntax-spec">Tự động rút 2 số đỉnh Stack</span>
+                </td>
+                <td>
+                  <code>PUSH A</code><br>
+                  <code>PUSH B</code><br>
+                  <code>ADD</code><br>
+                  <code>PUSH C</code><br>
+                  <code>PUSH D</code><br>
+                  <code>SUB</code><br>
+                  <code>MUL</code><br>
+                  <code>POP  Y</code>
+                </td>
+                <td>Giống chồng đĩa trong quán ăn. Lệnh ADD tự rút 2 đĩa trên cùng (A, B) ra cộng lại rồi úp đĩa kết quả ngược vào chồng đĩa.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-addressing" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.7</span> Các chế độ định địa chỉ (Addressing Modes)</h2>
+        <p>
+          <b>Chế độ định địa chỉ (Addressing Modes)</b> quy định phương thức xác định địa chỉ vật lý hoặc vị trí của toán hạng (trong thanh ghi, bộ nhớ hoặc trực tiếp trong mã lệnh).
+        </p>
+
+        <div class="table-responsive">
+          <table class="academic-table">
+            <thead>
+              <tr>
+                <th style="width: 200px;">Chế độ địa chỉ</th>
+                <th style="width: 220px;">Ví dụ câu lệnh</th>
+                <th style="width: 240px;">Ẩn dụ đời sống</th>
+                <th>Bản chất bên trong phần cứng máy tính</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>1. Tức thì (Immediate)</b></td>
+                <td><code>MOV AX, 500</code></td>
+                <td>Tiền mặt có sẵn trong tay</td>
+                <td>Con số 500 nằm ngay sát sau mã lệnh, nạp thẳng tức thì vào thanh ghi mà không cần tìm kiếm đâu xa.</td>
+              </tr>
+              <tr>
+                <td><b>2. Thanh ghi (Register)</b></td>
+                <td><code>MOV AX, BX</code></td>
+                <td>Chuyển đồ giữa 2 cái túi áo</td>
+                <td>Lấy dữ liệu từ thanh ghi BX bỏ sang thanh ghi AX. Diễn ra hoàn toàn trong lòng CPU, tốc độ nhanh nhất.</td>
+              </tr>
+              <tr>
+                <td><b>3. Trực tiếp (Direct)</b></td>
+                <td><code>MOV AX, [1000H]</code></td>
+                <td>Đến đúng số nhà 1000 lấy đồ</td>
+                <td>Số 1000H là địa chỉ ô nhớ RAM cụ thể. CPU phát số 1000H lên Address Bus và mở đúng ô nhớ đó lấy dữ liệu.</td>
+              </tr>
+              <tr>
+                <td><b>4. Gián tiếp qua thanh ghi</b></td>
+                <td><code>MOV AX, [BX]</code></td>
+                <td>Mở mẩu giấy trong túi BX ra xem số nhà</td>
+                <td>Thanh ghi BX đang cầm số hiệu địa chỉ. CPU nhìn vào ruột BX để biết phải chạy đến ô RAM nào.</td>
+              </tr>
+              <tr>
+                <td><b>5. Chỉ số / Cơ sở (Base/Index)</b></td>
+                <td><code>MOV AX, [BX + SI]</code></td>
+                <td>Tìm nhà số BX, đếm tới SI bước</td>
+                <td>Chuyên dùng để duyệt mảng: BX trỏ vào đầu dãy nhà (đầu mảng), SI là số thứ tự nhà cần vào (chỉ số phần tử mảng).</td>
+              </tr>
+              <tr>
+                <td><b>6. Tương đối PC (PC-Relative)</b></td>
+                <td><code>BEQ R1, R2, +8</code></td>
+                <td>Bước tới 8 bước nữa</td>
+                <td>Dùng trong lệnh rẽ nhánh: Lấy vị trí con trỏ lệnh hiện tại (PC) cộng thêm một khoảng dịch (Offset).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-mem-anim" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.8</span> Mô hình tương tác đường dữ liệu CPU và Bộ nhớ</h2>
+        <p>
+          Dưới đây là mô hình mô phỏng tương tác thời gian thực giữa CPU và bộ nhớ RAM thông qua các đường truyền bus: <b>Address Bus (Bus địa chỉ)</b>, <b>Data Bus (Bus dữ liệu)</b> cùng các tín hiệu điều khiển <b>MEM_READ / MEM_WRITE</b>:
+        </p>
+
+        <!-- INTERACTIVE ANIMATION COMPONENT: MEMORY ASSEMBLY STUDIO -->
+        <div class="anim-card">
+          <div class="anim-header">
+            <div class="anim-title">
+              <span>MÔ PHỎNG TƯƠNG TÁC ĐƯỜNG DỮ LIỆU CPU VÀ BỘ NHỚ (DATAPATH & MEMORY)</span>
+            </div>
+            <div class="anim-btn-group">
+              <button class="btn-anim" onclick="memPlayAuto()">Chạy Hoạt Họa (Play)</button>
+              <button class="btn-anim btn-secondary" onclick="memStep()">Bước Tiếp (Step)</button>
+              <button class="btn-anim btn-secondary" onclick="memReset()">Đặt lại (Reset)</button>
+            </div>
+          </div>
+
+          <div class="studio-grid">
+            <!-- Left: Scenarios list -->
+            <div class="asm-program-list">
+              <h4>Chọn kịch bản thao tác bộ nhớ:</h4>
+              <div class="code-line-item active" id="mscen-0" onclick="selectMemScenario(0)">
+                <span>1. MOV [1000H], AX (Ghi RAM & Little-Endian)</span>
+              </div>
+              <div class="code-line-item" id="mscen-1" onclick="selectMemScenario(1)">
+                <span>2. MOV BX, [1000H] (Đọc từ RAM vào BX)</span>
+              </div>
+              <div class="code-line-item" id="mscen-2" onclick="selectMemScenario(2)">
+                <span>3. LEA vs MOV (Lấy địa chỉ vs đọc RAM)</span>
+              </div>
+              <div class="code-line-item" id="mscen-3" onclick="selectMemScenario(3)">
+                <span>4. MOV DX, [BX+SI] (Duyệt mảng bộ nhớ)</span>
+              </div>
+              <div class="code-line-item" id="mscen-4" onclick="selectMemScenario(4)">
+                <span>5. PUSH AX (Cất vào Ngăn xếp Stack)</span>
+              </div>
+              <div class="code-line-item" id="mscen-5" onclick="selectMemScenario(5)">
+                <span>6. POP BX (Lấy khỏi Ngăn xếp Stack)</span>
+              </div>
+              <div class="code-line-item" id="mscen-6" onclick="selectMemScenario(6)">
+                <span>7. ADD AX, [1004H] (ALU cộng trực tiếp với RAM)</span>
+              </div>
+            </div>
+
+            <!-- Right: Interactive CPU & Memory Stage -->
+            <div class="datapath-stage" id="mem-stage">
+              <!-- Flying Packet -->
+              <div class="flying-packet" id="mem-packet">1234H</div>
+
+              <!-- Top: CPU Registers -->
+              <div>
+                <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:var(--navy); margin-bottom:6px;">Bên trong CPU (Tập thanh ghi):</div>
+                <div class="studio-hardware-row">
+                  <div class="hw-box" id="mbox-ax">
+                    <div class="hw-label">AX (AH:AL)</div>
+                    <div class="hw-value" id="mval-ax">1234H</div>
+                  </div>
+                  <div class="hw-box" id="mbox-bx">
+                    <div class="hw-label">BX (Cơ sở)</div>
+                    <div class="hw-value" id="mval-bx">1000H</div>
+                  </div>
+                  <div class="hw-box" id="mbox-si">
+                    <div class="hw-label">SI (Chỉ số)</div>
+                    <div class="hw-value" id="mval-si">0004H</div>
+                  </div>
+                  <div class="hw-box" id="mbox-sp">
+                    <div class="hw-label">SP (Con trỏ Stack)</div>
+                    <div class="hw-value" id="mval-sp">FFFEH</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Middle: System Buses -->
+              <div class="bus-indicator-bar">
+                <div class="bus-tag">
+                  <div class="bus-light" id="light-addr"></div>
+                  <span>Address Bus: <strong id="bus-addr-val">None</strong></span>
+                </div>
+                <div class="bus-tag">
+                  <div class="bus-light" id="light-data"></div>
+                  <span>Data Bus: <strong id="bus-data-val">None</strong></span>
+                </div>
+                <div class="bus-tag">
+                  <div class="bus-light" id="light-ctrl"></div>
+                  <span>Control: <strong id="bus-ctrl-val">IDLE</strong></span>
+                </div>
+              </div>
+
+              <!-- Bottom: RAM Grid (Visual Memory Map) -->
+              <div class="ram-grid-container">
+                <div class="ram-grid-header">
+                  <span>BỘ NHỚ RAM (Mô hình từng Byte):</span>
+                  <span id="ram-status-badge" style="color:var(--text-muted);">Sẵn sàng</span>
+                </div>
+                <div class="ram-cells-row">
+                  <div class="ram-cell" id="rcell-1000">
+                    <div class="cell-addr">1000H</div>
+                    <div class="cell-val" id="rval-1000">34H</div>
+                  </div>
+                  <div class="ram-cell" id="rcell-1001">
+                    <div class="cell-addr">1001H</div>
+                    <div class="cell-val" id="rval-1001">12H</div>
+                  </div>
+                  <div class="ram-cell" id="rcell-1002">
+                    <div class="cell-addr">1002H</div>
+                    <div class="cell-val" id="rval-1002">78H</div>
+                  </div>
+                  <div class="ram-cell" id="rcell-1003">
+                    <div class="cell-addr">1003H</div>
+                    <div class="cell-val" id="rval-1003">56H</div>
+                  </div>
+                  <div class="ram-cell" id="rcell-1004">
+                    <div class="cell-addr">1004H</div>
+                    <div class="cell-val" id="rval-1004">AAH</div>
+                  </div>
+                  <div class="ram-cell" id="rcell-1005">
+                    <div class="cell-addr">1005H</div>
+                    <div class="cell-val" id="rval-1005">55H</div>
+                  </div>
+                  <div class="ram-cell" id="rcell-fffc">
+                    <div class="cell-addr">FFFCH</div>
+                    <div class="cell-val" id="rval-fffc">00H</div>
+                  </div>
+                  <div class="ram-cell" id="rcell-fffe">
+                    <div class="cell-addr">FFFEH</div>
+                    <div class="cell-val" id="rval-fffe">BEEFH</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Narration Box -->
+          <div class="studio-narration" id="mem-narration">
+            <b>Sẵn sàng:</b> Chọn kịch bản bên trái và nhấn "Chạy Hoạt Họa" hoặc "Bước Tiếp" để xem chuyển động dữ liệu giữa CPU và RAM.
+          </div>
+        </div>
+
+        <div class="box box-example">
+          <div class="box-title">Nguyên lý cốt tử: Quy ước Little-Endian trong Bộ nhớ x86</div>
+          <p>
+            Khi máy tính x86 ghi một con số 16-bit <code>1234H</code> vào ô nhớ <code>1000H</code>:
+          </p>
+          <ul>
+            <li><b>Byte thấp (34H):</b> Luôn được xếp vào <b>địa chỉ thấp hơn (1000H)</b>.</li>
+            <li><b>Byte cao (12H):</b> Được xếp vào <b>địa chỉ cao hơn tiếp theo (1001H)</b>.</li>
+          </ul>
+          <p>
+            Đây là quy ước "Đầu nhỏ" (Little-Endian) kinh điển của họ vi xử lý Intel và RISC-V. Khi đọc ngược lại vào thanh ghi <code>AX</code>, CPU tự động ghép <code>AL = 34H</code> và <code>AH = 12H</code> để phục hồi lại trọn vẹn số <code>1234H</code>!
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-flags" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.9</span> Thanh ghi trạng thái và cờ hiệu (Flags Register)</h2>
+        <p>
+          Sau mỗi phép tính toán số học hoặc logic, ALU cập nhật trạng thái kết quả vào <b>thanh ghi cờ (Flags Register)</b>:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0;">
+          <div class="box" style="margin:0; border-top: 4px solid var(--green);">
+            <div class="box-title" style="color:var(--green); font-family:var(--font-mono);">ZF (Zero Flag)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Cờ số không:</b> Thiết lập lên 1 khi kết quả phép tính vừa thực hiện <b>bằng 0</b>. Thường dùng kiểm tra điều kiện bằng nhau trong các lệnh so sánh (CMP) và rẽ nhánh.</p>
+          </div>
+          <div class="box" style="margin:0; border-top: 4px solid var(--navy);">
+            <div class="box-title" style="color:var(--navy); font-family:var(--font-mono);">SF (Sign Flag)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Cờ dấu:</b> Bằng giá trị của bit có trọng số cao nhất (MSB) của kết quả: bằng 1 nếu kết quả âm (trong biểu diễn bù 2) và bằng 0 nếu dương.</p>
+          </div>
+          <div class="box" style="margin:0; border-top: 4px solid var(--red);">
+            <div class="box-title" style="color:var(--red); font-family:var(--font-mono);">CF (Carry Flag)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Cờ nhớ:</b> Bật sáng khi phép cộng <b>bị tràn vượt quá phạm vi số không dấu</b> (phát sinh bit nhớ từ bit cao nhất).</p>
+          </div>
+          <div class="box" style="margin:0; border-top: 4px solid var(--copper);">
+            <div class="box-title" style="color:var(--copper); font-family:var(--font-mono);">OF (Overflow Flag)</div>
+            <p style="font-size:0.9rem; margin:0;"><b>Cờ tràn số có dấu:</b> Bật sáng khi kết quả vượt quá dải biểu diễn số bù 2 hợp lệ của thanh ghi.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-cisc-risc" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.10</span> So sánh kiến trúc CISC và RISC</h2>
+        <p>
+          Hai triết lý thiết kế tập lệnh vi xử lý tiêu biểu:
+        </p>
+
+        <div class="box box-metaphor">
+          <div class="box-title">Đặc tính kỹ thuật kiến trúc CISC và RISC</div>
+          <ul>
+            <li>
+              <b>CISC (Complex Instruction Set Computer - Ví dụ: kiến trúc x86 / IA-32, x86-64):</b><br>
+              Tập lệnh đa dạng và phức tạp, cho phép một câu lệnh thực hiện nhiều thao tác phối hợp (nạp bộ nhớ, tính toán số học, lưu kết quả). Lệnh có độ dài thay đổi (từ 1 đến 15 byte trên x86), khối giải mã lệnh phần cứng phức tạp nhằm giảm số lượng lệnh cần biên dịch cho mỗi chương trình.
+            </li>
+            <li>
+              <b>RISC (Reduced Instruction Set Computer - Ví dụ: ARM, MIPS, RISC-V):</b><br>
+              Tối ưu hóa tập lệnh đơn giản, đa số các lệnh thực thi trong đúng 1 chu kỳ máy với định dạng độ dài cố định (thường 32 bit). Áp dụng triệt để kiến trúc Load/Store: chỉ lệnh nạp (LW/LD) và ghi (SW/SD) được phép truy xuất bộ nhớ; mọi thao tác tính toán số học - logic chỉ làm việc trên các thanh ghi đa năng.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-pipeline" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.11</span> Cơ chế đường ống lệnh (Pipeline)</h2>
+        <p>
+          <b>Pipeline (Kỹ thuật phân tầng đường ống)</b> là phương pháp xử lý song song mức lệnh (ILP - Instruction-Level Parallelism), cho phép nhiều lệnh được thực thi gối đầu nhau qua các tầng phần cứng độc lập. Trong vi xử lý RISC kinh điển, chu kỳ lệnh được chia thành <b>5 tầng cơ bản</b>:
+        </p>
+
+        <ol>
+          <li><b>IF (Instruction Fetch):</b> Nạp mã lệnh từ bộ nhớ đệm lệnh (I-Cache) dựa trên con trỏ lệnh PC.</li>
+          <li><b>ID (Instruction Decode):</b> Giải mã lệnh, phát tín hiệu điều khiển và đọc toán hạng từ tập thanh ghi.</li>
+          <li><b>EX (Execute):</b> Thực hiện phép tính số học/logic tại ALU hoặc tính toán địa chỉ hiệu dụng.</li>
+          <li><b>MEM (Memory Access):</b> Truy xuất dữ liệu trong bộ nhớ đệm (D-Cache) đối với các lệnh Load/Store.</li>
+          <li><b>WB (Write Back):</b> Ghi kết quả tính toán hoặc dữ liệu đọc được trở lại vào tập thanh ghi đích.</li>
+        </ol>
+
+        <!-- PIPELINE CONVEYOR COMPONENT -->
+        <div class="anim-card">
+          <div class="anim-header">
+            <div class="anim-title">
+              <span>MÔ PHỎNG BĂNG CHUYỀN PIPELINE 5 TẦNG (PIPELINE CONVEYOR)</span>
+            </div>
+            <div class="anim-btn-group">
+              <button class="btn-anim" onclick="pipeStepConveyor()">Bước Tiếp (Clock Next)</button>
+              <button class="btn-anim btn-secondary" onclick="pipeResetConveyor()">Đặt lại (Reset)</button>
+            </div>
+          </div>
+
+          <div class="pipeline-conveyor-wrap">
+            <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px;">
+              Chu kỳ xung nhịp (Clock): <span id="pipe-clock-num" style="color:var(--copper); font-size:16px;">0</span>
+            </div>
+
+            <div class="conveyor-track">
+              <div class="conveyor-stage-box">
+                <div class="conveyor-stage-title">1. IF (Nạp lệnh)</div>
+                <div class="conveyor-cell" id="c-if"><span style="color:#94a3b8;">Trống</span></div>
+              </div>
+              <div class="conveyor-stage-box">
+                <div class="conveyor-stage-title">2. ID (Giải mã)</div>
+                <div class="conveyor-cell" id="c-id"><span style="color:#94a3b8;">Trống</span></div>
+              </div>
+              <div class="conveyor-stage-box">
+                <div class="conveyor-stage-title">3. EX (Thực thi)</div>
+                <div class="conveyor-cell" id="c-ex"><span style="color:#94a3b8;">Trống</span></div>
+              </div>
+              <div class="conveyor-stage-box">
+                <div class="conveyor-stage-title">4. MEM (Bộ nhớ)</div>
+                <div class="conveyor-cell" id="c-mem"><span style="color:#94a3b8;">Trống</span></div>
+              </div>
+              <div class="conveyor-stage-box">
+                <div class="conveyor-stage-title">5. WB (Ghi về)</div>
+                <div class="conveyor-cell" id="c-wb"><span style="color:#94a3b8;">Trống</span></div>
+              </div>
+            </div>
+
+            <div class="studio-narration" id="pipe-narration" style="margin-top:16px; border-radius:4px;">
+              Nhấn "Bước Tiếp (Clock Next)" để quan sát từng lệnh trôi vào băng chuyền!
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-hazards" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.12</span> Xung đột đường ống (Pipeline Hazards) và giải pháp</h2>
+        <p>
+          Trong thực tế thực thi đường ống, có 3 nhóm xung đột cản trở việc thực hiện lệnh ở chu kỳ tiếp theo:
+        </p>
+
+        <div class="box box-warn">
+          <div class="box-title">1. Xung đột tài nguyên / cấu trúc (Structural Hazard)</div>
+          <p>
+            Xuất hiện khi hai hoặc nhiều lệnh ở các tầng khác nhau cần truy xuất đồng thời một tài nguyên phần cứng duy nhất trong cùng một chu kỳ xung nhịp.
+          </p>
+          <p><b>Giải pháp:</b> Sử dụng kiến trúc bộ nhớ phân tách (Harvard Architecture) với bộ nhớ đệm lệnh (I-Cache) và bộ nhớ đệm dữ liệu (D-Cache) độc lập.</p>
+        </div>
+
+        <div class="box box-warn">
+          <div class="box-title">2. Xung đột dữ liệu (Data Hazard)</div>
+          <p>
+            Xuất hiện khi một lệnh phụ thuộc vào kết quả của một lệnh trước đó vẫn đang trong quá trình thực thi trên đường ống và chưa được ghi vào tập thanh ghi.
+          </p>
+          <pre><code>ADD R1, R2, R3    ; R1 đến tầng WB (chu kỳ 5) mới được ghi vào thanh ghi
+SUB R4, R1, R5    ; Lệnh SUB cần giá trị R1 tại tầng ID (chu kỳ 3)</code></pre>
+          <p><b>Giải pháp tối ưu: Kỹ thuật chuyển tiếp dữ liệu (Data Forwarding / Bypassing):</b> Định tuyến trực tiếp dữ liệu từ đầu ra khối ALU hoặc thanh ghi trung gian EX/MEM về đầu vào tầng EX của lệnh kế tiếp mà không cần chờ chu kỳ ghi WB.</p>
+        </div>
+
+        <div class="box box-warn">
+          <div class="box-title">3. Xung đột điều khiển (Control Hazard)</div>
+          <p>
+            Xuất hiện khi gặp các lệnh rẽ nhánh có điều kiện hoặc lệnh nhảy không điều kiện, do địa chỉ lệnh kế tiếp cần nạp vào tầng IF phụ thuộc vào kết quả tính toán điều kiện rẽ nhánh ở tầng sau.
+          </p>
+          <p><b>Giải pháp: Dự đoán rẽ nhánh (Branch Prediction):</b> Sử dụng cơ chế dự đoán tĩnh hoặc động. Nếu dự đoán đúng, đường ống hoạt động liên tục; nếu dự đoán sai, CPU tiến hành hủy lệnh (flush) và nạp lại từ địa chỉ đúng.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <section id="c3-exercises" class="lecture-sec">
+        <h2 class="sec-heading"><span class="num">3.13</span> Bài tập tính toán mẫu</h2>
+        
+        <div class="step-box">
+          <div class="step-num">BÀI TOÁN 1: TÍNH THỜI GIAN VÀ HỆ SỐ TĂNG TỐC PIPELINE</div>
+          <p>
+            <b>Đề bài:</b> Một chương trình gồm <span class="math"><i>n</i> = 100</span> lệnh được thực thi trên vi xử lý có đường ống <span class="math"><i>k</i> = 5</span> tầng. Chu kỳ xung nhịp là <span class="math">&tau; = 2 ns</span>.
+          </p>
+          <p><b>Yêu cầu:</b></p>
+          <ol>
+            <li>Tính thời gian thực hiện khi chạy tuần tự không có đường ống (<span class="math"><i>T</i><sub>seq</sub></span>).</li>
+            <li>Tính thời gian thực hiện khi có đường ống lý tưởng (<span class="math"><i>T</i><sub>pipe</sub></span>).</li>
+            <li>Tính hệ số tăng tốc (<span class="math"><i>S</i><sub><i>k</i></sub></span>).</li>
+          </ol>
+          <div style="background: var(--bg-subtle); padding: 12px; border-radius: 4px; margin-top: 10px;">
+            <b>Lời giải chi tiết:</b><br>
+            1. Khi chạy tuần tự: Mỗi lệnh cần 5 tầng, 100 lệnh mất:<br>
+            <div class="math-display">
+              <i>T</i><sub>seq</sub> = <i>n</i> &times; <i>k</i> &times; &tau; = 100 &times; 5 &times; 2 ns = 1000 ns
+            </div>
+            2. Khi chạy trên đường ống Pipeline:<br>
+            Lệnh đầu tiên mất 5 chu kỳ để lấp đầy ống. 99 lệnh còn lại, cứ mỗi chu kỳ có 1 lệnh xong:<br>
+            <div class="math-display">
+              <i>T</i><sub>pipe</sub> = [<i>k</i> + (<i>n</i> - 1)] &times; &tau; = [5 + 99] &times; 2 ns = 104 &times; 2 ns = 208 ns
+            </div>
+            3. Hệ số tăng tốc Speedup:<br>
+            <div class="math-display">
+              <i>S</i><sub><i>k</i></sub> = <i>T</i><sub>seq</sub> / <i>T</i><sub>pipe</sub> = 1000 ns / 208 ns &approx; 4.81 lần!
+            </div>
+            <i>Nhận xét:</i> Đường ống 5 tầng giúp máy tính chạy nhanh gần gấp 5 lần so với chạy tuần tự!
+          </div>
+        </div>
+
+        <div class="step-box" style="margin-top: 24px;">
+          <div class="step-num">BÀI TOÁN 2: TÍNH THỜI GIAN THỰC KHI CÓ CHU KỲ DỪNG (STALL / BUBBLE)</div>
+          <p>
+            <b>Đề bài:</b> Một chương trình có 100 lệnh. Trong đó có 20 lệnh bị phụ thuộc dữ liệu Load-Use, mỗi lệnh này bắt buộc CPU phải chèn <b>1 bong bóng dừng (1 stall bubble)</b>. Chu kỳ xung nhịp là 2 ns.
+          </p>
+          <div style="background: var(--bg-subtle); padding: 12px; border-radius: 4px; margin-top: 10px;">
+            <b>Lời giải chi tiết:</b><br>
+            Tổng số bong bóng dừng chèn vào băng chuyền là: <span class="math"><i>b</i> = 20</span> chu kỳ.<br>
+            Tổng số chu kỳ xung nhịp thực tế cần chạy:<br>
+            <div class="math-display">
+              Tổng số chu kỳ = <i>k</i> + (<i>n</i> - 1) + <i>b</i> = 5 + 99 + 20 = 124 chu kỳ
+            </div>
+            Thời gian thực thi thực tế:<br>
+            <div class="math-display">
+              <i>T</i><sub>thực tế</sub> = 124 &times; 2 ns = 248 ns
+            </div>
+            Chỉ số CPI hiệu dụng (Số chu kỳ trung bình cho mỗi lệnh):<br>
+            <div class="math-display">
+              <i>CPI</i> = 124 chu kỳ / 100 lệnh = 1.24 chu kỳ/lệnh
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer style="margin-top:80px; border-top:1px solid var(--border); padding:32px 0; text-align:center; font-size:14px; color:var(--text-muted);">
+    <div style="max-width:1240px; margin:0 auto; padding:0 24px;">
+      <p><b>Học viện Công nghệ Bưu chính Viễn thông · Khoa Kỹ thuật Điện tử 2</b></p>
+      <p style="margin-top: 6px;">Học phần: Kiến trúc máy tính (INT13145) · Tài liệu bài giảng</p>
+    </div>
+  </footer>
+
+  <!-- =============================================================== -->
+  <!-- JAVASCRIPT ANIMATION LOGIC                                      -->
+  <!-- =============================================================== -->
+  <script>
+    // -------------------------------------------------------------
+    // MEMORY ASSEMBLY STUDIO LOGIC
+    // -------------------------------------------------------------
+    let currentMemScen = 0;
+    let memStepIdx = 0;
+    let memAutoTimer = null;
+
+    const memScenarios = [
+      {
+        id: 0,
+        name: "1. MOV [1000H], AX (Ghi RAM & Little-Endian)",
+        steps: [
+          {
+            desc: "Bước 1: CPU nạp giá trị <code>AX = 1234H</code> (AL = 34H, AH = 12H).",
+            highlight: "mbox-ax",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "None", dataBus: "None", ctrlBus: "IDLE",
+            readCell: null, writeCell: null,
+            packetText: "1234H", pFrom: {x: 40, y: 35}, pTo: {x: 40, y: 35}
+          },
+          {
+            desc: "Bước 2: Thực thi lệnh <code>MOV [1000H], AX</code>. CPU phát địa chỉ 1000H lên Address Bus và bật tín hiệu MEM_WRITE màu đỏ!",
+            highlight: "mbox-ax",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "1000H", dataBus: "1234H", ctrlBus: "MEM_WRITE",
+            readCell: null, writeCell: "rcell-1000",
+            packetText: "34H", pFrom: {x: 40, y: 35}, pTo: {x: 40, y: 310}
+          },
+          {
+            desc: "Bước 3: Nguyên lý Little-Endian! Byte thấp 34H chui vào ô 1000H; Byte cao 12H chui vào ô 1001H. RAM được ghi thành công!",
+            highlight: "mbox-ax",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "1001H", dataBus: "12H", ctrlBus: "MEM_WRITE",
+            readCell: null, writeCell: "rcell-1001",
+            packetText: "12H", pFrom: {x: 40, y: 35}, pTo: {x: 90, y: 310}
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "2. MOV BX, [1000H] (Đọc từ RAM vào BX)",
+        steps: [
+          {
+            desc: "Bước 1: CPU phát địa chỉ 1000H lên Address Bus và bật tín hiệu MEM_READ màu xanh lục!",
+            highlight: "mbox-bx",
+            ax: "1234H", bx: "0000H", si: "0004H", sp: "FFFEH",
+            addrBus: "1000H", dataBus: "Waiting", ctrlBus: "MEM_READ",
+            readCell: "rcell-1000", writeCell: null,
+            packetText: "ADDR 1000H", pFrom: {x: 100, y: 35}, pTo: {x: 40, y: 310}
+          },
+          {
+            desc: "Bước 2: RAM tại ô 1000H (chứa 34H) và 1001H (chứa 12H) đẩy dữ liệu 1234H lên Data Bus bay ngược lên CPU!",
+            highlight: "mbox-bx",
+            ax: "1234H", bx: "0000H", si: "0004H", sp: "FFFEH",
+            addrBus: "1000H", dataBus: "1234H", ctrlBus: "MEM_READ",
+            readCell: "rcell-1000", writeCell: null,
+            packetText: "1234H", pFrom: {x: 40, y: 310}, pTo: {x: 100, y: 35}
+          },
+          {
+            desc: "Bước 3: Chiếc hộp BX nhận đủ giá trị 1234H từ RAM! Quá trình đọc bộ nhớ hoàn tất.",
+            highlight: "mbox-bx",
+            ax: "1234H", bx: "1234H", si: "0004H", sp: "FFFEH",
+            addrBus: "None", dataBus: "1234H", ctrlBus: "IDLE",
+            readCell: null, writeCell: null,
+            packetText: "DONE", pFrom: {x: 100, y: 35}, pTo: {x: 100, y: 35}
+          }
+        ]
+      },
+      {
+        id: 2,
+        name: "3. LEA vs MOV: Lấy địa chỉ vs đọc RAM",
+        steps: [
+          {
+            desc: "Trường hợp 1: Chạy <code>MOV CX, [1004H]</code>. Address Bus = 1004H, Data Bus = AAH/55H. CPU mở cửa RAM nhấc giá trị 55AAH nạp vào CX!",
+            highlight: "mbox-cx",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "1004H", dataBus: "55AAH", ctrlBus: "MEM_READ",
+            readCell: "rcell-1004", writeCell: null,
+            packetText: "55AAH (Đồ)", pFrom: {x: 180, y: 310}, pTo: {x: 160, y: 35}
+          },
+          {
+            desc: "Trường hợp 2: Chạy <code>LEA CX, [1004H]</code>. Address Bus & Data Bus HOÀN TOÀN TẮT (Không đụng vào RAM)! CPU nạp thẳng số hiệu địa chỉ 1004H vào CX!",
+            highlight: "mbox-cx",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "OFF", dataBus: "OFF", ctrlBus: "NO RAM ACCESS",
+            readCell: null, writeCell: null,
+            packetText: "1004H (Số nhà)", pFrom: {x: 160, y: 80}, pTo: {x: 160, y: 35}
+          }
+        ]
+      },
+      {
+        id: 3,
+        name: "4. MOV DX, [BX+SI] (Duyệt mảng bộ nhớ)",
+        steps: [
+          {
+            desc: "Bước 1: <code>BX = 1000H</code> (trỏ đầu mảng), <code>SI = 0004H</code> (chỉ số phần tử i).",
+            highlight: "mbox-bx",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "None", dataBus: "None", ctrlBus: "IDLE",
+            readCell: null, writeCell: null,
+            packetText: "BX+SI", pFrom: {x: 100, y: 35}, pTo: {x: 100, y: 35}
+          },
+          {
+            desc: "Bước 2: Bộ cộng địa chỉ tính: 1000H + 0004H = 1004H. Address Bus sáng đèn trỏ đúng ô nhớ phần tử mảng 1004H!",
+            highlight: "mbox-si",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "1004H", dataBus: "Waiting", ctrlBus: "MEM_READ",
+            readCell: "rcell-1004", writeCell: null,
+            packetText: "ADDR 1004H", pFrom: {x: 140, y: 35}, pTo: {x: 180, y: 310}
+          },
+          {
+            desc: "Bước 3: Giá trị 55AAH từ ô nhớ mảng 1004H bay về nạp cho thanh ghi đích DX!",
+            highlight: "mbox-ax",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "None", dataBus: "55AAH", ctrlBus: "IDLE",
+            readCell: null, writeCell: null,
+            packetText: "55AAH", pFrom: {x: 180, y: 310}, pTo: {x: 200, y: 35}
+          }
+        ]
+      },
+      {
+        id: 4,
+        name: "5. PUSH AX (Cất vào Ngăn xếp Stack)",
+        steps: [
+          {
+            desc: "Bước 1: Hiện tại con trỏ ngăn xếp <code>SP = FFFEH</code>. Chuẩn bị cất giá trị 1234H từ AX vào Stack.",
+            highlight: "mbox-sp",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "None", dataBus: "None", ctrlBus: "IDLE",
+            readCell: null, writeCell: null,
+            packetText: "1234H", pFrom: {x: 40, y: 35}, pTo: {x: 40, y: 35}
+          },
+          {
+            desc: "Bước 2: Lệnh PUSH tự động giảm SP đi 2: <code>SP = FFFEH - 2 = FFFCH</code>! Address Bus phát địa chỉ FFFCH.",
+            highlight: "mbox-sp",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFCH",
+            addrBus: "FFFCH", dataBus: "1234H", ctrlBus: "MEM_WRITE",
+            readCell: null, writeCell: "rcell-fffc",
+            packetText: "SP -= 2", pFrom: {x: 220, y: 35}, pTo: {x: 220, y: 35}
+          },
+          {
+            desc: "Bước 3: Dữ liệu 1234H từ AX trượt xuống cất an toàn vào ô nhớ đỉnh Stack [FFFCH]!",
+            highlight: "mbox-ax",
+            ax: "1234H", bx: "1000H", si: "0004H", sp: "FFFCH",
+            addrBus: "FFFCH", dataBus: "1234H", ctrlBus: "MEM_WRITE",
+            readCell: null, writeCell: "rcell-fffc",
+            packetText: "1234H", pFrom: {x: 40, y: 35}, pTo: {x: 250, y: 310}
+          }
+        ]
+      },
+      {
+        id: 5,
+        name: "6. POP BX (Lấy khỏi Ngăn xếp Stack)",
+        steps: [
+          {
+            desc: "Bước 1: Thực thi <code>POP BX</code>. Đọc dữ liệu từ đỉnh Stack tại ô nhớ [SP] = [FFFCH]. Dữ liệu 1234H được đẩy lên Data Bus!",
+            highlight: "mbox-sp",
+            ax: "1234H", bx: "0000H", si: "0004H", sp: "FFFCH",
+            addrBus: "FFFCH", dataBus: "1234H", ctrlBus: "MEM_READ",
+            readCell: "rcell-fffc", writeCell: null,
+            packetText: "1234H", pFrom: {x: 250, y: 310}, pTo: {x: 100, y: 35}
+          },
+          {
+            desc: "Bước 2: Hộp BX nhận giá trị 1234H. Đồng thời thước đo SP tự động tăng 2 byte: <code>SP = FFFCH + 2 = FFFEH</code> để trả lại trạng thái!",
+            highlight: "mbox-bx",
+            ax: "1234H", bx: "1234H", si: "0004H", sp: "FFFEH",
+            addrBus: "None", dataBus: "None", ctrlBus: "IDLE",
+            readCell: null, writeCell: null,
+            packetText: "SP += 2", pFrom: {x: 220, y: 35}, pTo: {x: 220, y: 35}
+          }
+        ]
+      },
+      {
+        id: 6,
+        name: "7. ADD AX, [1004H] (ALU cộng trực tiếp với RAM)",
+        steps: [
+          {
+            desc: "Bước 1: Khởi tạo <code>AX = 0010H</code>. Đọc ô nhớ RAM [1004H] (đang chứa giá trị AAH = 170).",
+            highlight: "mbox-ax",
+            ax: "0010H", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "1004H", dataBus: "00AAH", ctrlBus: "MEM_READ",
+            readCell: "rcell-1004", writeCell: null,
+            packetText: "00AAH", pFrom: {x: 180, y: 310}, pTo: {x: 120, y: 150}
+          },
+          {
+            desc: "Bước 2: Kiến trúc CISC x86 cho phép đưa thẳng giá trị từ RAM vào ALU cộng với AX: 0010H + 00AAH = 00BAH! Kết quả cất ngược vào AX!",
+            highlight: "mbox-ax",
+            ax: "00BAH", bx: "1000H", si: "0004H", sp: "FFFEH",
+            addrBus: "None", dataBus: "None", ctrlBus: "IDLE",
+            readCell: null, writeCell: null,
+            packetText: "00BAH", pFrom: {x: 120, y: 150}, pTo: {x: 40, y: 35}
+          }
+        ]
+      }
+    ];
+
+    function selectMemScenario(scenIdx) {
+      currentMemScen = scenIdx;
+      memStepIdx = 0;
+      clearInterval(memAutoTimer);
+      for (let i = 0; i < 7; i++) {
+        const el = document.getElementById("mscen-" + i);
+        if (el) {
+          if (i === scenIdx) el.classList.add("active");
+          else el.classList.remove("active");
+        }
+      }
+      renderMemStep(memScenarios[currentMemScen].steps[0]);
+    }
+
+    function renderMemStep(step) {
+      document.getElementById("mval-ax").innerText = step.ax;
+      document.getElementById("mval-bx").innerText = step.bx;
+      document.getElementById("mval-si").innerText = step.si;
+      document.getElementById("mval-sp").innerText = step.sp;
+
+      // Highlight registers
+      ["mbox-ax", "mbox-bx", "mbox-si", "mbox-sp"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (id === step.highlight) el.classList.add("highlight");
+          else el.classList.remove("highlight");
+        }
+      });
+
+      // Buses status
+      document.getElementById("bus-addr-val").innerText = step.addrBus;
+      document.getElementById("bus-data-val").innerText = step.dataBus;
+      document.getElementById("bus-ctrl-val").innerText = step.ctrlBus;
+
+      const lightAddr = document.getElementById("light-addr");
+      const lightData = document.getElementById("light-data");
+      const lightCtrl = document.getElementById("light-ctrl");
+
+      if (step.addrBus !== "None" && step.addrBus !== "OFF") lightAddr.className = "bus-light active-addr";
+      else lightAddr.className = "bus-light";
+
+      if (step.dataBus !== "None" && step.dataBus !== "OFF") lightData.className = "bus-light active-data";
+      else lightData.className = "bus-light";
+
+      if (step.ctrlBus.includes("WRITE")) lightCtrl.className = "bus-light active-ctrl";
+      else if (step.ctrlBus.includes("READ")) lightCtrl.className = "bus-light active-data";
+      else lightCtrl.className = "bus-light";
+
+      // RAM cell highlight
+      ["rcell-1000", "rcell-1001", "rcell-1002", "rcell-1003", "rcell-1004", "rcell-1005", "rcell-fffc", "rcell-fffe"].forEach(cid => {
+        const cel = document.getElementById(cid);
+        if (cel) {
+          cel.className = "ram-cell";
+          if (cid === step.readCell) cel.classList.add("reading");
+          if (cid === step.writeCell) cel.classList.add("writing");
+        }
+      });
+
+      // Update RAM values on writes
+      if (step.writeCell === "rcell-1000") document.getElementById("rval-1000").innerText = "34H";
+      if (step.writeCell === "rcell-1001") document.getElementById("rval-1001").innerText = "12H";
+      if (step.writeCell === "rcell-fffc") document.getElementById("rval-fffc").innerText = "1234H";
+
+      // Packet animation
+      const pkt = document.getElementById("mem-packet");
+      pkt.innerText = step.packetText;
+      pkt.style.left = step.pFrom.x + "px";
+      pkt.style.top = step.pFrom.y + "px";
+      pkt.classList.remove("flying");
+
+      setTimeout(() => {
+        pkt.style.left = step.pTo.x + "px";
+        pkt.style.top = step.pTo.y + "px";
+        pkt.classList.add("flying");
+      }, 40);
+
+      document.getElementById("mem-narration").innerHTML = step.desc;
+    }
+
+    function memStep() {
+      const scen = memScenarios[currentMemScen];
+      memStepIdx = (memStepIdx + 1) % scen.steps.length;
+      renderMemStep(scen.steps[memStepIdx]);
+    }
+
+    function memPlayAuto() {
+      clearInterval(memAutoTimer);
+      memStep();
+      memAutoTimer = setInterval(() => {
+        memStep();
+      }, 1700);
+    }
+
+    function memReset() {
+      clearInterval(memAutoTimer);
+      memStepIdx = 0;
+      document.getElementById("rval-1000").innerText = "34H";
+      document.getElementById("rval-1001").innerText = "12H";
+      document.getElementById("rval-fffc").innerText = "00H";
+      renderMemStep(memScenarios[currentMemScen].steps[0]);
+    }
+
+    // -------------------------------------------------------------
+    // PIPELINE CONVEYOR ANIMATION LOGIC
+    // -------------------------------------------------------------
+    const pipeScheduleData = [
+      { clock: 0, if: null, id: null, ex: null, mem: null, wb: null, desc: "Băng chuyền sẵn sàng. Nhấn 'Bước Tiếp' để nạp lệnh 1 (ADD)." },
+      { clock: 1, if: "L1: ADD", id: null, ex: null, mem: null, wb: null, desc: "Clock 1: Lệnh 1 (ADD) được nạp vào tầng IF." },
+      { clock: 2, if: "L2: SUB", id: "L1: ADD", ex: null, mem: null, wb: null, desc: "Clock 2: L1 sang ID giải mã; Lệnh 2 (SUB) nạp vào IF." },
+      { clock: 3, if: "L3: LW", id: "L2: SUB", ex: "L1: ADD", mem: null, wb: null, desc: "Clock 3: L1 vào EX tính toán; L2 sang ID; L3 (LW) vào IF." },
+      { clock: 4, if: "L4: AND", id: "L3: LW", ex: "L2: SUB", mem: "L1: ADD", wb: null, desc: "Clock 4: L1 đọc/ghi RAM; các lệnh trước trôi tiếp mượt mà." },
+      { clock: 5, if: "L5: OR", id: "L4: AND", ex: "L3: LW", mem: "L2: SUB", wb: "L1: ADD", desc: "Clock 5: LỆNH 1 HOÀN TẤT (WB)! Từ bây giờ cứ mỗi nhịp lại có 1 lệnh xong!" },
+      { clock: 6, if: "L5 (Chờ)", id: "L5 (Giữ)", ex: "NOP (Bubble)", mem: "L3: LW", wb: "L2: SUB", desc: "PHÁT HIỆN TẮC NGHẼN LOAD-USE: L4 cần dữ liệu từ L3 (LW). Băng chuyền chèn 1 bóng bóng NOP!" }
+    ];
+
+    let currentPipeClock = 0;
+
+    function renderPipeConveyor() {
+      const cur = pipeScheduleData[currentPipeClock];
+      document.getElementById("pipe-clock-num").innerText = cur.clock;
+      document.getElementById("pipe-narration").innerText = cur.desc;
+
+      setConveyorCell("c-if", cur.if);
+      setConveyorCell("c-id", cur.id);
+      setConveyorCell("c-ex", cur.ex);
+      setConveyorCell("c-mem", cur.mem);
+      setConveyorCell("c-wb", cur.wb);
+    }
+
+    function setConveyorCell(elementId, content) {
+      const cell = document.getElementById(elementId);
+      if (!content) {
+        cell.className = "conveyor-cell";
+        cell.innerHTML = '<span style="color:#94a3b8;">Trống</span>';
+      } else if (content.includes("Bubble") || content.includes("Chờ") || content.includes("Giữ")) {
+        cell.className = "conveyor-cell has-stall";
+        cell.innerHTML = '<div class="item-stall">' + content + '</div>';
+      } else {
+        cell.className = "conveyor-cell has-item";
+        cell.innerHTML = '<div class="item-bubble">' + content + '</div>';
+      }
+    }
+
+    function pipeStepConveyor() {
+      if (currentPipeClock < pipeScheduleData.length - 1) {
+        currentPipeClock++;
+      } else {
+        currentPipeClock = 0;
+      }
+      renderPipeConveyor();
+    }
+
+    function pipeResetConveyor() {
+      currentPipeClock = 0;
+      renderPipeConveyor();
+    }
+
+    // Initialize on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      selectMemScenario(0);
+      renderPipeConveyor();
+    });
+  </script>
+
+</body>
+</html>
